@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import "./Reservation.css"
 import Navbar from './components/Navbar'
 
 const Reservation = () => {
-  return (
+    const [submit, setSubmit] = useState(false);
+    const [confirm, setConfirm] = useState(false);
+
+    return (
     <div>
         <Navbar/>
         <div id='main-container'>
@@ -29,11 +32,30 @@ const Reservation = () => {
                         <div>Phone No:<br/><input id='input' type='tel'></input></div>
                         <div>No of pax:<br/><input id='input' type='number'></input></div>
                     </div>
+                    <button onClick={() => setSubmit(!submit)}>Submit</button>
+                    {submit &&
+                        <div id='popup-overlay'>
+                            <div id='popup'>
+                                <div>Confirm reservation?</div>
+                                <div>
+                                    <button  onClick={() => setSubmit(false)}>Wait</button>
+                                    <button  onClick={() => {setConfirm(true); setSubmit(false);}}>Confirm</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    {confirm &&
+                        <div id='popup-overlay'>
+                            <div id='popup'>
+                                <div>Confirmed</div>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
-  )
+    )
 }
 
 export default Reservation
