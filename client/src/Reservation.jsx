@@ -1,10 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect } from 'react'
 import "./Reservation.css"
 import Navbar from './components/Navbar'
 
 const Reservation = () => {
     const [submit, setSubmit] = useState(false);
     const [confirm, setConfirm] = useState(false);
+    const popRef = useRef(null);
+
+    const handleClickOutside = (event) => {
+        if (popRef.current && !popRef.current.contains(event.target)) {
+            setConfirm(false);
+        }
+    };
+    useEffect(() => {
+        document.addEventListener("click", handleClickOutside);
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+        };
+    }, []);
 
     return (
     <div>
@@ -45,7 +58,7 @@ const Reservation = () => {
                         </div>
                     }
                     {confirm &&
-                        <div id='popup-overlay'>
+                        <div id='popup-overlay' ref={popRef}>
                             <div id='popup'>
                                 <div>Confirmed</div>
                             </div>
