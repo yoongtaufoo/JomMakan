@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Preahvihear&display=swap');
+
+*{
+  font-family: "Preahvihear", sans-serif;
+}
+nav{
+  color: black;
+  background-color: #FBC355;
+  width: 100%;
+  position:absolute;
+  padding: 4px 5px;
+  top:0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  
+}
+nav li{
+  display: inline-block;
+  list-style: none;
+  margin: 5px 20px;
+  font-size: 16px;
+}
+
+button{
+  background: #000;
+  color: #FDFFEA;
+  font-size: 13px;
+  padding: 10px 20px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#logo{
+  width: 14%;
+}
+
+#first-view{
+  background-color: #FDFFEA;
+  height: 100vh;
+  padding-left: 5%;
+  padding-right: 5%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  
+}
+#gif{
+  position: relative;
+  width: 45%;
+}
+#tagline{
+  position: relative;
+  font-size: 40px;
+}
+#second-view{
+  background-color: #FDFFEA;
+  height: 100vh;
+  padding-left: 5%;
+  padding-right: 5%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  
+}
+#drip{
+  position: absolute;
+  display: flex;
+  height: 200%;
+}
