@@ -32,9 +32,11 @@
     flex-direction: column;
 }
 #input{
+    width:200%;
     background-color: #FFE2AB;
     border-radius: 30px;
     padding: 10px;
+    margin:5px;
     border: none
 }
 #inputs{
@@ -61,4 +63,17 @@
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
     padding: 20px;
     z-index: 10;
+}
+
+#form-container{
+    padding-left: 10%;
+    width:50%;
+    display: flex;
+    align-items: left;
+    justify-content: center;
+    flex-direction: column;
+}
+h2{
+    margin-top:30px;
+    padding-left: 10%;
 }
