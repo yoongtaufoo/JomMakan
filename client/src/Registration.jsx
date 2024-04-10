@@ -2,6 +2,7 @@ import React , { useState , useEffect,useRef } from "react";
 import Navbar from './components/Navbar'
 import "./Reservation.css";
 import Form from "./components/Form";
+import { Link } from 'react-router-dom';
 
 
 const Registration = () => {
@@ -10,9 +11,15 @@ const Registration = () => {
         <div>
             <Navbar/>
             <div id='main-container'>
+                
                 <div id='up'>
-                    <button>Back</button>
-                    <button>View My Reservations</button>
+                    <Link to="/home">
+                            <small>Back</small>
+                    </Link>
+                    <div className="ml-auto">
+                        
+                         <small className="text-muted"><i className="bi bi-calendar-heart custom-icon"></i>View My Registration</small>
+                    </div>
                 </div>
                 <div id='down'>
                     <div id='left'>
