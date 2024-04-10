@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import App from "./App.jsx";
 import Home from "./Home.jsx";
 import Reservation from "./Reservation.jsx";
+import Workshop from "./Workshop.jsx";
+import WRegistration from "./Registration.jsx";
 import FavRestaurant from "./FavRestaurant.jsx";
 import Restaurant from "./Restaurant.jsx";
 
@@ -15,6 +17,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route exact path="/" element={<App />} />
         <Route exact path="/home" element={<Home />} />
         <Route exact path="/reserve" element={<Reservation />} />
+        <Route exact path="/workshop" element={<Workshop/>}/>
+        <Route exact path="/wregister" element={<WRegistration/>}/>
         <Route exact path="/FavRestaurant" element={<FavRestaurant />} />
         <Route exact path="/restaurant/:id" element={<Restaurant/>} />
         {/* add route for new pages here, import the component*/}
