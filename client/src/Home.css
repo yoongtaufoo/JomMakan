@@ -1,0 +1,32 @@
+.custom-col {
+    display: inline-block;
+    margin-right: 10spx;
+    margin-bottom: 30px;
+  }
+  
+.container{
+    padding: 0;
+}
+
+  .custom-card {
+    width: 348px; /* Set the width of the card */
+    height: 400px; /* Set the height of the card */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-img-top {
+    width: 100%; /* Ensure the image takes up the full width of the card */
+    height: 200px; /* Set the height of the image */
+    object-fit: cover; /* Ensure the image fills its container without stretching */
+  }
+  
+  .card-body {
+    flex: 1; /* Make the title part take up the available vertical space */
+  }
+  
+  .custom-h1{
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+  
