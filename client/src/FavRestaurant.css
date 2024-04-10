@@ -7,21 +7,12 @@
 .container{
     padding: 0;
 }
-
-
-
-.custom-card {
-    width: 400px; /* Set the width of the card */
-    height: 500px; /* Set the height of the card */
-  }
   
   .card-img-top {
     width: 100%; /* Ensure the image takes up the full width of the card */
-    height: 250px; /* Set the height of the image */
+    height: 300px; /* Set the height of the image */
     object-fit: cover; /* Ensure the image fills its container without stretching */
   }
-  
-
   
   .card-body {
     flex: 1; /* Make the title part take up the available vertical space */
@@ -41,6 +32,15 @@
     margin-right: 15px;
   }
 
-  .custom-card-footer{
-    background-color: #f8ebd5;
+  .custom-row{
+    margin-bottom: 10px;
+    background-color: #fff0d7;
+  }
+
+  .custom-button{
+    float: right;
+  }
+
+  .card-title{
+    font-weight: bold;
   }
