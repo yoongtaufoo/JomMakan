@@ -1,0 +1,63 @@
+.workshop-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .workshop-img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .workshop-details {
+    margin-top: 20px;
+  }
+  
+  .title {
+    font-family: 'Work Sans', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+  }
+  
+  .description {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 16px;
+  }
+  
+  .date-time,
+  .available-slots {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 14px;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .button-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #FBC355;
+    color: black;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 16px;
+  }
+  
+  .button-container button:hover {
+    background-color: #e0ac36;
+  }
+  
+  .star-icon {
+    font-size: 20px;
+    color: #FBC355;
+  }
+  
