@@ -16,7 +16,7 @@ const Registration = () => {
             <div id='main-container'>
             <br />
                 <div id='up'>
-                    <Link to="/home">
+                    <Link to="/workshop">
                             <small>Back</small>
                         </Link>
                     <div className="ml-auto">
