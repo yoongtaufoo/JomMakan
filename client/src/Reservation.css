@@ -73,7 +73,7 @@
 #form-container{
     margin-top:5%;
     margin-left: 10%;
-    margin-bottom: 27%;
+    margin-bottom: 26%;
     display: flex;
     align-items: left;
     justify-content: center;
@@ -81,7 +81,7 @@
 }
 
 h2{
-    padding-left: 15%;
+    padding-left: 20%;
 }
 
 #submit-button {
