@@ -3,7 +3,7 @@ import React from 'react';
 const DetailCard = ({ workshop }) => {
   return (
     <div style={{ padding: "10px", display: "block", margin: "5% auto" }}>
-      <img src={workshop.photo} alt={workshop.title} style={{ width: '120%', height: '200px' }} />
+      <img src={workshop.photo} alt={workshop.title} style={{ width: '150%', height: '200px' }} />
       <div>
         <h1 className='custom-h1'>{workshop.title}</h1>
       </div>
