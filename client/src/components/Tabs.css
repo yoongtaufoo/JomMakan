@@ -1,0 +1,19 @@
+.tabs {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 20px;
+  }
+  
+  .tab-btn {
+    color: black;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    text-decoration: none;
+    outline: none;
+  }
+  
+  .tab-btn.active {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  
