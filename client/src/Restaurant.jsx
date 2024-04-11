@@ -188,10 +188,10 @@ const renderRatingStars = (rating) => {
 const Restaurant = () => {
   const { id } = useParams();
   const [isSaved, setIsSaved] = useState(false); // Initialize isSaved state
-  const [likes, setLikes] = useState(new Array(reviews.length).fill(0));
   const [hasLiked, setHasLiked] = useState(
     new Array(reviews.length).fill(false)
-  ); // Initialize hasLiked state
+  );
+  const [likes, setLikes] = useState(new Array(reviews.length).fill(0));
 
   const handleSaveToggle = () => {
     setIsSaved((prevState) => !prevState);
