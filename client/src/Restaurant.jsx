@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react'; 
 import Navbar from './components/Navbar';
 import res1 from "./assets/Restaurant1.jpg";
 import res2 from "./assets/Restaurant2.jpg";
@@ -89,13 +89,19 @@ const restaurants = [
 
 const Restaurant = () => {
     const {id} = useParams();
-    const [isSaved, setIsSaved] = useState();
+    const sliderRef = useRef(null);
+    const scrollAmount = 100;
+
+    const [isSaved, setIsSaved] = useState(false);
+
 
     const handleSaveToggle = () => {
         setIsSaved(prevState => !prevState);
     };
 
     const restaurant = restaurants.find(restaurant => restaurant.id === parseInt(id));
+    const [images, setImages] = useState(restaurant.resPhotos);
+
   return (
     <div>
       <Navbar />
@@ -126,27 +132,44 @@ const Restaurant = () => {
         <p className="card-text"><i className='bi-geo-alt-fill custom-icon'></i>{restaurant.phone}</p>
         <p className="card-text"><i className="bi bi-telephone-fill custom-icon"></i>{restaurant.address}</p>
         <p className="card-text"><i className="bi bi-clock-fill custom-icon"></i>{restaurant.openinghours}</p>
-        <p className="card-text"><i class="bi bi-egg-fried custom-icon"></i>{restaurant.cuisine}</p>
+        <p className="card-text"><i className="bi bi-egg-fried custom-icon"></i>{restaurant.cuisine}</p>
         <br />
         <h5 className='card-text'>Photos</h5>
-        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-        <div className="carousel-inner">
-            {restaurant.resPhotos.map((photo, index) => (
-              <div className={`carousel-item ${index === 0 ? 'active' : ''}`} key={index}>
-                <img src={photo} className="d-block w-100" alt={`Slide ${index + 1}`} style={{ height: '500px', objectFit: 'cover' }}/>
-              </div>
-            ))}
-          </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-        <br />
+        
+        <div className="App">
+        <button
+        className="nav-btn"
+        onClick={() => {
+          const container = sliderRef.current;
+          container.scrollLeft -= scrollAmount; // Scroll left by the specified amount
+        }}
+      >
+        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+      </button>
+    {/* Image container */}
+      <div className="images-container" ref={sliderRef}>
+        {images.map((image) => {
+          return (
+            <img
+              className="image"
+              alt="sliderImage"
+              // key={image?.id}
+              src={image}
+            />
+          );
+        })}
+      </div>
+    {/* Right navigation button */}
+      <button
+        className="nav-btn"
+        onClick={() => {
+          const container = sliderRef.current;
+          container.scrollLeft += scrollAmount; // Scroll right by the specified amount
+        }}
+      >
+        <span className="carousel-control-next-icon" aria-hidden="true"></span>
+      </button>
+      </div>
         <h5>Review</h5>
     </div>
 </div>
