@@ -1,11 +1,14 @@
 #main-container{
-    padding: 20px;
+    padding-left: 60px;
+    padding-right: 60px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 #up{
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 #down{
     display: flex;
@@ -14,7 +17,8 @@
     
 }
 #left{
-    
+    margin-top:10px;
+
 }
 #disclaimer{
     background-color: gray;
@@ -25,6 +29,7 @@
 }
 #form{
     padding-left: 10%;
+    margin-left: 5%;
     width: 50%;
     display: flex;
     align-items: left;
@@ -37,7 +42,7 @@
     border-radius: 30px;
     padding: 10px;
     margin:5px;
-    border: none
+    border: none;
 }
 #inputs{
     font-size:12px;
@@ -66,14 +71,35 @@
 }
 
 #form-container{
-    padding-left: 10%;
-    width:50%;
+    margin-top:5%;
+    margin-left: 10%;
+    margin-bottom: 27%;
     display: flex;
     align-items: left;
     justify-content: center;
     flex-direction: column;
 }
+
 h2{
-    margin-top:30px;
-    padding-left: 10%;
+    padding-left: 15%;
+}
+
+#submit-button {
+    margin-left: 75%;
+}
+
+#Check{
+    margin: 10px;;
+}
+
+#Rtext{
+    padding: 5px;
+    margin: 5px auto;
+    width: 200%;
+    text-align: center;
+    color: red;
+}
+
+#checkbox{
+    margin: 10px;
 }

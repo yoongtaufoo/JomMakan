@@ -2,20 +2,23 @@ import React , { useState , useEffect,useRef } from "react";
 import Navbar from './components/Navbar'
 import "./Reservation.css";
 import Form from "./components/Form";
-import { Link } from 'react-router-dom';
+import { Link, useParams  } from 'react-router-dom';
+import WorkshopDetails from './WorkshopDetails'
+import DetailCard from './components/DetailCard'
 
 
 const Registration = () => {
-       const date ="12-5pm, 05-05-2024 ";
+       const {id} = useParams();
+       const workshop = WorkshopDetails.find( workshop =>  workshop.id === parseInt(id));
         return (
         <div>
             <Navbar/>
             <div id='main-container'>
-                
+            <br />
                 <div id='up'>
                     <Link to="/home">
                             <small>Back</small>
-                    </Link>
+                        </Link>
                     <div className="ml-auto">
                         
                          <small className="text-muted"><i className="bi bi-calendar-heart custom-icon"></i>View My Registration</small>
@@ -23,7 +26,7 @@ const Registration = () => {
                 </div>
                 <div id='down'>
                     <div id='left'>
-                        {/* restaurant card */}
+                        <DetailCard workshop={workshop}/>
                         <div id='disclaimer'>
                             <h3>Registration Policy</h3>
                             <p>1. Registration Procedure: Our workshop accepts registration through our online registration form, available on our official website. Registration can also be made via phone during operating hours.
@@ -32,8 +35,8 @@ const Registration = () => {
                         </div>
                     </div>
                     <div id="form-container">
-                        <h2>RESERVATION FORM</h2>
-                        <Form date={date}/>
+                        <h2>REGISTRATION FORM</h2>
+                        <Form date={workshop.dateAndTime}/>
                     </div>
                 </div>
             </div>

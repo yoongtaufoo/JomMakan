@@ -24,8 +24,12 @@ return(
         <div>Name:<br/><input id='input'></input></div>
         <div>Phone No:<br/><input id='input' type='tel'></input></div>
         <div>No of pax:<br/><input id='input' type='number'></input></div>
+        <div id="Check">
+        <label id="Rtext" ><input id = "checkbox" type="checkbox" name="" if="" />I have read and understood the Registration Policy of this restaurant</label>
+     </div>
+    <button id="submit-button" onClick={() => setSubmit(!submit)}>Submit</button>
     </div>
-    <button onClick={() => setSubmit(!submit)}>Submit</button>
+
     {submit &&
         <div id='popup-overlay'>
             <div id='popup'>
