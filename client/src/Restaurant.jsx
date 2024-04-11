@@ -169,17 +169,21 @@ const reviews = [
 
 const renderRatingStars = (rating) => {
   const filledStars = Math.floor(rating);
-  const halfStar = rating - filledStars >= 0.5 ? 1 : 0;
-  const emptyStars = 5 - filledStars - halfStar;
+  const hasHalfStar = rating - filledStars === 0.5;
 
   return (
     <div className="star-container">
       {[...Array(filledStars)].map((_, index) => (
         <BsStarFill key={index} className="star-icon filled-star" />
       ))}
-      {halfStar === 1 && <BsStarFill className="star-icon filled-star" />}
-      {[...Array(emptyStars)].map((_, index) => (
-        <BsStar key={index} className="star-icon empty-star" />
+      {hasHalfStar && (
+        <i
+          key="halfStar"
+          className="bi bi-star-half star-icon filled-star half-star"
+        ></i>
+      )}
+      {[...Array(5 - filledStars - (hasHalfStar ? 1 : 0))].map((_, index) => (
+        <BsStar key={filledStars + index} className="star-icon empty-star" />
       ))}
     </div>
   );
@@ -328,6 +332,69 @@ const Restaurant = () => {
             </Link>
           </div>
         </div>
+        <div
+          class="box-flex fd-column info-reviews-rating-section"
+          data-testid="info-reviews-rating"
+        >
+          <div class="info-left">
+            <div class="box-flex fd-row ai-center">{restaurant.review}</div>
+            <div id="star-container">
+              {renderRatingStars(restaurant.review)}
+            </div>
+            <div class="f-title-xlarge-secondary-font-size fw-title-xlarge-secondary-font-weight">
+              All ratings (318)
+            </div>
+          </div>
+
+          <div class="rating-bar-container">
+            <div className="rating-bar">
+              <div className="star-indicator">
+                5 <i className="bi bi-star-fill"></i>
+              </div>
+              <div className="rectangle-box">
+                <div className={`bar bar-colored bar-78`}></div>
+              </div>
+              <div className="percentage">78%</div>
+            </div>
+            <div className="rating-bar">
+              <div className="star-indicator">
+                4 <i className="bi bi-star-fill"></i>
+              </div>
+              <div className="rectangle-box">
+                <div className={`bar bar-colored bar-15`}></div>
+              </div>
+              <div className="percentage">15%</div>
+            </div>
+            <div className="rating-bar">
+              <div className="star-indicator">
+                3 <i className="bi bi-star-fill"></i>
+              </div>
+              <div className="rectangle-box">
+                <div className={`bar bar-colored bar-5`}></div>
+              </div>
+              <div className="percentage">5%</div>
+            </div>
+            <div className="rating-bar">
+              <div className="star-indicator">
+                2 <i className="bi bi-star-fill"></i>
+              </div>
+              <div className="rectangle-box">
+                <div className={`bar bar-colored bar-2}`}></div>
+              </div>
+              <div className="percentage">2%</div>
+            </div>
+            <div className="rating-bar">
+              <div className="star-indicator">
+                1 <i className="bi bi-star-fill"></i>
+              </div>
+              <div className="rectangle-box">
+                <div className={`bar bar-colored bar-0`}></div>
+              </div>
+              <div className="percentage">0%</div>
+            </div>
+          </div>
+        </div>
+
         {reviews.map((review, index) => (
           <div key={index} className="review-card">
             <p>
