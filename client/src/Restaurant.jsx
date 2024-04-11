@@ -69,7 +69,7 @@ const restaurants = [
     openinghours: "Mon-Sat 12–2:30 pm, 6:30–10:30 pm",
     cuisine: "local Malaysia",
     resPhotos: photos,
-    review: "3.8",
+    review: "3.5",
   },
   {
     id: 4,
@@ -84,7 +84,7 @@ const restaurants = [
     openinghours: "Mon-Sat 12–3 pm, 6–10 pm",
     cuisine: "steakhouse",
     resPhotos: photos,
-    review: "4.8",
+    review: "4.5",
   },
   {
     id: 5,
@@ -196,6 +196,10 @@ const Restaurant = () => {
     new Array(reviews.length).fill(false)
   );
   const [likes, setLikes] = useState(new Array(reviews.length).fill(0));
+  const [showDetailsPopups, setShowDetailsPopups] = useState(
+    new Array(reviews.length).fill(false)
+  );
+  const [selectedReviewIndex, setSelectedReviewIndex] = useState(null); // Initialize selectedReviewIndex state
 
   const handleSaveToggle = () => {
     setIsSaved((prevState) => !prevState);
@@ -221,6 +225,25 @@ const Restaurant = () => {
       }
       return newLikes;
     });
+  };
+
+  const handleDetailsClick = (index) => {
+    setShowDetailsPopups((prevState) => {
+      const newState = [...prevState];
+      newState[index] = !newState[index];
+      return newState;
+    });
+    setSelectedReviewIndex(index);
+  };
+
+  const handleEdit = (index) => {
+    // Implement your edit functionality here
+    console.log("Edit review at index:", index);
+  };
+
+  const handleDelete = (index) => {
+    // Implement your delete functionality here
+    console.log("Delete review at index:", index);
   };
 
   const restaurant = restaurants.find(
@@ -399,7 +422,20 @@ const Restaurant = () => {
           <div key={index} className="review-card">
             <p>
               <strong>{review.userName}</strong>
+              <button
+                className="details-button"
+                onClick={() => handleDetailsClick(index)}
+              >
+                <i class="bi-three-dots"></i>
+              </button>
             </p>
+
+            <button className="btn-edit" onClick={() => handleEdit(index)}>
+              <i className="bi bi-pencil"></i> Edit
+            </button>
+            <button className="btn-delete" onClick={() => handleDelete(index)}>
+              <i className="bi bi-trash"></i> Delete
+            </button>
             <div className="d-flex justify-content-start">
               <div>{renderRatingStars(review.rating)}</div>
               <p id="timePost">{review.timePosted}</p>

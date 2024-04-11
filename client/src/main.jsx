@@ -9,6 +9,7 @@ import Workshop from "./components/WorkshopPage.jsx";
 import WRegistration from "./Registration.jsx";
 import FavRestaurant from "./FavRestaurant.jsx";
 import Restaurant from "./Restaurant.jsx";
+import AddReview from "./AddReview.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -17,13 +18,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route exact path="/" element={<App />} />
         <Route exact path="/home" element={<Home />} />
         <Route exact path="/reserve" element={<Reservation />} />
-        <Route exact path="/workshop" element={<Workshop/>}/>
-        <Route exact path="/workshop/:id" element={<WRegistration/>}/>
+        <Route exact path="/workshop" element={<Workshop />} />
+        <Route exact path="/workshop/:id" element={<WRegistration />} />
         <Route exact path="/FavRestaurant" element={<FavRestaurant />} />
-        <Route exact path="/restaurant/:id" element={<Restaurant/>} />
+        <Route exact path="/restaurant/:id" element={<Restaurant />} />
+        <Route exact path="/addreview" element={<AddReview />} />
         {/* add route for new pages here, import the component*/}
       </Routes>
     </Router>
   </React.StrictMode>
 );
-
