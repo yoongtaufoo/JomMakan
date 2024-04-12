@@ -69,7 +69,7 @@ const restaurants = [
     openinghours: "Mon-Sat 12–2:30 pm, 6:30–10:30 pm",
     cuisine: "local Malaysia",
     resPhotos: photos,
-    review: "3.8",
+    review: "3.5",
   },
   {
     id: 4,
@@ -84,7 +84,7 @@ const restaurants = [
     openinghours: "Mon-Sat 12–3 pm, 6–10 pm",
     cuisine: "steakhouse",
     resPhotos: photos,
-    review: "4.8",
+    review: "4.5",
   },
   {
     id: 5,
@@ -169,17 +169,21 @@ const reviews = [
 
 const renderRatingStars = (rating) => {
   const filledStars = Math.floor(rating);
-  const halfStar = rating - filledStars >= 0.5 ? 1 : 0;
-  const emptyStars = 5 - filledStars - halfStar;
+  const hasHalfStar = rating - filledStars === 0.5;
 
   return (
     <div className="star-container">
       {[...Array(filledStars)].map((_, index) => (
         <BsStarFill key={index} className="star-icon filled-star" />
       ))}
-      {halfStar === 1 && <BsStarFill className="star-icon filled-star" />}
-      {[...Array(emptyStars)].map((_, index) => (
-        <BsStar key={index} className="star-icon empty-star" />
+      {hasHalfStar && (
+        <i
+          key="halfStar"
+          className="bi bi-star-half star-icon filled-star half-star"
+        ></i>
+      )}
+      {[...Array(5 - filledStars - (hasHalfStar ? 1 : 0))].map((_, index) => (
+        <BsStar key={filledStars + index} className="star-icon empty-star" />
       ))}
     </div>
   );
@@ -192,6 +196,10 @@ const Restaurant = () => {
     new Array(reviews.length).fill(false)
   );
   const [likes, setLikes] = useState(new Array(reviews.length).fill(0));
+  const [showDetailsPopups, setShowDetailsPopups] = useState(
+    new Array(reviews.length).fill(false)
+  );
+  const [selectedReviewIndex, setSelectedReviewIndex] = useState(null); // Initialize selectedReviewIndex state
 
   const handleSaveToggle = () => {
     setIsSaved((prevState) => !prevState);
@@ -217,6 +225,25 @@ const Restaurant = () => {
       }
       return newLikes;
     });
+  };
+
+  const handleDetailsClick = (index) => {
+    setShowDetailsPopups((prevState) => {
+      const newState = [...prevState];
+      newState[index] = !newState[index];
+      return newState;
+    });
+    setSelectedReviewIndex(index);
+  };
+
+  const handleEdit = (index) => {
+    // Implement your edit functionality here
+    console.log("Edit review at index:", index);
+  };
+
+  const handleDelete = (index) => {
+    // Implement your delete functionality here
+    console.log("Delete review at index:", index);
   };
 
   const restaurant = restaurants.find(
@@ -328,11 +355,87 @@ const Restaurant = () => {
             </Link>
           </div>
         </div>
+        <div
+          class="box-flex fd-column info-reviews-rating-section"
+          data-testid="info-reviews-rating"
+        >
+          <div class="info-left">
+            <div class="box-flex fd-row ai-center">{restaurant.review}</div>
+            <div id="star-container">
+              {renderRatingStars(restaurant.review)}
+            </div>
+            <div class="f-title-xlarge-secondary-font-size fw-title-xlarge-secondary-font-weight">
+              All ratings (318)
+            </div>
+          </div>
+
+          <div class="rating-bar-container">
+            <div className="rating-bar">
+              <div className="star-indicator">
+                5 <i className="bi bi-star-fill"></i>
+              </div>
+              <div className="rectangle-box">
+                <div className={`bar bar-colored bar-78`}></div>
+              </div>
+              <div className="percentage">78%</div>
+            </div>
+            <div className="rating-bar">
+              <div className="star-indicator">
+                4 <i className="bi bi-star-fill"></i>
+              </div>
+              <div className="rectangle-box">
+                <div className={`bar bar-colored bar-15`}></div>
+              </div>
+              <div className="percentage">15%</div>
+            </div>
+            <div className="rating-bar">
+              <div className="star-indicator">
+                3 <i className="bi bi-star-fill"></i>
+              </div>
+              <div className="rectangle-box">
+                <div className={`bar bar-colored bar-5`}></div>
+              </div>
+              <div className="percentage">5%</div>
+            </div>
+            <div className="rating-bar">
+              <div className="star-indicator">
+                2 <i className="bi bi-star-fill"></i>
+              </div>
+              <div className="rectangle-box">
+                <div className={`bar bar-colored bar-2}`}></div>
+              </div>
+              <div className="percentage">2%</div>
+            </div>
+            <div className="rating-bar">
+              <div className="star-indicator">
+                1 <i className="bi bi-star-fill"></i>
+              </div>
+              <div className="rectangle-box">
+                <div className={`bar bar-colored bar-0`}></div>
+              </div>
+              <div className="percentage">0%</div>
+            </div>
+          </div>
+        </div>
+
         {reviews.map((review, index) => (
           <div key={index} className="review-card">
             <p>
               <strong>{review.userName}</strong>
+              <button
+                className="details-button"
+                onClick={() => handleDetailsClick(index)}
+              >
+                <i class="bi-three-dots"></i>
+              </button>
             </p>
+
+            <button className="btn-edit" onClick={() => handleEdit(index)}>
+              <i className="bi bi-pencil"></i> Edit
+            </button>
+            <button className="btn-delete" onClick={() => handleDelete(index)}>
+              <i className="bi bi-trash"></i> Delete
+            </button>
             <div className="d-flex justify-content-start">
               <div>{renderRatingStars(review.rating)}</div>
               <p id="timePost">{review.timePosted}</p>
