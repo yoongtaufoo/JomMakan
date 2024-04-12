@@ -1,5 +1,6 @@
 import React , { useState , useEffect,useRef } from "react";
 
+//<Form date={null}/>
 //For the registration form 
 const RegistrationForm = (props) => {
     const [submit, setSubmit] = useState(false);
@@ -18,16 +19,21 @@ const RegistrationForm = (props) => {
         };
     }, []);
 return(
-    <div id='form'>
-    <div id='inputs'>
-        <div>Date:<br/><div id='input'>{props.date}</div></div>
-        <div>Name:<br/><input id='input'></input></div>
-        <div>Phone No:<br/><input id='input' type='tel'></input></div>
-        <div>No of pax:<br/><input id='input' type='number'></input></div>
+    <div id='Rform'>
+    <div id='Rinputs'>
+    {props.date !== null ? (
+    <div>Date:<br/><div id='Rinput'>{props.date}</div></div>
+  ) : (
+    <div>Date:<br/><input id='Rinput' type='datetime-local'></input></div>
+  )}
+        
+        <div>Name:<br/><input id='Rinput'></input></div>
+        <div>Phone No:<br/><input id='Rinput' type='tel'></input></div>
+        <div>No of pax:<br/><input id='Rinput' type='number'></input></div>
         <div id="Check">
         <label id="Rtext" ><input id = "checkbox" type="checkbox" name="" if="" />I have read and understood the Registration Policy of this restaurant</label>
      </div>
-    <button id="submit-button" onClick={() => setSubmit(!submit)}>Submit</button>
+    <button id="submitButton" onClick={() => setSubmit(!submit)}>Submit</button>
     </div>
 
     {submit &&

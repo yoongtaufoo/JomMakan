@@ -1,4 +1,4 @@
-#main-container{
+#Rmain-container{
     padding-left: 5%;
     padding-right: 5%;
     display: flex;
@@ -10,44 +10,53 @@
     justify-content: space-between;
     align-items: center;
 }
-#down{
+#Rdown{
     display: flex;
     justify-content: center;
     align-items: center;
     
 }
-#left{
-    margin-top:2%;
-    margin-right: 15%;
-    margin-bottom: 5%;
-
-
+#Fleft{
+margin-right: 5%;
 }
 #disclaimer{
-    background-color: gray;
+    background-color: rgb(212, 211, 211);
     border-radius: 20px;
     padding: 15px;
     font-size: 10px;
     max-width: 500px;
+    margin-bottom: 10%;
+
 }
-#form{
+#Rform{
     padding-left: 10%;
     margin-left: 5%;
-    width: 60%;
+    width:fit-content;
     display: flex;
     align-items: left;
     justify-content: center;
     flex-direction: column;
 }
-#input{
-    width:200%;
+#Rinput{
+    width:100%;
     background-color: #FFE2AB;
     border-radius: 30px;
     padding: 10px;
     margin:5px;
     border: none;
+    
 }
-#inputs{
+
+#Rinput{
+    width:100%;
+    background-color: #FFE2AB;
+    border-radius: 30px;
+    padding: 10px;
+    margin:5px;
+    border: none;
+    
+}
+#Rinputs{
     font-size:12px;
 }
 #popup-overlay {
@@ -73,20 +82,23 @@
     z-index: 10;
 }
 
-#form-container{
+#Rform-container{
     margin-top:3%;
     margin-left: 5%;
     margin-bottom: 35%;
     margin-right: 10%;
+    width: 60%;
     display: flex;
     align-items: left;
     justify-content: center;
     flex-direction: column;
 }
 
-h2{
-    padding-left: 20%;
-    width:150%;
+#form-header{
+    width:100%;
+    margin-right:15%;
+    margin-left: 10%;
+    text-align: center;
 }
 
 #submit-button {
@@ -100,11 +112,23 @@ h2{
 #Rtext{
     padding: 5px;
     margin: 5px auto;
-    width: 200%;
+    width: 100%;
     text-align: center;
     color: red;
 }
 
 #checkbox{
     margin: 10px;
+    
 }
+
+#submitButton {
+    display: flex;
+    color: white;
+    background-color: black;
+    width: 150px;
+    align-items: flex-end;
+    justify-content: center;
+    margin-left: 33%;
+    margin-right: 10%;
+  }

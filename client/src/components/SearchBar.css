@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+    
   }
 
 .search-term{
@@ -12,7 +13,7 @@
     border-style: solid;
     border-radius: 10px;
     border-color: #FCA311;
-    width: 500px;
+    width: 450px;
     height: 30px;
 }
 
@@ -39,3 +40,5 @@
     border-radius: 10px;
     cursor: pointer;
   }
+
+ 

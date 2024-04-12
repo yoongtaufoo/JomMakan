@@ -11,7 +11,7 @@ const DetailCard = ({ workshop }) => {
       <p className="card-text"><i className='bi-geo-alt-fill custom-icon'></i>{workshop.phone}</p>
       <p className="card-text"><i className="bi bi-telephone-fill custom-icon"></i>{workshop.address}</p>
       <p className="card-text"><i className="bi bi-clock-fill custom-icon"></i>{workshop.dateAndTime}</p>
-      <p className="card-text"><i class="bi bi-egg-fried custom-icon"></i>{workshop.current} / {workshop.total}</p>
+      <p className="card-text"><i className="bi bi-egg-fried custom-icon"></i>{workshop.current} / {workshop.total}</p>
     </div>
   );
 }

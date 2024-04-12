@@ -1,6 +1,7 @@
 .tabs {
-    font-family: 'Work Sans', sans-serif;
-    font-size: 20px;
+
+    margin-right: 5%;
+    margin-left:4.5%;
   }
   
   .tab-btn {
@@ -9,11 +10,18 @@
     background-color: transparent;
     cursor: pointer;
     text-decoration: none;
+    font-size: 17px;
     outline: none;
   }
   
   .tab-btn.active {
     font-weight: bold;
     text-decoration: underline;
+  }
+
+  #search-container{
+    float:right;
+    margin-right: 2%;
+    padding: auto;
   }
   

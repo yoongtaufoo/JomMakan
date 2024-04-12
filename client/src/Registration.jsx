@@ -13,19 +13,20 @@ const Registration = () => {
         return (
         <div>
             <Navbar/>
-            <div id='main-container'>
+            <div id='Rmain-container'>
             <br />
                 <div id='up'>
                     <Link to="/workshop">
                             <small>Back</small>
                         </Link>
                     <div className="ml-auto">
-                        
-                         <small className="text-muted"><i className="bi bi-calendar-heart custom-icon"></i>View My Registration</small>
+                        <Link to="/schedule">
+                         <small className="text-muted"><i className="bi bi-calendar-heart custom-icon"></i>View My Schedule</small>
+                         </Link>
                     </div>
                 </div>
-                <div id='down'>
-                    <div id='left'>
+                <div id='Rdown'>
+                    <div id='Fleft'>
                         <DetailCard workshop={workshop}/>
                         <div id='disclaimer'>
                             <h3>Registration Policy</h3>
@@ -34,8 +35,8 @@ const Registration = () => {
                             <br/>3. Cancellation Policy: A cancellation policy is in place to manage registration changes effectively. Customers will be subject to a cancellation fee if they fail to cancel within the specified time</p>
                         </div>
                     </div>
-                    <div id="form-container">
-                        <h2>REGISTRATION FORM</h2>
+                    <div id="Rform-container">
+                        <h2 id="form-header">REGISTRATION FORM</h2>
                         <Form date={workshop.dateAndTime}/>
                     </div>
                 </div>

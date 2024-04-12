@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./SearchBar.css";
 import searchIcon from "../assets/search.png";
 
-const SearchBar = () => {
+const SearchBar = (props) => {
   const [query, setQuery] = useState("");
 
   return (
@@ -14,7 +14,7 @@ const SearchBar = () => {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         type="search"
-        placeholder="Locations, Restaurant, or Cuisines..."
+        placeholder={props.place}
       />
       <button type="submit" className="searchButton">
       <i class="bi bi-search" id="search-icon"></i>
