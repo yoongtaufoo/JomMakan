@@ -92,7 +92,7 @@ const Home = () => {
         <div className="d-flex justify-content-between align-items-center">
           <h5><u>Top Picks</u></h5>
           <div className="ml-auto">
-            <SearchBar />
+            <SearchBar place="Locations, Restaurant, or Cuisines..."/>
           </div>
         </div>
         <br />

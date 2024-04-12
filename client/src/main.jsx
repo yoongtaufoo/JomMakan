@@ -10,6 +10,7 @@ import WRegistration from "./Registration.jsx";
 import FavRestaurant from "./FavRestaurant.jsx";
 import Restaurant from "./Restaurant.jsx";
 import AddReview from "./AddReview.jsx";
+import Scehdule from "./MyRegistration.jsx"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -23,6 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route exact path="/FavRestaurant" element={<FavRestaurant />} />
         <Route exact path="/restaurant/:id" element={<Restaurant />} />
         <Route exact path="/addreview" element={<AddReview />} />
+        <Route exact path="/schedule" element={<Scehdule />} />
         {/* add route for new pages here, import the component*/}
       </Routes>
     </Router>

@@ -47,7 +47,7 @@ h2 {
   min-height: 300px;
   border-color: orange;
 }
-button {
+/* button {
   padding: 10px 20px;
   background-color: #007bff;
   color: #fff;
@@ -58,7 +58,7 @@ button {
 
 button:hover {
   background-color: #0056b3;
-}
+} */
 
 #popup-overlay {
   position: fixed;

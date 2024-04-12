@@ -4,6 +4,8 @@ import Tabs from './Tabs';
 import WorkshopCard from './WorkshopCard';
 import './WorkshopPage.css';
 import workshopdetail from '../WorkshopDetails'
+import { Link } from 'react-router-dom';
+import image from "./image 3.png";
 
 //just use workshop detail
 // const workshops = [
@@ -35,14 +37,18 @@ const WorkshopPage = () => {
   return (
     <div className="workshop-page">
       <Navbar />
+      <img src={image} alt="" style={{ width: '100%' }} />
       <div className="title-bar">
         <h1 className="title">Workshops</h1>
         <div className="buttons">
+          
           <button className="button">Favourites</button>
+          <Link to="/schedule">
           <button className="button">Schedule</button>
+          </Link>
         </div>
       </div>
-      <Tabs />
+      <Tabs tabdata={{"one":"Top Picks","two":"Recently Viewed","three":"Fresh Additions"}}/>
       <div className="workshop-grid">
         {workshopdetail.map(workshop => (
           <WorkshopCard key={workshop.id} workshop={workshop} />

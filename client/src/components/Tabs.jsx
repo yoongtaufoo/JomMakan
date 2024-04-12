@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './Tabs.css';
+import SearchBar from "./SearchBar";
 
-const Tabs = () => {
+const Tabs = (props) => {
   const [activeTab, setActiveTab] = useState(0);
 
   const handleTabClick = (index) => {
@@ -10,12 +11,15 @@ const Tabs = () => {
 
   return (
     <div className='tabs'>
-      <button className={activeTab === 0 ? 'tab-btn active' : 'tab-btn'} onClick={() => handleTabClick(0)}>Top Picks</button>
-      <button className={activeTab === 1 ? 'tab-btn active' : 'tab-btn'} onClick={() => handleTabClick(1)}>Recently Viewed</button>
-      <button className={activeTab === 2 ? 'tab-btn active' : 'tab-btn'} onClick={() => handleTabClick(2)}>Fresh Additions</button>
-      <input type='text' placeholder='Search...' className='search-bar' />
+      <button className={activeTab === 0 ? 'tab-btn active' : 'tab-btn'} onClick={() => handleTabClick(0)}>{props.tabdata.one}</button>
+      <button className={activeTab === 1 ? 'tab-btn active' : 'tab-btn'} onClick={() => handleTabClick(1)}>{props.tabdata.two}</button>
+      <button className={activeTab === 2 ? 'tab-btn active' : 'tab-btn'} onClick={() => handleTabClick(2)}>{props.tabdata.three}</button>
+      <div id="search-container">
+      <SearchBar place="Worshops, Events...."/>
+      </div >
+      {/* <input type='text' placeholder='Search...' className='search-bar' />
       <button className='fav-btn'>Favourites</button>
-      <button className='schedule-btn'>Schedule</button>
+      <button className='schedule-btn'>Schedule</button> */}
     </div>
   );
 };
