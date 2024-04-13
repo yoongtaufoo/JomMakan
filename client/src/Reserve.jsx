@@ -1,23 +1,28 @@
-import React, { useState , useEffect } from 'react'
-import "./Reservation.css"
+import React, { useState , useEffect , useRef } from 'react'
+import "./Reserve.css"
 import Navbar from './components/Navbar'
+import { Link } from 'react-router-dom';
 
-const Reservation = () => {
+const Reserve = () => {
+    function useOutsideAlerter(ref, onClick) {
+        useEffect(() => {
+            function handleClickOutside(event) {
+                if (ref.current && !ref.current.contains(event.target)) {
+                onClick(); // Close the modal
+                }
+            }
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        }, [ref, onClick]);
+    }
+
     const [submit, setSubmit] = useState(false);
     const [confirm, setConfirm] = useState(false);
-    const popRef = useRef(null);
+    const popupRef = useRef(null);
 
-    const handleClickOutside = (event) => {
-        if (popRef.current && !popRef.current.contains(event.target)) {
-            setConfirm(false);
-        }
-    };
-    useEffect(() => {
-        document.addEventListener("click", handleClickOutside);
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, []);
+    useOutsideAlerter(popupRef, () => {setConfirm(false); setSubmit(false)});
 
     return (
     <div>
@@ -25,7 +30,7 @@ const Reservation = () => {
         <div id='main-container'>
             <div id='up'>
                 <button>Back</button>
-                <button>View My Reservations</button>
+                
             </div>
             <div id='down'>
                 <div id='left'>
@@ -45,10 +50,14 @@ const Reservation = () => {
                         <div>Phone No:<br/><input id='input' type='tel'></input></div>
                         <div>No of pax:<br/><input id='input' type='number'></input></div>
                     </div>
-                    <button onClick={() => setSubmit(!submit)}>Submit</button>
+                    <div id='warn'>
+                        <input type='checkbox'></input>
+                        <div>I have read and understood the Reservation Policy of this restaurant</div>
+                    </div>
+                    <button onClick={() => setSubmit(true)}>Submit</button>
                     {submit &&
                         <div id='popup-overlay'>
-                            <div id='popup'>
+                            <div id='popup' ref={popupRef}>
                                 <div>Confirm reservation?</div>
                                 <div>
                                     <button  onClick={() => setSubmit(false)}>Wait</button>
@@ -58,9 +67,12 @@ const Reservation = () => {
                         </div>
                     }
                     {confirm &&
-                        <div id='popup-overlay' ref={popRef}>
-                            <div id='popup'>
+                        <div id='popup-overlay'>
+                            <div id='popup' ref={popupRef}>
                                 <div>Confirmed</div>
+                                <Link to='/reservations'>
+                                    <button>View My Reservations</button>
+                                </Link>
                             </div>
                         </div>
                     }
@@ -71,4 +83,4 @@ const Reservation = () => {
     )
 }
 
-export default Reservation
+export default Reserve

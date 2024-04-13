@@ -62,3 +62,10 @@
     padding: 20px;
     z-index: 10;
 }
+#warn{
+    color: red;
+    font-size: 10px;
+    display: flex;
+    flex-direction: row;
+    border: none;
+}
