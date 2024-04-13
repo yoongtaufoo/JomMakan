@@ -1,6 +1,11 @@
-import React, { useState , useEffect } from 'react'
+import React, { useState , useEffect,useRef } from 'react'
 import "./Reservation.css"
 import Navbar from './components/Navbar'
+import workshopPic from "./assets/workshop.png";
+import DetailCard from './components/DetailCard';
+import { Link } from 'react-router-dom';
+
+import Form from "./components/Form";
 
 const Reservation = () => {
     const [submit, setSubmit] = useState(false);
@@ -22,13 +27,23 @@ const Reservation = () => {
     return (
     <div>
         <Navbar/>
-        <div id='main-container'>
+        <div id='Rmain-container'>
+        <br />
             <div id='up'>
-                <button>Back</button>
-                <button>View My Reservations</button>
+                {/* <button>Back</button>
+                <button>View My Reservations</button> */}
+                <Link to="/workshop">
+                <b> <small><i class="bi bi-arrow-left-circle"></i> Back</small></b>
+                        </Link>
+                    <div className="ml-auto">
+                        <Link to="/schedule">
+                         <b><small className="text-muted"><i className="bi bi-calendar-heart custom-icon"></i>View My Schedule</small></b>
+                         </Link>
+                    </div>
             </div>
-            <div id='down'>
-                <div id='left'>
+            <div id='Rdown'>
+                <div id='Fleft'>
+                <DetailCard workshop={{id:15, photo:workshopPic,title:"Hello",description:"Hello",phone:"123",address:"123",dateAndTime:"123"}}/>
                     {/* restaurant card */}
                     <div id='disclaimer'>
                         <h3>Reservation Policy</h3>
@@ -37,13 +52,15 @@ const Reservation = () => {
                         <br/>3. Cancellation Policy: A cancellation policy is in place to manage reservation changes effectively. Customers will be subject to a cancellation fee if they fail to cancel within the specified time</p>
                     </div>
                 </div>
-                <div id='form'>
-                    <h2>RESERVATION FORM</h2>
-                    <div id='inputs'>
-                        <div>Date:<br/><input id='input' type='datetime-local'></input></div>
-                        <div>Name:<br/><input id='input'></input></div>
-                        <div>Phone No:<br/><input id='input' type='tel'></input></div>
-                        <div>No of pax:<br/><input id='input' type='number'></input></div>
+                <div id="Rform-container">
+                <h2 id="form-header">RESERVATION FORM</h2>
+                <Form date={null}/>
+                {/* <div id='Rform'>
+                    <div id='Rinputs'>
+                        <div>Date:<br/><input id='Rinput' type='datetime-local'></input></div>
+                        <div>Name:<br/><input id='Rinput'></input></div>
+                        <div>Phone No:<br/><input id='Rinput' type='tel'></input></div>
+                        <div>No of pax:<br/><input id='Rinput' type='number'></input></div>
                     </div>
                     <button onClick={() => setSubmit(!submit)}>Submit</button>
                     {submit &&
@@ -64,6 +81,7 @@ const Reservation = () => {
                             </div>
                         </div>
                     }
+                </div> */}
                 </div>
             </div>
         </div>

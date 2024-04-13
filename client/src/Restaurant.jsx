@@ -278,10 +278,12 @@ const Restaurant = () => {
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="custom-h1">{restaurant.name}</h1>
           <div className="ml-auto">
-            <small className="text-muted">
+          <Link to ="/reserve">
+            <small className="text-muted" >
               <i className="bi bi-calendar-heart custom-icon"></i>Make
               reservations
             </small>
+          </Link>
           </div>
         </div>
 

@@ -14,6 +14,7 @@ for (let i = 0; i < 6; i++) {
     dateAndTime: `12.00-5.00 pm, ${i + 1} May 2024`,
     current: Math.floor(Math.random() * 50), // Remove ${} from Math.floor
     total: Math.floor(Math.random() * 100), // Remove ${} from Math.floor
+    status:'true',
   });
 }
 
