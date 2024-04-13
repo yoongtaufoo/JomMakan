@@ -15,11 +15,11 @@ const CollectionCard = (props) => {
                         <p className="card-text">{workshops.description}</p>
                         <p className="card-text">
                             <i className='bi-geo-alt-fill custom-icon'></i>
-                            {workshops.phone}
+                            {workshops.address}
                         </p>
                         <p className="card-text">
                             <i className="bi bi-telephone-fill custom-icon"></i>
-                            {workshops.address}
+                            {workshops.phone}
                         </p>
                     </div>
                 </div>

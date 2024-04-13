@@ -9,7 +9,7 @@ import CollectionCard from "./components/CollectionCard.jsx"
 const MyRegistration = () => {
     // Function body
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState();
+    const [activeTab, setActiveTab] = useState(0);
 
     //U for upcoming, D for COmpleted, C for cancelled
     const Rworkshop = [

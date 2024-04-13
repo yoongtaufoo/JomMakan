@@ -289,7 +289,6 @@ const Restaurant = () => {
               <i className="bi bi-calendar-heart custom-icon"></i>Make reservations
             </Link>
             </small>
-          </Link>
           </div>
         </div>
 
