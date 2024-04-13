@@ -1,9 +1,16 @@
 import React, { useState , useEffect , useRef } from 'react'
 import "./Reserve.css"
 import Navbar from './components/Navbar'
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import DetailCard from './components/DetailCard';
+import {restaurants} from './RestaurantData';
+import Form from "./components/Form";
 
 const Reserve = () => {
+
+    const { id } = useParams();
+    const restaurant = restaurants.find( restaurant =>  restaurant.id === parseInt(id));
+
     function useOutsideAlerter(ref, onClick) {
         useEffect(() => {
             function handleClickOutside(event) {
@@ -28,13 +35,23 @@ const Reserve = () => {
     <div>
         <Navbar/>
         <div id='main-container'>
+            <br />
             <div id='up'>
-                <button>Back</button>
-                
+                <Link to="/restaurant/{id}">
+                    <small>Back</small>
+                </Link>
+                <div className="ml-auto">
+                    <Link to="/reservations">
+                        <small className="text-muted"><i className="bi bi-calendar-heart custom-icon"></i>View My Reservations</small>
+                    </Link>
+                </div>
             </div>
-            <div id='down'>
-                <div id='left'>
+            <div id='Rdown'>
+                <div id='card'>
                     {/* restaurant card */}
+                    <div id='Fleft'>
+                        <DetailCard restaurant={restaurant}/>
+                    </div>
                     <div id='disclaimer'>
                         <h3>Reservation Policy</h3>
                         <p>1. Reservation Procedure: Our restaurant accepts reservations through our online reservation form, available on our official website. Reservations can also be made via phone during operating hours.
@@ -42,19 +59,20 @@ const Reserve = () => {
                         <br/>3. Cancellation Policy: A cancellation policy is in place to manage reservation changes effectively. Customers will be subject to a cancellation fee if they fail to cancel within the specified time</p>
                     </div>
                 </div>
-                <div id='form'>
-                    <h2>RESERVATION FORM</h2>
-                    <div id='inputs'>
-                        <div>Date:<br/><input id='input' type='datetime-local'></input></div>
-                        <div>Name:<br/><input id='input'></input></div>
-                        <div>Phone No:<br/><input id='input' type='tel'></input></div>
-                        <div>No of pax:<br/><input id='input' type='number'></input></div>
+                <div id='Rform-container'>
+                    <h2 id="form-header">RESERVATION FORM</h2>
+                    {/* <div id='Rform'>
+                        <div>Date:<br/><input id='Rinput' type='datetime-local'></input></div>
+                        <div>Name:<br/><input id='Rinput'></input></div>
+                        <div>Phone No:<br/><input id='Rinput' type='tel'></input></div>
+                        <div>No of pax:<br/><input id='Rinput' type='number'></input></div>
                     </div>
                     <div id='warn'>
                         <input type='checkbox'></input>
                         <div>I have read and understood the Reservation Policy of this restaurant</div>
-                    </div>
-                    <button onClick={() => setSubmit(true)}>Submit</button>
+                    </div> */}
+                    <Form/>
+                    {/* <button onClick={() => setSubmit(true)}>Submit</button>
                     {submit &&
                         <div id='popup-overlay'>
                             <div id='popup' ref={popupRef}>
@@ -75,7 +93,7 @@ const Reserve = () => {
                                 </Link>
                             </div>
                         </div>
-                    }
+                    } */}
                 </div>
             </div>
         </div>

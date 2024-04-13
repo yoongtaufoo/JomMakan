@@ -139,3 +139,12 @@ margin-right: 5%;
     margin-left: 33%;
     margin-right: 10%;
   }
+#card{
+    width: 80%;
+    font-size: small;
+    margin-right: 5%;
+}
+#card h1
+{
+    font-size: 30px;
+}

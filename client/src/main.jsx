@@ -19,14 +19,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Routes>
         <Route exact path="/" element={<App />} />
         <Route exact path="/home" element={<Home />} />
-        <Route exact path="/reserve" element={<Reservation />} />
         <Route exact path="/workshop" element={<Workshop />} />
         <Route exact path="/workshop/:id" element={<WRegistration />} />
         <Route exact path="/FavRestaurant" element={<FavRestaurant />} />
         <Route exact path="/restaurant/:id" element={<Restaurant />} />
         <Route exact path="/addreview" element={<AddReview />} />
         <Route exact path="/schedule" element={<Scehdule />} />
-        <Route exact path="/reserve" element={<Reserve />} />
+        <Route exact path="/restaurant/:id/reserve" element={<Reserve />} />
         <Route exact path="/reservations" element={<Reservations />} />
         {/* add route for new pages here, import the component*/}
       </Routes>
