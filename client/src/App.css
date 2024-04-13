@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Preahvihear&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 *{
-  font-family: "Preahvihear", sans-serif;
+  font-family: "Rubik", sans-serif;
 }
 nav{
   color: black;
@@ -56,6 +57,7 @@ button{
 #tagline{
   position: relative;
   font-size: 40px;
+  font-family: "Preahvihear", sans-serif;
 }
 #second-view{
   background-color: #FDFFEA;

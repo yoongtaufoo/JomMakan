@@ -1,6 +1,6 @@
 import React , { useState , useEffect,useRef } from "react";
 import Navbar from './components/Navbar'
-import "./Reservation.css";
+import "./Reserve.css";
 import Form from "./components/Form";
 import { Link, useParams  } from 'react-router-dom';
 import WorkshopDetails from './WorkshopDetails'
