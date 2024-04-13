@@ -1,0 +1,175 @@
+.custom-icon {
+  color: #fca311;
+  margin-right: 5px;
+}
+
+.images-container {
+  display: flex;
+  max-width: 100%;
+  overflow: scroll;
+
+  scroll-behavior: smooth;
+  transition: scroll 0.3s ease-in-out;
+  background-color: #edd2a8;
+  scrollbar-width: thin;
+}
+
+.image {
+  width: 500px;
+  height: 400px;
+  margin: 5px;
+  border-radius: 8px;
+}
+
+.nav-btn {
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  background-color: #fca311;
+  border-radius: 6px;
+  height: 200px;
+  width: 30px;
+  margin: 5px;
+}
+
+.App {
+  font-family: sans-serif;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.btn-default {
+  background-color: #fca311;
+  color: black;
+  align-items: center;
+  margin-left: 30px;
+}
+
+.review-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.review-card p {
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.review-photo {
+  width: 250px;
+  height: 150px;
+  max-height: 200px;
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+#timePost {
+  margin-left: 20px;
+}
+
+.star-icon {
+  color: #fca311;
+}
+
+.filled-star {
+  fill: #fca311;
+}
+
+.empty-star {
+  fill: gray;
+}
+
+.bi-star-fill {
+  color: #fca311;
+}
+
+#star-container {
+  display: inline-flex;
+  align-items: center;
+}
+.btn-like {
+  background-color: transparent;
+  color: black;
+  margin-right: 50px;
+}
+.btn-share {
+  background-color: transparent;
+  color: black;
+}
+
+.info-reviews-rating-section {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ff7f0e;
+  border-radius: 8px;
+  padding: 20px;
+  padding-left: 30px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.ai-center {
+  font-size: 40px;
+  align-items: center;
+}
+
+.rating-bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  margin-right: 20px;
+}
+
+.bar {
+  height: 20px;
+  color: #ccc;
+  width: 100%;
+}
+
+.percentage {
+  position: relative;
+  color: #000;
+}
+
+.bar-colored {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  color: #ff7f0e;
+}
+
+.review-info {
+  margin-right: 300px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.details-button {
+  align-items: flex-end;
+  margin-left: auto;
+  background-color: transparent;
+  color: black;
+  cursor: pointer;
+  border: none;
+}

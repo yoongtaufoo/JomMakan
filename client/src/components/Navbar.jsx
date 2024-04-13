@@ -15,7 +15,9 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-          <button id='invisible'>Something</button>
+            <Link to="/workshop">
+              <button id='invisible'>Workshop</button>
+            </Link>
           </li>
           <li>
           <button id='invisible'>Something</button>
