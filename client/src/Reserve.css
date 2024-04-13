@@ -81,6 +81,13 @@ margin-right: 5%;
     padding: 20px;
     z-index: 10;
 }
+#warn{
+    color: red;
+    font-size: 10px;
+    display: flex;
+    flex-direction: row;
+    border: none;
+}
 
 #Rform-container{
     margin-top:3%;
@@ -132,3 +139,12 @@ margin-right: 5%;
     margin-left: 33%;
     margin-right: 10%;
   }
+#card{
+    width: 80%;
+    font-size: small;
+    margin-right: 5%;
+}
+#card h1
+{
+    font-size: 30px;
+}
