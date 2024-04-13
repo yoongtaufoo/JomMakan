@@ -81,7 +81,7 @@ const FavRestaurant = () => {
       <div className="d-flex justify-content-between align-items-center">
           <h1 className='custom-h1'>My Favourite Restaurants</h1> 
           <div className="ml-auto">
-            <SearchBar />
+            <SearchBar place="Locations, Restaurant, or Cuisines..."/>
           </div>
         </div>
         <br />

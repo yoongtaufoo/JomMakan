@@ -17,11 +17,12 @@ const Registration = () => {
             <br />
                 <div id='up'>
                     <Link to="/workshop">
-                            <small>Back</small>
+                    <b> <small><i class="bi bi-arrow-left-circle"></i> Back</small></b>
                         </Link>
                     <div className="ml-auto">
                         <Link to="/schedule">
-                         <small className="text-muted"><i className="bi bi-calendar-heart custom-icon"></i>View My Schedule</small>
+                            <b>
+                         <small className="text-muted"><i className="bi bi-calendar-heart custom-icon"></i>View My Schedule</small></b>
                          </Link>
                     </div>
                 </div>
@@ -31,8 +32,8 @@ const Registration = () => {
                         <div id='disclaimer'>
                             <h3>Registration Policy</h3>
                             <p>1. Registration Procedure: Our workshop accepts registration through our online registration form, available on our official website. Registration can also be made via phone during operating hours.
-                            <br/>2. Registration Changes and Cancellations: Customers may modify or cancel their registration by contacting the restaurant directly via phone or email. Any changes or cancellations must be made at least 24 hours before the registration time to avoid penalties.
-                            <br/>3. Cancellation Policy: A cancellation policy is in place to manage registration changes effectively. Customers will be subject to a cancellation fee if they fail to cancel within the specified time</p>
+                            <br/>2. Registration Changes and Cancellations: Customers may modify or cancel their registration by contacting the organizer directly via phone or email (cancellation can be done via thi website) . Any changes or cancellations must be made at least 24 hours before the registration time to avoid penalties.
+                            <br/>3. Cancellation Policy: A cancellation policy is in place to manage registration changes effectively. Customers will be subject to a cancellation fee if they fail to cancel within the specified time<br/></p>
                         </div>
                     </div>
                     <div id="Rform-container">
