@@ -1,26 +1,28 @@
-.tabs {
+.tab-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Add this to push items to the left and right edges */
+  margin-left: 20px;
+}
 
-    margin-right: 5%;
-  }
-  
-  .tab-btn {
-    color: black;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 17px;
-    outline: none;
-  }
-  
-  .tab-btn.active {
-    font-weight: bold;
-    text-decoration: underline;
-  }
+.tab-btn {
+  color: black;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  outline: none;
+  font-weight: normal;
+  padding-left: 10px;
+  margin-right: 20px; /* Adjust margin to create space between buttons */
+}
 
-  #search-container{
-    float:right;
-    margin-right: 2%;
-    padding: auto;
-  }
-  
+.tab-btn.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.ml-auto {
+  margin-left: auto; /* Use margin-left: auto to push the search bar to the right */
+  margin-right: 20px;
+}
