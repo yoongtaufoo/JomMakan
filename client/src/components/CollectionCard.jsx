@@ -1,8 +1,23 @@
 // This card can be used for displaying registration or reservation made
-import react from "react";
+import React , { useState , useEffect,useRef } from "react";
 
 const CollectionCard = (props) => {
     let workshops=props.workshop;
+    const [submit, setSubmit] = useState(false);
+    const [confirm, setConfirm] = useState(false);
+    const popRef = useRef(null);
+    const handleClickOutside = (event) => {
+        if (popRef.current && !popRef.current.contains(event.target)) {
+            setConfirm(false);
+        }
+    };
+    useEffect(() => {
+        document.addEventListener("click", handleClickOutside);
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+        };
+    }, []);
+
     // Function body
     return(
     <div className="row g-0 custom-row">
@@ -36,8 +51,27 @@ const CollectionCard = (props) => {
             {workshops.Rstatus === 'U' && 
             <div className="col-md-2">
                     <div className="card-body" >
-                    <div className="card-body"><button type="button" className="btn btn-outline-dark custom-button">Cancel</button></div>
+                    <div className="card-body"><button type="button" className="btn btn-outline-dark custom-button" onClick={() => setSubmit(!submit)}>Cancel</button></div>
                     </div>
+
+                    {submit &&
+                        <div id='popup-overlay'>
+                        <div id='popup'>
+                        <div>Confirm Cancelation?</div>
+                        <div>
+                            <button  onClick={() => setSubmit(false)}>No</button>
+                            <button  onClick={() => {setConfirm(true); setSubmit(false);}}>Yes</button>
+                        </div>
+                        </div>
+                        </div>
+                     }
+                    {confirm &&
+                        <div id='popup-overlay' ref={popRef}>
+                        <div id='popup'>
+                        <div>Cancelled</div>
+                        </div>
+                         </div>
+                     }
                     
 
             </div>

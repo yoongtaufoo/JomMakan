@@ -19,3 +19,10 @@ a{
   padding-right: 10%;
   padding-left: 10%;
 }
+
+/* # I added this so if style lari then delete this code */
+button{
+  margin:10px;
+  padding: 5px;
+  width:100px;
+}
