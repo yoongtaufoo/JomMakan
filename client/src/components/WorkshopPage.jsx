@@ -43,8 +43,9 @@ const WorkshopPage = () => {
         <div className="ml-auto">
           <a href="/FavRestaurant">
             <small className="text-muted"><i className="bi bi-heart-fill custom-icon"></i>Favourites</small>
-          </a>
-          <small className="text-muted"><i className="bi bi-calendar-heart custom-icon"></i>Schedule</small>
+          </a >
+          <a href="/schedule"><small className="text-muted"><i className="bi bi-calendar-heart custom-icon"></i>Schedule</small></a>
+          
         </div>
       </div>
 
