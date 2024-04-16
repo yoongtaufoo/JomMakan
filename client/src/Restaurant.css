@@ -3,6 +3,16 @@
   margin-right: 5px;
 }
 
+.carousel-inner {
+  /* background-color: rgb(243, 243, 243) !important; */
+  border-radius: 10px;
+}
+
+.carousel-control-next,
+.carousel-control-prev {
+    filter: invert(100%);
+}
+
 .images-container {
   display: flex;
   max-width: 100%;

@@ -23,7 +23,7 @@ import "./Restaurant.css";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { BsStarFill, BsStar } from "react-icons/bs";
-import {restaurants , reviews} from "./RestaurantData";
+import { restaurants, reviews } from "./RestaurantData";
 
 // const photos = [p1, p2, p3, p4, p5, p6, p7];
 
@@ -252,7 +252,7 @@ const Restaurant = () => {
   // );
 
   const restaurant = restaurants.find(
-    restaurant => restaurant.id === parseInt(id)
+    (restaurant) => restaurant.id === parseInt(id)
   );
 
   return (
@@ -285,9 +285,10 @@ const Restaurant = () => {
           <h1 className="custom-h1">{restaurant.name}</h1>
           <div className="ml-auto">
             <small className="text-muted">
-            <Link to={`/restaurant/${id}/reserve`}>
-              <i className="bi bi-calendar-heart custom-icon"></i>Make reservations
-            </Link>
+              <Link to={`/restaurant/${id}/reserve`}>
+                <i className="bi bi-calendar-heart custom-icon"></i>Make
+                reservations
+              </Link>
             </small>
           </div>
         </div>
@@ -327,7 +328,7 @@ const Restaurant = () => {
                   src={photo}
                   className="d-block w-100"
                   alt={`Slide ${index + 1}`}
-                  style={{ height: "500px", objectFit: "cover" }}
+                  style={{ height: "500px", objectFit: "contain" }}
                 />
               </div>
             ))}
