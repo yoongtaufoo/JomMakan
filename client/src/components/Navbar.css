@@ -7,6 +7,7 @@ nav{
   color: black;
   background-color: #FBC355;
   width: 100%;
+  height:100px;
   position:relative;
   padding: 4px 5px;
   top:0;
@@ -27,7 +28,7 @@ nav li{
 #invisible{
   background-color: transparent;
   color: black;
-  font-size: 13px;
+  font-size: 16px;
   border: 0;
   cursor: pointer;
 }

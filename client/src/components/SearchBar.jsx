@@ -17,7 +17,7 @@ const SearchBar = (props) => {
         placeholder={props.place}
       />
       <button type="submit" className="searchButton">
-      <i class="bi bi-search" id="search-icon"></i>
+        <i class="bi bi-search" id="search-icon"></i>
       </button>
     </div>
   );
