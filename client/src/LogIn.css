@@ -10,7 +10,7 @@
 
 .log-in-container h1{
     font-weight: bold;
-    font-size: 40px;
+    font-size: 38px;
     margin: 50px;
   }
 
@@ -37,4 +37,8 @@
     font-size: 15px;
     width:fit-content;
     margin: 30px;
+}
+
+.log-in-pic{
+    height:calc(100vh - 100px);
 }
