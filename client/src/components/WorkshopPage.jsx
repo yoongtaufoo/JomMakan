@@ -36,10 +36,12 @@ const WorkshopPage = () => {
   }
 
   return (
-    <div className="workshop-page">
+
+    // <div className="workshop-page">
+    <div>
       <Navbar />
       <img src={image} alt="" style={{ width: "100%" }} />
-
+      <div className="container">
       <div className="d-flex justify-content-between align-items-center">
         <h1 className="customized-h1 workshop-header">Workshops</h1>
         <div className="ml-auto">
@@ -71,6 +73,7 @@ const WorkshopPage = () => {
           <WorkshopCard key={workshop.id} workshop={workshop} />
         ))}
       </div>
+    </div>
     </div>
   );
 };

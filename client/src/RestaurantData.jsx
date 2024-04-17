@@ -35,6 +35,7 @@ const restaurants = [
       cuisine: "steakhouse",
       resPhotos: photos,
       review: "3.5",
+      tableid: ["m1","m2","m3"],
     },
     {
       id: 2,
@@ -50,6 +51,7 @@ const restaurants = [
       cuisine: "wine",
       resPhotos: photos,
       review: "4.5",
+      tableid: ["s1","s2","s3"],
     },
     {
       id: 3,
@@ -64,6 +66,7 @@ const restaurants = [
       cuisine: "local Malaysia",
       resPhotos: photos,
       review: "3.5",
+      tableid: ["c1","c2","c3"],
     },
     {
       id: 4,

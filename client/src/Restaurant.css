@@ -190,3 +190,6 @@
   cursor: pointer;
   border: none;
 }
+.back-btn{
+  font-size: 20px;
+}

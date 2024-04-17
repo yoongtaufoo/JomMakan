@@ -1,9 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 #Rmain-container{
-    padding-left: 5%;
-    padding-right: 5%;
-    display: flex;
+    /* padding-left: 5%;
+    padding-right: 5%; */
+    /* display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-between; */
+    padding: 0px;
 }
 #up{
     display: flex;
@@ -26,10 +29,16 @@
     background-color: rgb(212, 211, 211);
     border-radius: 20px;
     padding: 15px;
-    font-size: 10px;
     width: 600px;
     margin-bottom: 10%;
-
+}
+#disclaimer h3{
+    font-family: "Montserrat", sans-serif;
+    font-size: 20px;
+}
+#disclaimer p{
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
 }
 #Rform{
     /* padding-left: 10%; */
@@ -90,32 +99,39 @@
     margin-left: 5%;
     margin-bottom: 35%;
     margin-right: 5%;
-    width: 600px;
+    /* width: 600px; */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
-
-#form-header{
-    /* width:60%; */
-    /* margin-right:15%; */
-    margin-left: 4%; 
-    font-weight: bold;
+#rtitle{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
 }
+
+#Rform-container h2{
+    margin-left: 0px;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+}
+
 
 #submit-button {
     margin-left: 75%;
 }
 
 #Check{
-    margin: 10px;;
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #Rtext{
-    padding: 5px;
-    margin: 5px auto;
-    width: 100%;
+    display: contents;
     text-align: center;
     color: red;
 }
