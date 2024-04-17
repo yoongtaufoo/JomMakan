@@ -1,61 +1,93 @@
-import React , { useState , useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 //<Form date={null}/>
-//For the registration form 
+//For the registration form
 const RegistrationForm = (props) => {
-    const [submit, setSubmit] = useState(false);
-    const [confirm, setConfirm] = useState(false);
-    const popRef = useRef(null);
-    const Rworkshop=props.registrationInfo;
-    const handleClickOutside = (event) => {
-        if (popRef.current && !popRef.current.contains(event.target)) {
-            setConfirm(false);
-        }
+  const [submit, setSubmit] = useState(false);
+  const [confirm, setConfirm] = useState(false);
+  const popRef = useRef(null);
+  const Rworkshop = props.registrationInfo;
+  const handleClickOutside = (event) => {
+    if (popRef.current && !popRef.current.contains(event.target)) {
+      setConfirm(false);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
     };
-    useEffect(() => {
-        document.addEventListener("click", handleClickOutside);
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, []);
-return(
-    <div id='Rform'>
-    <div id='Rinputs'>
-    {props.date !== null ? (
-    <div>Date:<br/><div id='Rinput'>{props.date}</div></div>
-  ) : (
-    <div>Date:<br/><input id='Rinput' type='datetime-local' required></input></div>
-  )}
-        
-        <div>Name:<br/><input id='Rinput' required ></input></div>
-        <div>Phone No:<br/><input id='Rinput' type='tel' required></input></div>
-        <div>No of pax:<br/><input id='Rinput' type='number' required></input></div>
-        <div id="Check">
-        <label id="Rtext" ><input id = "checkbox" type="checkbox" name="" if="" required/>I have read and understood the Registration Policy of this restaurant</label>
-     </div>
-    <button id="submitButton" onClick={() => setSubmit(!submit)}>Submit</button>
-    </div>
+  }, []);
+  return (
+    <div id="Rform">
+      <div id="Rinputs">
+        {props.date !== null ? (
+          <div>
+            Date:
+            <br />
+            <div id="Rinput">{props.date}</div>
+          </div>
+        ) : (
+          <div>
+            Date:
+            <br />
+            <input id="Rinput" type="datetime-local" required></input>
+          </div>
+        )}
 
-    {submit &&
-        <div id='popup-overlay'>
-            <div id='popup'>
-                <div>Confirm reservation?</div>
-                <div>
-                    <button  onClick={() => setSubmit(false)}>Wait</button>
-                    <button  onClick={() => {setConfirm(true); setSubmit(false);}}>Confirm</button>
-                </div>
-            </div>
+        <div>
+          Name:
+          <br />
+          <input id="Rinput" required></input>
         </div>
-    }
-    {confirm &&
-        <div id='popup-overlay' ref={popRef}>
-            <div id='popup'>
-                <div>Confirmed</div>
-            </div>
+        <div>
+          Phone No:
+          <br />
+          <input id="Rinput" type="tel" required></input>
         </div>
-    }
+        <div>
+          No of pax:
+          <br />
+          <input id="Rinput" type="number" required></input>
+        </div>
+        <div id="Check">
+          <label id="Rtext">
+            <input id="checkbox" type="checkbox" name="" if="" required />I have
+            read and understood the Registration Policy of this restaurant
+          </label>
+        </div>
+        <button id="form-submitButton" onClick={() => setSubmit(!submit)}>
+          Submit
+        </button>
+      </div>
+
+      {submit && (
+        <div id="popup-overlay">
+          <div id="popup">
+            <div>Confirm reservation?</div>
+            <div>
+              <button onClick={() => setSubmit(false)}>Wait</button>
+              <button
+                onClick={() => {
+                  setConfirm(true);
+                  setSubmit(false);
+                }}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {confirm && (
+        <div id="popup-overlay" ref={popRef}>
+          <div id="popup">
+            <div>Confirmed</div>
+          </div>
+        </div>
+      )}
     </div>
-)
-}
+  );
+};
 
 export default RegistrationForm;

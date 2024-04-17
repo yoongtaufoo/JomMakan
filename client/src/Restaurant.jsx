@@ -312,7 +312,9 @@ const Restaurant = () => {
           {restaurant.cuisine}
         </p>
         <br />
-        <h5 className="card-text">Photos</h5>
+        <h5 className="card-text">
+          <strong>Photos</strong>
+        </h5>
         <div
           id="carouselExampleControls"
           class="carousel slide"
@@ -353,8 +355,10 @@ const Restaurant = () => {
           </button>
         </div>
         <br />
-        <div className="d-flex justify-content-start">
-          <h5 className="card-text">Reviews</h5>
+        <div className="d-flex justify-content-start mt-5">
+          <h5 id="review-title ">
+            <strong>Reviews</strong>
+          </h5>
           <div className="ml-auto">
             <Link to="/AddReview">
               <button type="button" className="btn-default">
