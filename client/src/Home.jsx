@@ -88,9 +88,11 @@ const Home = () => {
                 <i className="bi bi-heart-fill custom-icon"></i>Favourites
               </small>
             </Link>
+            <Link to="/reservations">
             <small className="text-muted">
-              <i className="bi bi-calendar-heart custom-icon"></i>Schedule
+              <i className="bi bi-calendar-heart custom-icon"></i>Reservations
             </small>
+            </Link>
           </div>
         </div>
         <div className="d-flex justify-content-between align-items-center">

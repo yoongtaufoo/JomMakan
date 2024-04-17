@@ -137,7 +137,8 @@ const MyRegistration = () => {
         <br />
         <div className="card mb-3">
           {filteredWorkshops.map((registration) => (
-            <CollectionCard key={registration.id} workshop={registration} />
+            <CollectionCard key={registration.id} workshops={registration} />
+            // <CollectionCard key={registration.id} workshop={registration} />
           ))}
         </div>
       </div>
