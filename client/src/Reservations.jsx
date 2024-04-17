@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
+import { useNavigate } from "react-router-dom";
 import "./Reservations.css"
 import Navbar from './components/Navbar'
 import SearchBar from "./components/SearchBar";
 import image from "./assets/image 3.png";
 import Tabs from './components/Tabs';
 import { reservations } from './ReservationData';
+import CollectionCard from './components/CollectionCard';
 
 const Reservations = () => {
   const navigate = useNavigate();
@@ -41,7 +43,8 @@ const Reservations = () => {
         <br />
         <div className="card mb-3">
           {filteredReservations.map((reservation) => (
-            <CollectionCard key={reservation.id} workshop={registration} />
+            <CollectionCard key={reservation.id} reservations={reservation} />
+            // <CollectionCard key={reservation.id} workshop={registration} />
           ))}
         </div>
       </div>
