@@ -20,8 +20,7 @@ import Navbar from "./components/Navbar";
 // import review5 from "./assets/Review5.jpeg";
 // import review6 from "./assets/Review6.jpeg";
 import "./Restaurant.css";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useParams , Link } from "react-router-dom";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import { restaurants, reviews } from "./RestaurantData";
 
@@ -261,9 +260,9 @@ const Restaurant = () => {
       <div className="container">
         <br />
         <div className="d-flex justify-content-between align-items-center">
-        <Link to="/home" className="back-btn">
-          <i className="bi bi-arrow-left-circle"></i> Back
-        </Link>
+          <Link to="/home" className="back-btn">
+            <i className="bi bi-arrow-left-circle"></i> Back
+          </Link>
           <div className="ml-auto">
             <small className="text-muted" onClick={handleSaveToggle}>
               <i
@@ -283,13 +282,13 @@ const Restaurant = () => {
         />
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="custom-h1">{restaurant.name}</h1>
-          <div className="ml-auto">
-            <small className="text-muted">
-              <Link to={`/restaurant/${id}/reserve`}>
-                <i className="bi bi-calendar-heart custom-icon"></i>Make
-                reservations
-              </Link>
-            </small>
+          <div >
+          <Link to={`/restaurant/${id}/reserve`}>
+            <button  id="reserve-btn">
+                {/* <i className="bi bi-calendar-heart custom-icon"></i>Make */}
+                Make Reservation
+            </button>
+          </Link>
           </div>
         </div>
 
