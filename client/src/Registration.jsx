@@ -14,24 +14,17 @@ const Registration = () => {
   return (
     <div>
       <Navbar />
-      <div id="Rmain-container">
+      {/* <div id="Rmain-container"> */}
+      <div className='container'>
         <br />
-        <div id="up">
-          <Link to="/workshop">
-            <b>
-              <small>
-                <i class="bi bi-arrow-left-circle"></i> Back
-              </small>
-            </b>
+        <div className='d-flex justify-content-between align-items-center'>
+          <Link to="/workshop" className="back-btn">
+            <i className="bi bi-arrow-left-circle"></i> Back
           </Link>
           <div className="ml-auto">
-            <Link to="/schedule">
-              <b>
-                <small className="text-muted">
+            <Link to="/schedule" className="back-btn">
                   <i className="bi bi-calendar-heart custom-icon"></i>View My
                   Schedule
-                </small>
-              </b>
             </Link>
           </div>
         </div>

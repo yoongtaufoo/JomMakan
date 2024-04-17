@@ -123,10 +123,8 @@ const MyRegistration = () => {
       <img src={image} alt="" style={{ width: "100%" }} />
       <div className="container">
         <br />
-        <div>
-          <b style={{ cursor: "pointer" }} onClick={() => navigate(-1)}>
+        <div className='back-btn' style={{ cursor: "pointer" }} onClick={() => navigate(-1)}>
             <i class="bi bi-arrow-left-circle"></i> Back
-          </b>
         </div>
 
         <h1 className="custom-h1">My Schedule</h1>
