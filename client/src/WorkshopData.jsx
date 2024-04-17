@@ -22,7 +22,7 @@ const workshopPic = [
   workshopPic6,
 ];
 
-const status = ["T", "T", "F", "F", "F", "T", "T", "T", "F", "F", "F", "F"];
+const status = ["T", "T", "F", "F", "T", "T", "F", "T", "T", "T", "F", "F"];
 
 for (let i = 0; i < workshopPic.length; i++) {
   WorkshopData.push({
