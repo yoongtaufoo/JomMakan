@@ -9,6 +9,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-left: 5%;
+    margin-right: 5%;
 }
 #Rdown{
     display: flex;
@@ -17,46 +19,41 @@
     
 }
 #Fleft{
-margin-right: 5%;
+    margin-right: 5%;
+    margin-left: 5%;
 }
 #disclaimer{
     background-color: rgb(212, 211, 211);
     border-radius: 20px;
     padding: 15px;
     font-size: 10px;
-    max-width: 500px;
+    width: 600px;
     margin-bottom: 10%;
 
 }
 #Rform{
-    padding-left: 10%;
-    margin-left: 5%;
+    /* padding-left: 10%; */
+    /* margin-left: 5%; */
     display: flex;
-    align-items: left;
+    align-items: center;
     justify-content: center;
     flex-direction: column;
 }
-#Rinput{
-    width:100%;
-    background-color: #FFE2AB;
-    border-radius: 30px;
-    padding: 10px;
-    margin:5px;
-    border: none;
-    
-}
 
 #Rinput{
-    width:100%;
+    width:580px;
     background-color: #FFE2AB;
     border-radius: 30px;
     padding: 10px;
     margin:5px;
     border: none;
-    
 }
 #Rinputs{
     font-size:12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 #popup-overlay {
     position: fixed;
@@ -92,19 +89,19 @@ margin-right: 5%;
     margin-top:3%;
     margin-left: 5%;
     margin-bottom: 35%;
-    margin-right: 10%;
-    width: 60%;
+    margin-right: 5%;
+    width: 600px;
     display: flex;
-    align-items: left;
-    justify-content: center;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 #form-header{
-    width:100%;
-    margin-right:15%;
-    margin-left: 5%;
-    text-align: center;
+    /* width:60%; */
+    /* margin-right:15%; */
+    margin-left: 4%; 
+    font-weight: bold;
 }
 
 #submit-button {
@@ -128,15 +125,15 @@ margin-right: 5%;
     
 }
 
-#submitButton {
-    display: flex;
+#form-submitButton {
+    /* display: flex; */
     color: white;
     background-color: black;
-    width: 150px;
-    align-items: flex-end;
-    justify-content: center;
-    margin-left: 33%;
-    margin-right: 10%;
+    width: 140px;
+    /* align-items: flex-center;
+    justify-content: center; */
+    /* margin-left: 40%; */
+    /* margin-right: 50%; */
   }
 #card{
     width: 80%;

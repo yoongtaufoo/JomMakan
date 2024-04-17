@@ -1,16 +1,16 @@
 .workshop-page {
-  background-color: rgba(251, 195, 85, 0.5);
+  /* background-color: rgba(251, 195, 85, 0.5); */
 }
 
-.custom-h1 {
-  padding-left: 2%;
-}
 
 .title {
   font-size: 24px;
   font-weight: bold;
   color: black;
   padding-left: 10px;
+}
+.workshop-header{
+  margin-left: 2%;
 }
 
 .buttons {
@@ -34,7 +34,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  background-color: rgba(251, 195, 85, 0.3);
+  background-color: #ffedc8;
   padding: 20px;
 }
 
