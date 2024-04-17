@@ -39,6 +39,7 @@ const Reservations = () => {
           tabdata={{ one: "Upcoming", two: "Completed", three: "Cancelled" }}
           activeTab={activeTab}
           onTabClick={handleTabClick}
+          searchBarPlaceholder={"Restaurants, Name..."}
         />
         <br />
         <div className="card mb-3">

@@ -64,6 +64,7 @@ const WorkshopPage = () => {
           two: "Recently Viewed",
           three: "Fresh Additions",
         }}
+        searchBarPlaceholder={"Workshops, Events..."}
       />
       <div className="workshop-grid">
         {workshops.map((workshop) => (

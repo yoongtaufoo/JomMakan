@@ -24,7 +24,7 @@ const Tabs = (props) => {
         </button>
       </div>
       <div className="ml-auto">
-        <SearchBar place="Worshops, Events...." />
+        <SearchBar place={props.searchBarPlaceholder} />
       </div>
     </div>
   );
