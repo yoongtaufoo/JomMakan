@@ -1,4 +1,4 @@
-.workshop-card {
+/* .workshop-card {
   display: flex;
   flex-direction: column;
   border: 1px solid #ccc;
@@ -6,12 +6,22 @@
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background-color: #FFFFFF;
+  width: 400px; 
+  height: 500px;
+} */
+
+.customized-workshop-card{
+  width: 400px; 
+  height: 500px; 
 }
+
+
 
 .workshop-img {
   width: 100%;
-  height: auto;
-  border-radius: 8px;
+  height: 250px;
+  /* border-radius: 8px; */
+  object-fit: cover
 }
 
 .workshop-details {
@@ -60,4 +70,35 @@
 .star-icon {
   font-size: 20px;
   color: #FBC355;
+}
+
+.custom-add-schedule{
+  background-color:#FBC355;
+  border:3px #FBC355;
+  border-radius: 20px;
+  color: #000;
+  width: fit-content;
+  margin: 16px;
+  margin-left: 50px;
+  margin-bottom: 20px;
+  font-size: medium;
+  font-weight: bold;
+  padding-left: 70px;
+  padding-right: 70px;
+}
+
+.custom-add-schedule:hover{
+  background-color:#fda400;
+  border-color: 3px #000;
+  color: #000;
+
+}
+
+.star-icon{
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.star-icon:hover{
+  color:#fd7600;
 }
