@@ -192,6 +192,7 @@
 }
 .back-btn{
   font-size: 20px;
+  cursor: pointer;
 }
 #reserve-btn{
   padding: 15px 30px;
