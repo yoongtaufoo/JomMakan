@@ -4,9 +4,11 @@ import Navbar from "./components/Navbar";
 import { Link, useParams } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AddReview = () => {
   const { id } = useParams();
+    const navigate = useNavigate();
    const location = useLocation();
    const params = new URLSearchParams(location.search);
    const restaurantName = params.get("restaurantName");
@@ -43,9 +45,13 @@ const AddReview = () => {
           <Link to="/home" className="back-btn">
             <i className="bi bi-arrow-left-circle"></i> Back
           </Link>
-          <Link to={`/restaurant/${id}?scrollToReviews=true`}>
-            <i class="bi-view-list"></i> View All Reviews
-          </Link>
+          <div
+          className="back-btn"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate(-1)}
+        ><i class="bi-view-list"></i> View All Reviews</div>
+            
+
         </div>
 
         <div id="form">
