@@ -52,7 +52,7 @@ const WorkshopPage = () => {
           </a>
           <a href="/schedule">
             <small className="text-muted">
-              <i className="bi bi-calendar-heart custom-icon"></i>Schedule
+              <i className="bi bi-calendar-heart custom-icon"></i>My Workshop
             </small>
           </a>
         </div>

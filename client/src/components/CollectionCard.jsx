@@ -7,17 +7,23 @@ const CollectionCard = ({ workshops, reservations }) => {
     const [submit, setSubmit] = useState(false);
     const [confirm, setConfirm] = useState(false);
     const popRef = useRef(null);
-    const handleClickOutside = (event) => {
-        if (popRef.current && !popRef.current.contains(event.target)) {
-            setConfirm(false);
-        }
-    };
+
+
     useEffect(() => {
-        document.addEventListener("click", handleClickOutside);
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, []);
+      let handler = (e)=>{
+        if(!popRef.current.contains(e.target)){
+          setConfirm(false);
+        }      
+      };
+  
+      document.addEventListener("mousedown", handler);
+      
+  
+      return() =>{
+        document.removeEventListener("mousedown", handler);
+      }
+  
+    });
 
     const getRestaurantData = (reservations, restaurants) => {
         if (reservations && restaurants) {
@@ -69,15 +75,16 @@ const CollectionCard = ({ workshops, reservations }) => {
                         <div id='popup'>
                         <div>Confirm Cancelation?</div>
                         <div>
-                            <button  onClick={() => setSubmit(false)}>No</button>
+                            <button id="buttonPopupCancel" onClick={() => setSubmit(false)}>No</button>
                             <button  onClick={() => {setConfirm(true); setSubmit(false);}}>Yes</button>
                         </div>
                         </div>
                         </div>
                     }
                     {confirm &&
-                        <div id='popup-overlay' ref={popRef}>
-                        <div id='popup'>
+                        <div id='popup-overlay' >
+                        <div id='popup' ref={popRef}>
+                        <i class="bi bi-calendar-x-fill"></i>
                         <div>Cancelled</div>
                         </div>
                         </div>
@@ -136,8 +143,9 @@ const CollectionCard = ({ workshops, reservations }) => {
                             </div>
                         }
                         {confirm &&
-                            <div id='popup-overlay' ref={popRef}>
-                                <div id='popup'>
+                            <div id='popup-overlay' >
+                                <div id='popup' ref={popRef}>
+                                <i class="bi bi-calendar-x-fill"></i>
                                     <div>Cancelled</div>
                                 </div>
                             </div>

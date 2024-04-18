@@ -43,7 +43,7 @@ const Reserve = () => {
                 </Link>
                 <div className="ml-auto">
                     <Link to="/reservations">
-                        <small><i className="bi bi-calendar-heart custom-icon"></i>View My Reservations</small>
+                        <i className="bi bi-calendar-heart custom-icon"></i>View My Reservations
                     </Link>
                 </div>
             </div>
