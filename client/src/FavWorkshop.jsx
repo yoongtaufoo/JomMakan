@@ -31,6 +31,14 @@ const FavWorkshop = () => {
       <Navbar />
       <img src={image} alt="" style={{ width: "100%" }} />
       <div className="container">
+      <br />
+        <div
+          className="back-btn"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate(-1)}
+        >
+          <i class="bi bi-arrow-left-circle"></i> Back
+        </div>
         <h1 className="customized-h1 workshop-header">Favorite Workshops</h1>
         <div className="workshop-grid">
           {filteredWorkshops.map((workshop) => (
