@@ -21,11 +21,12 @@
 }
 
 h2 {
-  margin-left: 200px;
+  margin-top: 20px;
 }
 
 #desc {
-  margin: auto;
+  margin-top:20px;
+  margin-bottom:30px;
 }
 #inputs {
   font-size: 15px;
@@ -33,11 +34,11 @@ h2 {
 .input {
   background-color: #ffe2ab;
   border-radius: 30px;
-  width: 250px;
-  max-height: 40px;
-  padding: 20px;
-  margin: 5px;
+  width: auto;
+  height: 30px;
+  padding:5px 10px;
   border: none;
+  white-space: nowrap;
 }
 .restaurantName {
   width: 300px;
@@ -80,6 +81,7 @@ button:hover {
 }
 
 #checkbox {
+  margin-left: 0px;
   margin-top: 10px;
 }
 
@@ -90,4 +92,6 @@ button:hover {
   width: 150px;
   align-items: flex-end;
   justify-content: center;
+  margin-top: 20px;
+  margin-left: 0px;
 }

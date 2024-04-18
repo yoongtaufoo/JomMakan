@@ -13,7 +13,12 @@
     filter: invert(100%);
 }
 
-.images-container {
+.back-btn{
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* .images-container {
   display: flex;
   max-width: 100%;
   overflow: scroll;
@@ -22,16 +27,16 @@
   transition: scroll 0.3s ease-in-out;
   background-color: #edd2a8;
   scrollbar-width: thin;
-}
+} */
 
-.image {
+/* .image {
   width: 500px;
   height: 400px;
   margin: 5px;
   border-radius: 8px;
-}
+} */
 
-.nav-btn {
+/* .nav-btn {
   color: inherit;
   border: none;
   padding: 0;
@@ -43,26 +48,24 @@
   height: 200px;
   width: 30px;
   margin: 5px;
-}
+} */
 
-.App {
+/* .App {
   font-family: sans-serif;
   align-items: center;
   display: flex;
   justify-content: center;
   margin-top: 20px;
   margin-bottom: 20px;
-}
+} */
 
-.btn-default {
+.button-add-reviews {
   background-color: #fca311;
   color: black;
   align-items: center;
-  margin-left: 30px;
-}
-
-#review-title{
-  margin-top: 100px;
+  white-space: nowrap;
+  width: 150px;
+  cursor: pointer;
 }
 
 .review-card {
@@ -74,8 +77,7 @@
 }
 
 .review-card p {
-  margin: 0;
-  margin-bottom: 5px;
+  margin: 5px;
 }
 
 .review-photo {
@@ -84,7 +86,7 @@
   max-height: 200px;
   border-radius: 8px;
   margin-top: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 #timePost {
@@ -117,11 +119,18 @@
 .btn-like {
   background-color: transparent;
   color: black;
-  margin-right: 50px;
+  margin-right: 30px;
+  margin-left: 0px;
+  white-space: nowrap;
 }
+
 .btn-share {
   background-color: transparent;
   color: black;
+}
+.review-options-popup{
+  white-space: nowrap;
+  margin-left:1050px;
 }
 
 .info-reviews-rating-section {
@@ -145,35 +154,27 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  max-width: 400px;
   margin-left: auto;
   margin-right: auto;
+  
 }
 
 .rating-bar {
   display: flex;
   align-items: center;
   margin-bottom: 5px;
+ 
+}
+
+.star-indicator{
   margin-right: 20px;
 }
 
-.bar {
-  height: 20px;
-  color: #ccc;
-  width: 100%;
-}
 
 .percentage {
   position: relative;
   color: #000;
-}
-
-.bar-colored {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  color: #ff7f0e;
+  margin-left: 20px;
 }
 
 .review-info {
@@ -182,23 +183,30 @@
   align-items: flex-start;
 }
 
-.details-button {
+.review-options{
   align-items: flex-end;
-  margin-left: auto;
+  margin-left: 1200px;
   background-color: transparent;
   color: black;
   cursor: pointer;
   border: none;
 }
-.back-btn{
-  font-size: 20px;
-  cursor: pointer;
-}
+
 #reserve-btn{
   padding: 15px 30px;
   font-size: 16px;
   width:fit-content;
   /* margin: 30px; */
+}
+
+.rectangle-box {
+  width: 500px;
+  height: 10px;
+  background-color: gray;
+}
+
+.fillable-box {
+  background-color: orange;
 }
 
 .btn-default{

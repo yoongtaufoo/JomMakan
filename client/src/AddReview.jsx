@@ -1,9 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./AddReview.css";
 import Navbar from "./components/Navbar";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { Rating } from "react-simple-star-rating";
+import { useLocation } from "react-router-dom";
 
 const AddReview = () => {
+  const { id } = useParams();
+   const location = useLocation();
+   const params = new URLSearchParams(location.search);
+   const restaurantName = params.get("restaurantName");
+
   const [submit, setSubmit] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const popRef = useRef(null);
@@ -13,24 +20,31 @@ const AddReview = () => {
       setConfirm(false);
     }
   };
+  const [rating, setRating] = useState(0);
 
+  const handleRating = (rate) => {
+    setRating(rate);
+  };
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+  const onPointerEnter = () => console.log("Enter");
+  const onPointerLeave = () => console.log("Leave");
+  const onPointerMove = (value, index) => console.log(value, index);
 
   return (
     <div>
       <Navbar />
       <div id="main-container">
         <div className="back">
-          <Link to="/home">
-            <small>Back</small>
+          <Link to="/home" className="back-btn">
+            <i className="bi bi-arrow-left-circle"></i> Back
           </Link>
-          <Link to="/home">
-            <small>Back to Restaurant</small>
+          <Link to={`/restaurant/${id}?scrollToReviews=true`}>
+            <i class="bi-view-list"></i> View All Reviews
           </Link>
         </div>
 
@@ -44,33 +58,35 @@ const AddReview = () => {
           </p>
           <div id="inputs">
             <div id="restaurantName">
-              Restaurant Name:
-              <input className="input" type="text" />
+              Restaurant Name: <span className="input">{restaurantName}</span>
             </div>
+            <br></br>
             <div id="ratings">
               Overall Ratings:
               <br />
-              <select className="input">
-                <option value="1">1 star</option>
-                <option value="2">2 stars</option>
-                <option value="3">3 stars</option>
-                <option value="4">4 stars</option>
-                <option value="5">5 stars</option>
-              </select>
+              <Rating
+                onClick={handleRating}
+                onPointerEnter={onPointerEnter}
+                onPointerLeave={onPointerLeave}
+                onPointerMove={onPointerMove}
+              />
             </div>
+            <br></br>
             <div>
               Review:
               <br />
               <textarea className="textArea" rows="4" cols="50" />
             </div>
+            <br></br>
             <div>
               Media Upload:
               <input type="file" />
             </div>
+            <br></br>
             <div id="checkbox">
               <input type="checkbox" />
-              I agree to the JomMakan Terms of Use and that this review is an
-              honest and accurate account of my experience at the restaurant.
+              &nbsp;I agree to the JomMakan Terms of Use and that this review is
+              an honest and accurate account of my experience at the restaurant.
               <br />
             </div>
           </div>

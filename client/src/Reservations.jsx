@@ -26,21 +26,26 @@ const Reservations = () => {
 
   return (
     <div>
-      <Navbar/>
-      <img src={image} alt="" style={{ width: '100%' }}/>
-      <div className='container'>
-        <br/>
-        <div className='back-btn' style={{ cursor: "pointer" }} onClick={() => navigate(-1)}>
-            <i class="bi bi-arrow-left-circle"></i> Back  
+      <Navbar />
+      <img src={image} alt="" style={{ width: "100%" }} />
+      <div className="container">
+        <br />
+        <div
+          className="back-btn"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate(-1)}
+        >
+          <i class="bi bi-arrow-left-circle"></i> Back
         </div>
-        
-        <h1 className='custom-h1'>My Reservations</h1> 
+
+        <h1 className="custom-h1">My Reservations</h1>
         <Tabs
           tabdata={{ one: "Upcoming", two: "Completed", three: "Cancelled" }}
           activeTab={activeTab}
           onTabClick={handleTabClick}
           searchBarPlaceholder={"Restaurants, Name..."}
         />
+        {`/restaurant/${id}/reserve`}
         <br />
         <div className="card mb-3">
           {filteredReservations.map((reservation) => (
@@ -50,7 +55,7 @@ const Reservations = () => {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Reservations
