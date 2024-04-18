@@ -133,6 +133,7 @@ const MyRegistration = () => {
           tabdata={{ one: "Upcoming", two: "Completed", three: "Cancelled" }}
           activeTab={activeTab}
           onTabClick={handleTabClick}
+          searchBarPlaceholder={"Workshops, Events..."}
         />
         <br />
         <div className="card mb-3">
