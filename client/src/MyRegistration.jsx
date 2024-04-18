@@ -127,7 +127,7 @@ const MyRegistration = () => {
             <i class="bi bi-arrow-left-circle"></i> Back
         </div>
 
-        <h1 className="custom-h1">My Schedule</h1>
+        <h1 className="custom-h1">My Workshop</h1>
 
         <Tabs
           tabdata={{ one: "Upcoming", two: "Completed", three: "Cancelled" }}

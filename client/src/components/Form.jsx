@@ -5,19 +5,26 @@ import React, { useState, useEffect, useRef } from "react";
 const RegistrationForm = (props) => {
   const [submit, setSubmit] = useState(false);
   const [confirm, setConfirm] = useState(false);
-  const popRef = useRef(null);
   const Rworkshop = props.registrationInfo;
-  const handleClickOutside = (event) => {
-    if (popRef.current && !popRef.current.contains(event.target)) {
-      setConfirm(false);
-    }
-  };
+  const popRef = useRef(null);
+
+
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
+    let handler = (e)=>{
+      if(!popRef.current.contains(e.target)){
+        setConfirm(false);
+      }      
     };
-  }, []);
+
+    document.addEventListener("mousedown", handler);
+    
+
+    return() =>{
+      document.removeEventListener("mousedown", handler);
+    }
+
+  });
+
   return (
     <div id="Rform">
       <div id="Rinputs">
@@ -62,11 +69,11 @@ const RegistrationForm = (props) => {
       </div>
 
       {submit && (
-        <div id="popup-overlay">
-          <div id="popup">
+        <div id="popup-overlay" >
+          <div id="popup" ref={popRef}>
             <div>Confirm reservation?</div>
             <div>
-              <button onClick={() => setSubmit(false)}>Wait</button>
+              <button id="buttonPopupCancel"onClick={() => setSubmit(false)}>Cancel</button>
               <button
                 onClick={() => {
                   setConfirm(true);
@@ -80,8 +87,9 @@ const RegistrationForm = (props) => {
         </div>
       )}
       {confirm && (
-        <div id="popup-overlay" ref={popRef}>
-          <div id="popup">
+        <div id="popup-overlay">
+          <div id="popup"  ref={popRef}>
+          <i class="bi bi-calendar2-check-fill"></i>
             <div>Confirmed</div>
           </div>
         </div>
