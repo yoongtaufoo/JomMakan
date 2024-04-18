@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Navbar from "./components/Navbar";
 import WorkshopCard from "./components/WorkshopCard";
 import workshopData from "./WorkshopData";
@@ -7,48 +7,32 @@ import { useNavigate } from "react-router-dom";
 
 const FavWorkshop = () => {
   const navigate = useNavigate();
-  const [favoriteWorkshops, setFavoriteWorkshops] = useState([]);
 
-  // Function to toggle favorite status of a workshop
-  const toggleFavorite = (workshopId) => {
-    const index = favoriteWorkshops.indexOf(workshopId);
-    if (index === -1) {
-      // If workshop is not in favorites, add it
-      setFavoriteWorkshops([...favoriteWorkshops, workshopId]);
-    } else {
-      // If workshop is already in favorites, remove it
-      const updatedFavorites = [...favoriteWorkshops];
-      updatedFavorites.splice(index, 1);
-      setFavoriteWorkshops(updatedFavorites);
-    }
-  };
+  // Filter workshops with status "T" (favorites)
+  const favoriteWorkshops = workshopData.filter((workshop) => workshop.status === "T");
 
-  // Filter workshops based on favoriteWorkshops array
-  const filteredWorkshops = workshopData.filter((workshop) =>
-    favoriteWorkshops.includes(workshop.id)
-  );
+  // Limit the display to only 3 favorite workshops
+  const limitedWorkshops = favoriteWorkshops.slice(0, 3);
 
   return (
     <div>
       <Navbar />
       <img src={image} alt="" style={{ width: "100%" }} />
       <div className="container">
-      <br />
+        <br />
         <div
           className="back-btn"
           style={{ cursor: "pointer" }}
           onClick={() => navigate(-1)}
         >
-          <i class="bi bi-arrow-left-circle"></i> Back
+          <i className="bi bi-arrow-left-circle"></i> Back
         </div>
         <h1 className="customized-h1 workshop-header">Favorite Workshops</h1>
         <div className="workshop-grid">
-          {filteredWorkshops.map((workshop) => (
+          {limitedWorkshops.map((workshop) => (
             <WorkshopCard
               key={workshop.id}
               workshop={workshop}
-              toggleFavorite={toggleFavorite}
-              isFavorite={true} // Pass a prop to WorkshopCard indicating it's a favorite
             />
           ))}
         </div>
