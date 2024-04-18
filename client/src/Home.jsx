@@ -89,17 +89,19 @@ const Home = () => {
               </small>
             </Link>
             <Link to="/reservations">
-            <small className="text-muted">
-              <i className="bi bi-calendar-heart custom-icon"></i>Reservations
-            </small>
+              <small className="text-muted">
+                <i className="bi bi-calendar-heart custom-icon"></i>Reservations
+              </small>
             </Link>
           </div>
         </div>
-        <div className="d-flex justify-content-between align-items-center">
-          <h5>
-            <u>Top Picks</u>
-          </h5>
-          <div className="ml-auto">
+        <div className="d-flex justify-content-between align-items-center mt-4">
+          <div className="mt-4">
+            <strong>
+              <u>Top Picks</u>
+            </strong>
+          </div>
+          <div>
             <SearchBar place="Locations, Restaurant, or Cuisines..." />
           </div>
         </div>
@@ -111,7 +113,7 @@ const Home = () => {
                 to={`/restaurant/${restaurant.id}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                <div className="card customized-card">
+                <div className="card customized-restaurant-card">
                   <img
                     src={restaurant.image}
                     className="card-img-top"

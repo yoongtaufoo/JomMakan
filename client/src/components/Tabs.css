@@ -2,11 +2,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between; /* Add this to push items to the left and right edges */
-  margin-left: 20px;
+  /* margin-left: 20px; */
 }
 
 .tab-btn {
   color: black;
+  width:fit-content;
   border: none;
   background-color: transparent;
   cursor: pointer;
@@ -15,6 +16,8 @@
   font-weight: normal;
   padding-left: 10px;
   margin-right: 20px; /* Adjust margin to create space between buttons */
+  font-size: medium;
+  margin-top: 40px;
 }
 
 .tab-btn.active {

@@ -1,7 +1,7 @@
 .custom-col {
-    display: inline-block;
-    margin-right: 10spx;
-    margin-bottom: 30px;
+    /* display: inline-block; */
+    /* margin-right: 10spx; */
+    /* margin-bottom: 30px; */
   }
   
 .container{
@@ -11,12 +11,13 @@
 .restaurants-list{
   background-color: #ffedc8;
   margin-top: 15px;
+  justify-content: center;
 }
 
-.customized-card {
-    width: 400px; /* Set the width of the card */
-    height: 500px; /* Set the height of the card */
-    margin-left: 10px;;
+.customized-restaurant-card {
+    width: 400px; 
+    height: 500px; 
+    margin-left: 10px;
   }
   
   .card-img-top {

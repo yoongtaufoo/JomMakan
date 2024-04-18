@@ -3,28 +3,28 @@ import Navbar from "./components/Navbar";
 import "./Reserve.css";
 import Form from "./components/Form";
 import { Link, useParams } from "react-router-dom";
-import WorkshopDetails from "./WorkshopDetails";
+import workshopdatas from "./WorkshopData";
 import DetailCard from "./components/DetailCard";
 
 const Registration = () => {
   const { id } = useParams();
-  const workshop = WorkshopDetails.find(
+  const workshop = workshopdatas.find(
     (workshop) => workshop.id === parseInt(id)
   );
   return (
     <div>
       <Navbar />
       {/* <div id="Rmain-container"> */}
-      <div className='container'>
+      <div className="container">
         <br />
-        <div className='d-flex justify-content-between align-items-center'>
+        <div className="d-flex justify-content-between align-items-center">
           <Link to="/workshop" className="back-btn">
             <i className="bi bi-arrow-left-circle"></i> Back
           </Link>
           <div className="ml-auto">
             <Link to="/schedule" className="back-btn">
-                  <i className="bi bi-calendar-heart custom-icon"></i>View My
-                  Schedule
+              <i className="bi bi-calendar-heart custom-icon"></i>View My
+              Schedule
             </Link>
           </div>
         </div>

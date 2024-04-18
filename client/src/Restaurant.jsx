@@ -20,7 +20,7 @@ import Navbar from "./components/Navbar";
 // import review5 from "./assets/Review5.jpeg";
 // import review6 from "./assets/Review6.jpeg";
 import "./Restaurant.css";
-import { useParams , Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import { restaurants, reviews } from "./RestaurantData";
 
@@ -278,17 +278,17 @@ const Restaurant = () => {
         <img
           src={restaurant.image}
           alt=""
-          style={{ width: "100%", height: "500px" }}
+          style={{ width: "100%", height: "500px", objectFit: "cover" }}
         />
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="custom-h1">{restaurant.name}</h1>
-          <div >
-          <Link to={`/restaurant/${id}/reserve`}>
-            <button  id="reserve-btn">
+          <div>
+            <Link to={`/restaurant/${id}/reserve`}>
+              <button id="reserve-btn">
                 {/* <i className="bi bi-calendar-heart custom-icon"></i>Make */}
                 Make Reservation
-            </button>
-          </Link>
+              </button>
+            </Link>
           </div>
         </div>
 
@@ -386,7 +386,7 @@ const Restaurant = () => {
                 5 <i className="bi bi-star-fill"></i>
               </div>
               <div className="rectangle-box">
-                <div className={`bar bar-colored bar-78`}></div>
+                {/* <div className={`bar bar-colored bar-78`}></div> */}
               </div>
               <div className="percentage">78%</div>
             </div>
@@ -395,7 +395,7 @@ const Restaurant = () => {
                 4 <i className="bi bi-star-fill"></i>
               </div>
               <div className="rectangle-box">
-                <div className={`bar bar-colored bar-15`}></div>
+                {/* <div className={`bar bar-colored bar-15`}></div> */}
               </div>
               <div className="percentage">15%</div>
             </div>
@@ -404,7 +404,7 @@ const Restaurant = () => {
                 3 <i className="bi bi-star-fill"></i>
               </div>
               <div className="rectangle-box">
-                <div className={`bar bar-colored bar-5`}></div>
+                {/* <div className={`bar bar-colored bar-5`}></div> */}
               </div>
               <div className="percentage">5%</div>
             </div>
@@ -413,7 +413,7 @@ const Restaurant = () => {
                 2 <i className="bi bi-star-fill"></i>
               </div>
               <div className="rectangle-box">
-                <div className={`bar bar-colored bar-2}`}></div>
+                {/* <div className={`bar bar-colored bar-2}`}></div> */}
               </div>
               <div className="percentage">2%</div>
             </div>
@@ -422,7 +422,7 @@ const Restaurant = () => {
                 1 <i className="bi bi-star-fill"></i>
               </div>
               <div className="rectangle-box">
-                <div className={`bar bar-colored bar-0`}></div>
+                {/* <div className={`bar bar-colored bar-0`}></div> */}
               </div>
               <div className="percentage">0%</div>
             </div>

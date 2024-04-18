@@ -6,7 +6,7 @@ import App from "./App.jsx";
 import Home from "./Home.jsx";
 import LogIn from "./LogIn.jsx";
 import SignUp from "./SignUp.jsx";
-import Workshop from "./components/WorkshopPage.jsx";
+import Workshop from "./WorkshopPage.jsx";
 import WRegistration from "./Registration.jsx";
 import FavRestaurant from "./FavRestaurant.jsx";
 import Restaurant from "./Restaurant.jsx";
