@@ -350,7 +350,7 @@ const Restaurant = () => {
           >
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
-          </button> 
+          </button>
         </div>
         <br />
         <div className="d-flex justify-content-between align-items-center">
@@ -358,7 +358,7 @@ const Restaurant = () => {
             <strong>Reviews</strong>
           </h5>
           <div className="ml-auto">
-           <Link to={`/AddReview?restaurantName=${restaurant.name}`}>
+            <Link to={`/AddReview?restaurantName=${restaurant.name}`}>
               <button type="button" className="button-add-reviews">
                 <i className="bi-plus"></i>Add a review
               </button>
