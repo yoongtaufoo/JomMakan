@@ -3,8 +3,10 @@ import Navbar from "./components/Navbar";
 import WorkshopCard from "./components/WorkshopCard";
 import workshopData from "./WorkshopData";
 import image from "./assets/image 3.png";
+import { useNavigate } from "react-router-dom";
 
 const FavWorkshop = () => {
+  const navigate = useNavigate();
   const [favoriteWorkshops, setFavoriteWorkshops] = useState([]);
 
   // Function to toggle favorite status of a workshop
