@@ -49,6 +49,7 @@ const WorkshopPage = () => {
           }}
           activeTab={activeTab}
           onTabClick={handleTabClick}
+          searchBarPlaceholder={"Workshops, Events..."}
         />
         <div className="workshop-grid">
           {filteredWorkshops.map((workshop) => (
