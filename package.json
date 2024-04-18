@@ -1,5 +1,11 @@
 {
   "dependencies": {
-    "react-icons": "^5.0.1"
+    "@fortawesome/free-regular-svg-icons": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "react-icons": "^5.0.1",
+    "react-popup": "^0.11.2",
+    "react-rating-stars-component": "^2.2.0",
+    "react-simple-star-rating": "^5.1.7"
   }
 }
