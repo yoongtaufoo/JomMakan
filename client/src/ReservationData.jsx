@@ -4,6 +4,7 @@ const reservations = [
     {
         id: 1,
         date: "2024-05-20",
+        time: "8:00",
         name: "LeBron",
         phone: "0112033828",
         pax: 3,

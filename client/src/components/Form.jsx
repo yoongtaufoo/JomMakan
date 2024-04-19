@@ -9,16 +9,19 @@ const RegistrationForm = (props) => {
   const tables = props.tables;
   const [numberOfPax, setNumberOfPax] = useState(1);
   const popRef = useRef(null);
-  const handleClickOutside = (event) => {
-    if (popRef.current && !popRef.current.contains(event.target)) {
-      setConfirm(false);
-    }
-  };
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowString = tomorrow.toISOString().split('T')[0];
+  // const handleClickOutside = (event) => {
+  //   if (popRef.current && !popRef.current.contains(event.target)) {
+  //     setConfirm(false);
+  //   }
+  // };
   useEffect(() => {
     let handler = (e)=>{
       if(!popRef.current.contains(e.target)){
         setConfirm(false);
-      }      
+      }
     };
 
     document.addEventListener("mousedown", handler);
@@ -32,26 +35,33 @@ const RegistrationForm = (props) => {
 
   // Handle change event for the number of pax input
   const handlePaxChange = (event) => {
+    if(props.tables!==null){
     setNumberOfPax(parseInt(event.target.value));
+    }
   };
+  
 
   // Generate select options for pax no
   const nopaxOptions = [];
-  for (let i = 1; i <= Math.max(...tables.map(table => table.pax)); i++) {
-    nopaxOptions.push(<option key={i} value={i}>{i}</option>);
+  if(props.tables!==null){
+    for (let i = 1; i <= Math.max(...tables.map(table => table.pax)); i++) {
+      nopaxOptions.push(<option key={i} value={i}>{i}</option>);
+    }
   }
 
   // Generate select options for restaurant tables
-  const tableOptions = tables.map((table, index) => (
-    <option
-      key={index}
-      value={table.id}
-      disabled={numberOfPax > table.pax || table.status === 'Unavailable'}
-    >
-      Table {table.id} - ({table.pax} pax capacity)
-    </option>
-  ));
   
+    const tableOptions = props.tables && props.tables.map((table, index) => (
+      <option
+        key={index}
+        value={table.id}
+        disabled={numberOfPax > table.pax || table.status === 'Unavailable'}
+      >
+        Table {table.id} - ({table.pax} pax capacity)
+      </option>
+    ));
+  
+
   return (
     <div id="Rform">
       <div id="Rinputs">
@@ -65,10 +75,20 @@ const RegistrationForm = (props) => {
           <div>
             Date:
             <br />
-            <input id="Rinput" type="datetime-local" required></input>
+            <input id="Rinput" type="date" min={tomorrowString} required></input>
           </div>
         )}
-
+        {/* restaurant reservation time input  */}
+        {props.tables !== null ? (
+          <div>
+            Time:
+            <br />
+            <input id="Rtimeinput" type="time" step="3600000" required></input> to  
+            <input id="Rtimeinput" type="time" step="3600000" ></input>
+          </div>
+        ) : (
+          null
+        )}
         <div>
           Name:
           <br />
@@ -82,11 +102,18 @@ const RegistrationForm = (props) => {
         <div>
           No of pax:
           <br />
-          <select id="Rinput" value={numberOfPax} onChange={handlePaxChange} required>
-            {nopaxOptions}
-          </select>
+          {props.tables !== null ? (
+            //if its a reservation form
+            <select id="Rinput" value={numberOfPax} onChange={handlePaxChange} required>
+              {nopaxOptions}
+            </select>
+          ) : (
+            //if its a registration form
+            <input id='Rinput' type="number" required></input>
+          ) }
+          
         </div>
-        {props.table !== null ? (
+        {props.tables !== null ? (
           <div>
             Table:
             <br />

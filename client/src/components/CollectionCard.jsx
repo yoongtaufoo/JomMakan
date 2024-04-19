@@ -33,6 +33,17 @@ const CollectionCard = ({ workshops, reservations }) => {
         return null;
     };
 
+    // Get table for reservation information
+    // const getTable = (reservation) => {
+    //     for (const restaurant of restaurants) {
+    //         const matchingTable = restaurant.tables.find(table => table.id === reservation.tableid);
+    //         if (matchingTable) {
+    //             return matchingTable; 
+    //         }
+    //     }
+    //     return null;
+    // };
+    
     // For workshop
     const renderWorkshop = (workshops) => {
     return(
@@ -73,7 +84,7 @@ const CollectionCard = ({ workshops, reservations }) => {
                     {submit &&
                         <div id='popup-overlay'>
                         <div id='popup'>
-                        <div>Confirm Cancelation?</div>
+                        <div>Confirm Cancellation?</div>
                         <div>
                             <button id="buttonPopupCancel" onClick={() => setSubmit(false)}>No</button>
                             <button  onClick={() => {setConfirm(true); setSubmit(false);}}>Yes</button>
@@ -97,6 +108,7 @@ const CollectionCard = ({ workshops, reservations }) => {
 
     const renderReservation = (reservations) => {
         const restaurantData = getRestaurantData(reservations, restaurants);
+        // const tableData = getTable(reservations);
         return (
             <div className="row g-0 custom-row">
                 <div className="col-md-4">
@@ -122,6 +134,7 @@ const CollectionCard = ({ workshops, reservations }) => {
                         <p className="card-text">Name : {reservations.name}</p>
                         <p className="card-text">Phone No: {reservations.phone}</p>
                         <p className="card-text">No. Pax: {reservations.pax}</p>
+                        <p className="card-text">Table: {reservations.tableid}</p>
                     </div>
                 </div>
                 {reservations.status === 'U' &&
@@ -134,7 +147,7 @@ const CollectionCard = ({ workshops, reservations }) => {
                         {submit &&
                             <div id='popup-overlay'>
                                 <div id='popup'>
-                                    <div>Confirm Cancelation?</div>
+                                    <div>Confirm Cancellation?</div>
                                     <div>
                                         <button onClick={() => setSubmit(false)}>No</button>
                                         <button onClick={() => { setConfirm(true); setSubmit(false); }}>Yes</button>

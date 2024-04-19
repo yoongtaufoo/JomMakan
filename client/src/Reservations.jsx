@@ -45,12 +45,11 @@ const Reservations = () => {
           onTabClick={handleTabClick}
           searchBarPlaceholder={"Restaurants, Name..."}
         />
-        {`/restaurant/${id}/reserve`}
+        
         <br />
         <div className="card mb-3">
           {filteredReservations.map((reservation) => (
-            <CollectionCard key={reservation.id} reservations={reservation} />
-            // <CollectionCard key={reservation.id} workshop={registration} />
+            <CollectionCard key={reservation.id} reservations={reservation}/>
           ))}
         </div>
       </div>
