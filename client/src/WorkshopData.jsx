@@ -22,7 +22,11 @@ const workshopPic = [
   workshopPic6,
 ];
 
-const status = ["T", "T", "F", "F", "T", "T", "F", "T", "T", "T", "F", "F"];
+// isFresh = 1 mean fresh addition, 0 means not
+// isFavourite = 1 mean fav, 0 means not
+// const status = ["T", "T", "F", "F", "T", "T", "F", "T", "T", "T", "F", "F"];
+const isFav = [0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1];
+const isFresh = [0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0];
 
 for (let i = 0; i < workshopPic.length; i++) {
   WorkshopData.push({
@@ -35,7 +39,8 @@ for (let i = 0; i < workshopPic.length; i++) {
     dateAndTime: `12.00-5.00 pm, ${i + 1} May 2024`,
     current: Math.floor(Math.random() * 50), // Remove ${} from Math.floor
     total: Math.floor(Math.random() * 100), // Remove ${} from Math.floor
-    status: status[i],
+    isFav: isFav[i],
+    isFresh: isFresh[i],
   });
 }
 

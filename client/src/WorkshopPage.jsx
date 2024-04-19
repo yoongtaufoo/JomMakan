@@ -12,8 +12,8 @@ const WorkshopPage = () => {
 
   //For filtering
   const filteredWorkshops = workshopData.filter((workshop) => {
-    if (activeTab === 0) return workshop.status === "T";
-    if (activeTab === 1) return workshop.status === "F";
+    if (activeTab === 0) return workshop;
+    if (activeTab === 1) return workshop.isFresh === 1;
     return true; // Default case
   });
 
@@ -44,7 +44,7 @@ const WorkshopPage = () => {
 
         <Tabs
           tabdata={{
-            one: "Top Picks",
+            one: "All",
             two: "Fresh Additions",
           }}
           activeTab={activeTab}

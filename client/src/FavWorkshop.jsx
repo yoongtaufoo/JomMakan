@@ -8,9 +8,9 @@ import { useNavigate } from "react-router-dom";
 const FavWorkshop = () => {
   const navigate = useNavigate();
 
-  // Filter workshops with status "T" (favorites)
+  // Filter workshops with status "1" (favorites)
   const favoriteWorkshops = workshopData.filter(
-    (workshop) => workshop.status === "T"
+    (workshop) => workshop.isFav === 1
   );
 
   // Limit the display to only 3 favorite workshops
