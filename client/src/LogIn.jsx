@@ -4,9 +4,6 @@ import { Link } from "react-router-dom";
 import logo from "./assets/logo.png";
 import loginLeft from "./assets/log-in-left.jpg";
 import loginRight from "./assets/log-in-right.jpg";
-import { Password } from "primereact/password";
-import "primereact/resources/primereact.min.css";
-// import "primereact/primeicons.css";
 
 const LogIn = () => {
   const handleSubmit = (event) => {
@@ -20,18 +17,6 @@ const LogIn = () => {
     setShowPassword(!showPassword);
   };
 
-  const footer = (
-    <>
-      <p className="mt-2">Suggestions</p>
-      <ul className="pl-2 ml-2 mt-0">
-        <li>At least one lowercase</li>
-        <li>At least one uppercase</li>
-        <li>At least one numeric</li>
-        <li>Minimum 8 characters</li>
-      </ul>
-    </>
-  );
-
   return (
     <div>
       <nav className="navbar">
@@ -43,12 +28,12 @@ const LogIn = () => {
           src={loginLeft}
           alt="left log in pic"
         />
-        <div className="log-in-container">
+        <div className="auth-container">
           <h1>Log in to your account</h1>
           <form
             onSubmit={handleSubmit}
             className="needs-validation"
-            id="log-in-form"
+            id="auth-form"
           >
             <div class="form-group was-validated">
               <label htmlFor="emailLogIn">
@@ -56,7 +41,7 @@ const LogIn = () => {
               </label>
               <input
                 type="email"
-                class="form-control log-in"
+                class="form-control auth"
                 name="emailLogIn"
                 id="emailLogIn"
                 // aria-describedby="emailHelp"
@@ -75,13 +60,13 @@ const LogIn = () => {
                 <input
                   name="passwordLogin"
                   id="passwordLogin"
-                  class="form-control log-in"
+                  class="form-control auth"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
                   required
-                  noValidate
+                  // noValidate
                   // validated={false}
-                  // value={pass}
+                  value={pass}
                   onChange={(e) => setPass(e.target.value)}
                 />
                 {showPassword ? (
@@ -98,10 +83,11 @@ const LogIn = () => {
                   ></i>
                 )}
               </div>
+              {/* <PasswordStrengthMeter password={pass} /> */}
             </div>
 
             <Link to="/home">
-              <button type="submit" id="log-in-button">
+              <button type="submit" id="auth-button">
                 Log In
               </button>
             </Link>

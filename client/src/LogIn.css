@@ -1,18 +1,18 @@
 
-#log-in-form{
+#auth-form{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.log-in-container h1{
+.auth-container h1{
     font-weight: bold;
     font-size: 38px;
     margin: 50px;
   }
 
-.log-in{
+.auth{
     background-color: #FFE2AB;
     border-radius: 30px;
     padding: 10px;
@@ -21,7 +21,7 @@
     width: 400px;
 }
 
-.log-in-container{
+.auth-container{
     background-color: #fff;
     height: calc(100vh - 100px);
     display:flex;
@@ -30,7 +30,7 @@
     justify-content: center;
 }
 
-#log-in-button{
+#auth-button{
     padding: 15px 30px;
     font-size: 15px;
     width:fit-content;

@@ -1,0 +1,38 @@
+.register-header{
+    padding: 0;
+    margin-left: 0;
+    font-family: "Montserrat", sans-serif;
+    font-weight: bold;
+}
+
+.register{
+    margin-top: 0px;
+    margin-bottom: 12px;
+    width:500px;
+    height:40px;
+}
+
+.register2{
+    margin-top: 0px;
+    margin-bottom: 8px;
+    width:500px;
+    height:40px;
+}
+
+.register-content{
+    gap:70px;
+    height: 90vh;
+    height: calc(100vh - 100px);
+}
+
+.register-container{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-pic{
+    width:600px;
+    object-fit: contain;
+}
