@@ -21,7 +21,7 @@ import Navbar from "./components/Navbar";
 // import review5 from "./assets/Review5.jpeg";
 // import review6 from "./assets/Review6.jpeg";
 import "./Restaurant.css";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link , useNavigate} from "react-router-dom";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import { restaurants, reviews } from "./RestaurantData";
 
@@ -192,6 +192,7 @@ const renderRatingStars = (rating) => {
 
 const Restaurant = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [isSaved, setIsSaved] = useState(false);
   const [hasLiked, setHasLiked] = useState(
     new Array(reviews.length).fill(false)
@@ -259,11 +260,15 @@ const Restaurant = () => {
       <div className="container">
         <br />
         <div className="d-flex justify-content-between align-items-center">
-          <Link to="/home" className="back-btn">
-            <i className="bi bi-arrow-left-circle"></i> Back
-          </Link>
+        <div
+          className="back-btn"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate(-1)}
+        >
+          <i class="bi bi-arrow-left-circle"></i> Back
+        </div>
           <div className="ml-auto">
-            <small className="text-muted" onClick={handleSaveToggle}>
+            <small className="back-btn" onClick={handleSaveToggle}>
               <i
                 className={`bi ${
                   isSaved ? "bi-heart-fill" : "bi-heart"

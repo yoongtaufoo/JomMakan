@@ -63,7 +63,7 @@ const Reserve = () => {
                 </div>
                 <div id='Rform-container'>
                     <h2>Reservation Form</h2>
-                    <Form date={null} tables={restaurant.tables}/>
+                    <Form date={null} tables={restaurant.tables} openinghours={restaurant.openinghours}/>
                 </div>
             </div>
         </div>

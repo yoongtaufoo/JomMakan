@@ -18,8 +18,10 @@ const AddReview = () => {
   const popRef = useRef(null);
 
   const handleClickOutside = (event) => {
+    console.log("click")
     if (popRef.current && !popRef.current.contains(event.target)) {
       setConfirm(false);
+      setSubmit(false);
     }
   };
   const [rating, setRating] = useState(0);
@@ -28,9 +30,9 @@ const AddReview = () => {
     setRating(rate);
   };
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
   const onPointerEnter = () => console.log("Enter");
@@ -38,6 +40,7 @@ const AddReview = () => {
   const onPointerMove = (value, index) => console.log(value, index);
 
   return (
+    <div>
     <div>
       <Navbar />
       <div id="main-container">
@@ -93,36 +96,40 @@ const AddReview = () => {
               <br />
             </div>
           </div>
-          <button id="submitButton" onClick={() => setSubmit(!submit)}>
+          <button id="submitButton" onClick={() => setSubmit(true)}>
             Submit Review
           </button>
           {submit && (
-            <div id="popup-overlay">
-              <div id="popup">
-                <div>Confirm submit?</div>
-                <div>
-                  <button
-                    onClick={() => {
-                      setConfirm(true);
-                      setSubmit(false);
-                    }}
-                  >
-                    Confirm
-                  </button>
-                  <button onClick={() => setSubmit(false)}>Cancel</button>
-                </div>
-              </div>
+        <div id="popup-overlay">
+          <div id="popup" ref={popRef}>
+            <div>Confirm submit?</div>
+            <div>
+            <button id="buttonPopupCancel" onClick={() => setSubmit(false)}>Cancel</button>
+              <button
+                onClick={() => {
+                  setConfirm(true);
+                  setSubmit(false);
+                }}
+              >
+                Confirm
+              </button>
             </div>
-          )}
-          {confirm && (
-            <div id="popup-overlay" ref={popRef}>
-              <div id="popup">
-                <div>Confirmed</div>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
+      )}
+      {confirm && (
+        <div id="popup-overlay">
+          <div id="popup" ref={popRef}>
+            <div>Review Submitted!</div>
+          </div>
+        </div>
+      )}
+        </div>
+        
       </div>
+      
+    </div>
+    
     </div>
   );
 };
