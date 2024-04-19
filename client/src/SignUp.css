@@ -20,9 +20,10 @@
 }
 
 .register-content{
-    gap:70px;
+    gap:60px;
     height: 90vh;
     height: calc(100vh - 100px);
+    margin-left: 30px;
 }
 
 .register-container{
@@ -33,6 +34,7 @@
 }
 
 .register-pic{
-    width:600px;
+    width:550px;
     object-fit: contain;
+    margin-bottom: 70px;
 }

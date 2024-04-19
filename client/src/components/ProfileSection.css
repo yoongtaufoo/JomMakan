@@ -17,12 +17,18 @@
     border: 0.3px solid black;
 }
 
+input[type="file"] {
+    display: none;
+}
+
 .edit-icon{
     color: rgb(0, 0, 0);
 
 }
 
-.edit-button{
+.custom-file-upload-button{
+    cursor: pointer;
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -36,14 +42,29 @@
     bottom: 8%;
 }
 
-.log-out-btn{
+.upload-image-btn{
+    width: fit-content;
+
+}
+
+.orange-btn{
     width: fit-content;
     background-color: orange;
     font-weight: bold;
     color: black;
     font-size: 13px ;
-    padding: 15px 30px;
+    /* padding: 15px 30px; */
     /* border-radius: 30px; */
+}
+
+.log-out-btn{
+    width: fit-content;
+    /* background-color: orange; */
+    font-weight: bold;
+    color: white;
+    font-size: 13px ;
+    padding: 13px 40px; 
+    /* border-radius: 30px;*/
 }
 
 

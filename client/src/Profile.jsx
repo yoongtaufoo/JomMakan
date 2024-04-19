@@ -189,8 +189,8 @@ const Profile = () => {
               >
                 Cancel
               </button> */}
-              <button className=" mt-0 mb-8 pt-3 pb-3 " type="submit">
-                Save
+              <button className=" mt-0 mb-8 pt-3 pb-3 orange-btn" type="submit">
+                Update
               </button>
             </div>
           </form>
