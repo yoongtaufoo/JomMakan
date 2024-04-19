@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import DetailCard from './components/DetailCard';
 import {restaurants} from './RestaurantData';
 import Form from "./components/Form";
+import { reservations } from './ReservationData';
 
 const Reserve = () => {
 
@@ -62,9 +63,7 @@ const Reserve = () => {
                 </div>
                 <div id='Rform-container'>
                     <h2>Reservation Form</h2>
-                    
-                    <Form date={null}/>
-                    
+                    <Form date={null} tables={restaurant.tables}/>
                 </div>
             </div>
         </div>
