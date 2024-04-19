@@ -20,7 +20,7 @@ const LogIn = () => {
   return (
     <div>
       <nav className="navbar">
-        <img src={logo} id="logo"></img>
+        <img className="ms-4" src={logo} id="logo"></img>
       </nav>
       <div class="w-100 d-flex flex-row justify-content-between align-items-center">
         <img

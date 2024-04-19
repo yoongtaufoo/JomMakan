@@ -11,7 +11,7 @@ function App() {
   return (
     <>
       <nav className="navbar">
-        <img src={logo} id="logo"></img>
+        <img className="ms-4" src={logo} id="logo"></img>
         <li>
           <Link to="/login">
             <button>Login</button>
