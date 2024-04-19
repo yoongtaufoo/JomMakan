@@ -1,11 +1,12 @@
 import React from "react";
 import "./SignUp.css";
-import Navbar from "./components/Navbar";
-
+import logo from "./assets/logo.png";
 const SignUp = () => {
   return (
     <div>
-      <Navbar />
+      <nav className="navbar">
+        <img src={logo} id="logo"></img>
+      </nav>
     </div>
   );
 };

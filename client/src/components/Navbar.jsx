@@ -22,9 +22,11 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <button id="invisible">
-              <strong>{name}</strong>
-            </button>
+            <Link to="/profile">
+              <button id="invisible">
+                <strong>{name}</strong>
+              </button>
+            </Link>
           </li>
         </div>
       </nav>

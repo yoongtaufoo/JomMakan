@@ -1,22 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import "./LogIn.css";
 import { Link } from "react-router-dom";
 import logo from "./assets/logo.png";
 import loginLeft from "./assets/log-in-left.jpg";
 import loginRight from "./assets/log-in-right.jpg";
+import { Password } from "primereact/password";
+import "primereact/resources/primereact.min.css";
+// import "primereact/primeicons.css";
 
 const LogIn = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
   };
 
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const footer = (
+    <>
+      <p className="mt-2">Suggestions</p>
+      <ul className="pl-2 ml-2 mt-0">
+        <li>At least one lowercase</li>
+        <li>At least one uppercase</li>
+        <li>At least one numeric</li>
+        <li>Minimum 8 characters</li>
+      </ul>
+    </>
+  );
+
   return (
     <div>
       <nav className="navbar">
         <img src={logo} id="logo"></img>
-        {/* <Link to="/login">
-          <button>Login</button>
-        </Link> */}
       </nav>
       <div class="w-100 d-flex flex-row justify-content-between align-items-center">
         <img
@@ -26,59 +45,78 @@ const LogIn = () => {
         />
         <div className="log-in-container">
           <h1>Log in to your account</h1>
-          <form onSubmit={handleSubmit} id="log-in-form">
-            <div class="form-group">
-              <label for="emailLogIn">
+          <form
+            onSubmit={handleSubmit}
+            className="needs-validation"
+            id="log-in-form"
+          >
+            <div class="form-group was-validated">
+              <label htmlFor="emailLogIn">
                 <strong>Email</strong>
               </label>
               <input
                 type="email"
                 class="form-control log-in"
+                name="emailLogIn"
                 id="emailLogIn"
                 // aria-describedby="emailHelp"
                 placeholder="Enter email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
-              {/* <small id="emailHelp" class="form-text text-muted">
-            We'll never share your email with anyone else.
-          </small> */}
             </div>
-            <div class="form-group">
-              <label for="passwordLogIn">
+
+            <div class="form-group position-relative">
+              <label htmlFor="passwordLogin">
                 <strong>Password</strong>
               </label>
-              <input
-                type="password"
-                class="form-control log-in"
-                id="passwordLogIn"
-                placeholder="Enter Password"
-              />
+              <div className="position-relative">
+                <input
+                  name="passwordLogin"
+                  id="passwordLogin"
+                  class="form-control log-in"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                  required
+                  noValidate
+                  // validated={false}
+                  // value={pass}
+                  onChange={(e) => setPass(e.target.value)}
+                />
+                {showPassword ? (
+                  <i
+                    class="bi bi-eye fs-4 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    onClick={handleClickShowPassword}
+                    style={{ cursor: "pointer" }}
+                  ></i>
+                ) : (
+                  <i
+                    class="bi bi-eye-slash fs-4 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    onClick={handleClickShowPassword}
+                    style={{ cursor: "pointer" }}
+                  ></i>
+                )}
+              </div>
             </div>
+
             <Link to="/home">
               <button type="submit" id="log-in-button">
                 Log In
               </button>
             </Link>
-            <br />
-            <p>
-              <strong>Don't have an account ?</strong>
-            </p>
-            <a
-              class="link-danger link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-              href="/signup"
-            >
-              Click here to sign up !
-            </a>
-            {/* <label htmlFor="">Email Address: </label>
-        <br></br>
-        <input
-          type="email"
-          placeholder="--Enter your email address--"
-          className="input-Box"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        /> */}
-            {/* <button type="submit">Log In</button> */}
           </form>
+          <br />
+
+          <p>
+            <strong>Don't have an account ?</strong>
+          </p>
+          <a
+            class="link-danger link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+            href="/signup"
+          >
+            Click here to sign up !
+          </a>
         </div>
         <img className="log-in-pic" src={loginRight} alt="right log in pic" />
       </div>
