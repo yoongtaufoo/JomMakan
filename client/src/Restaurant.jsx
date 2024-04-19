@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
+
 // import res1 from "./assets/Restaurant1.jpg";
 // import res2 from "./assets/Restaurant2.jpg";
 // import res3 from "./assets/Restaurant3.jpg";
@@ -191,7 +192,7 @@ const renderRatingStars = (rating) => {
 
 const Restaurant = () => {
   const { id } = useParams();
-  const [isSaved, setIsSaved] = useState(false); // Initialize isSaved state
+  const [isSaved, setIsSaved] = useState(false);
   const [hasLiked, setHasLiked] = useState(
     new Array(reviews.length).fill(false)
   );
@@ -199,7 +200,7 @@ const Restaurant = () => {
   const [showDetailsPopups, setShowDetailsPopups] = useState(
     new Array(reviews.length).fill(false)
   );
-  const [selectedReviewIndex, setSelectedReviewIndex] = useState(null); // Initialize selectedReviewIndex state
+  const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
 
   const handleSaveToggle = () => {
     setIsSaved((prevState) => !prevState);
@@ -212,14 +213,14 @@ const Restaurant = () => {
         newLikes[index] = 1;
         setHasLiked((prevHasLiked) => {
           const newHasLiked = [...prevHasLiked];
-          newHasLiked[index] = true; // Set liked status to true
+          newHasLiked[index] = true;
           return newHasLiked;
         });
       } else {
         newLikes[index] = 0;
         setHasLiked((prevHasLiked) => {
           const newHasLiked = [...prevHasLiked];
-          newHasLiked[index] = false; // Set liked status to false
+          newHasLiked[index] = false;
           return newHasLiked;
         });
       }
@@ -227,7 +228,7 @@ const Restaurant = () => {
     });
   };
 
-  const handleDetailsClick = (index) => {
+  const togglePopup = (index) => {
     setShowDetailsPopups((prevState) => {
       const newState = [...prevState];
       newState[index] = !newState[index];
@@ -237,12 +238,10 @@ const Restaurant = () => {
   };
 
   const handleEdit = (index) => {
-    // Implement your edit functionality here
     console.log("Edit review at index:", index);
   };
 
   const handleDelete = (index) => {
-    // Implement your delete functionality here
     console.log("Delete review at index:", index);
   };
 
@@ -354,13 +353,13 @@ const Restaurant = () => {
           </button>
         </div>
         <br />
-        <div className="d-flex justify-content-start mt-5">
+        <div className="d-flex justify-content-between align-items-center">
           <h5 id="review-title ">
             <strong>Reviews</strong>
           </h5>
           <div className="ml-auto">
-            <Link to="/AddReview">
-              <button type="button" className="btn-default">
+            <Link to={`/AddReview?restaurantName=${restaurant.name}`}>
+              <button type="button" className="button-add-reviews">
                 <i className="bi-plus"></i>Add a review
               </button>
             </Link>
@@ -386,7 +385,10 @@ const Restaurant = () => {
                 5 <i className="bi bi-star-fill"></i>
               </div>
               <div className="rectangle-box">
-                {/* <div className={`bar bar-colored bar-78`}></div> */}
+                <div
+                  className="fillable-box"
+                  style={{ width: `78%`, height: "100%" }}
+                />
               </div>
               <div className="percentage">78%</div>
             </div>
@@ -395,7 +397,10 @@ const Restaurant = () => {
                 4 <i className="bi bi-star-fill"></i>
               </div>
               <div className="rectangle-box">
-                {/* <div className={`bar bar-colored bar-15`}></div> */}
+                <div
+                  className="fillable-box"
+                  style={{ width: `15%`, height: "100%" }}
+                />
               </div>
               <div className="percentage">15%</div>
             </div>
@@ -404,7 +409,10 @@ const Restaurant = () => {
                 3 <i className="bi bi-star-fill"></i>
               </div>
               <div className="rectangle-box">
-                {/* <div className={`bar bar-colored bar-5`}></div> */}
+                <div
+                  className="fillable-box"
+                  style={{ width: `5%`, height: "100%" }}
+                />
               </div>
               <div className="percentage">5%</div>
             </div>
@@ -413,7 +421,10 @@ const Restaurant = () => {
                 2 <i className="bi bi-star-fill"></i>
               </div>
               <div className="rectangle-box">
-                {/* <div className={`bar bar-colored bar-2}`}></div> */}
+                <div
+                  className="fillable-box"
+                  style={{ width: `2%`, height: "100%" }}
+                />
               </div>
               <div className="percentage">2%</div>
             </div>
@@ -422,7 +433,10 @@ const Restaurant = () => {
                 1 <i className="bi bi-star-fill"></i>
               </div>
               <div className="rectangle-box">
-                {/* <div className={`bar bar-colored bar-0`}></div> */}
+                <div
+                  className="fillable-box"
+                  style={{ width: `0%`, height: "100%" }}
+                />
               </div>
               <div className="percentage">0%</div>
             </div>
@@ -433,23 +447,29 @@ const Restaurant = () => {
           <div key={index} className="review-card">
             <p>
               <strong>{review.userName}</strong>
-              <button
-                className="details-button"
-                onClick={() => handleDetailsClick(index)}
+              <span
+                className="review-options"
+                onClick={() => togglePopup(index)}
               >
                 <i class="bi-three-dots"></i>
-              </button>
+              </span>
+              {showDetailsPopups[index] && (
+                <div className="review-options-popup">
+                  <button onClick={() => handleEdit(index)}>
+                    {" "}
+                    <i className="bi bi-pencil"></i> Edit
+                  </button>
+                  <button onClick={() => handleDelete(index)}>
+                    {" "}
+                    <i className="bi bi-trash"></i> Delete
+                  </button>
+                </div>
+              )}
             </p>
 
-            <button className="btn-edit" onClick={() => handleEdit(index)}>
-              <i className="bi bi-pencil"></i> Edit
-            </button>
-            <button className="btn-delete" onClick={() => handleDelete(index)}>
-              <i className="bi bi-trash"></i> Delete
-            </button>
             <div className="d-flex justify-content-start">
               <div>{renderRatingStars(review.rating)}</div>
-              <p id="timePost">{review.timePosted}</p>
+              <p className="time-post">{review.timePosted}</p>
             </div>
 
             <p>{review.reviewDescription}</p>
@@ -473,7 +493,7 @@ const Restaurant = () => {
                       ? "bi bi-hand-thumbs-up-fill"
                       : "bi bi-hand-thumbs-up"
                   }
-                ></i>
+                ></i>{" "}
                 Helpful ({likes[index]})
               </button>
               <button className="btn-share">
