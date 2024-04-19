@@ -4,6 +4,9 @@ import Navbar from "./components/Navbar";
 import { Link } from "react-router-dom";
 import ProfileSection from "./components/ProfileSection";
 import PasswordStrengthMeter from "./components/PasswordStrengthMeter";
+import report from "./assets/report.png";
+import savedWorkshop from "./assets/saved-workshops.png";
+import savedRestaurant from "./assets/saved-restaurant.png";
 
 const userInfo = {
   id: 1,
@@ -194,6 +197,30 @@ const Profile = () => {
               </button>
             </div>
           </form>
+          <div className="profile-selections-wrapper d-flex flex-row">
+            <Link to="/fav-restaurant">
+              <div className="profile-selections">
+                <img className="profile-icons" src={savedRestaurant}></img>
+                <div>
+                  <strong>Favourite Restaurants</strong>
+                </div>
+              </div>
+            </Link>
+            <Link to="/fav-workshop">
+              <div className="profile-selections">
+                <img className="profile-icons" src={savedWorkshop}></img>
+                <strong>
+                  <div>Favourite Workshops</div>
+                </strong>
+              </div>
+            </Link>
+            <Link to="/report">
+              <div className="profile-selections">
+                <img className="profile-icons" src={report}></img>
+                <strong className="">Report & Feedback</strong>
+              </div>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
