@@ -7,6 +7,9 @@ const RegistrationForm = (props) => {
   const [confirm, setConfirm] = useState(false);
   const popRef = useRef(null);
   const Rworkshop = props.registrationInfo;
+  const tables = props.tables;
+  const [numberOfPax, setNumberOfPax] = useState(1);
+
   const handleClickOutside = (event) => {
     if (popRef.current && !popRef.current.contains(event.target)) {
       setConfirm(false);
@@ -18,6 +21,29 @@ const RegistrationForm = (props) => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+
+  // Handle change event for the number of pax input
+  const handlePaxChange = (event) => {
+    setNumberOfPax(parseInt(event.target.value));
+  };
+
+  // Generate select options for pax no
+  const nopaxOptions = [];
+  for (let i = 1; i <= Math.max(...tables.map(table => table.pax)); i++) {
+    nopaxOptions.push(<option key={i} value={i}>{i}</option>);
+  }
+
+  // Generate select options for restaurant tables
+  const tableOptions = tables.map((table, index) => (
+    <option
+      key={index}
+      value={table.id}
+      disabled={numberOfPax > table.pax || table.status === 'Unavailable'}
+    >
+      Table {table.id} - ({table.pax} pax capacity)
+    </option>
+  ));
+
   return (
     <div id="Rform">
       <div id="Rinputs">
@@ -48,8 +74,19 @@ const RegistrationForm = (props) => {
         <div>
           No of pax:
           <br />
-          <input id="Rinput" type="number" required></input>
+          <select id="Rinput" value={numberOfPax} onChange={handlePaxChange} required>
+            {nopaxOptions}
+          </select>
         </div>
+        {props.table !== null ? (
+          <div>
+            Table:
+            <br />
+              <select id="Rinput">
+                {tableOptions}
+              </select>
+          </div>
+        ) : null }
         <div id="Check">
           <label id="Rtext">
             <input id="checkbox" type="checkbox" name="" if="" required />I have

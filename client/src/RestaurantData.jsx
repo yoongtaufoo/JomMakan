@@ -35,7 +35,23 @@ const restaurants = [
       cuisine: "steakhouse",
       resPhotos: photos,
       review: "3.5",
-      tableid: ["m1","m2","m3"],
+      tables: [
+        {
+          id: 1,
+          status: "Available",
+          pax: 4,
+        },
+        {
+          id: 2,
+          status: "Available",
+          pax: 2,
+        },
+        {
+          id: 3,
+          status: "Unavailable",
+          pax: 8,
+        },
+      ],
     },
     {
       id: 2,
@@ -51,7 +67,23 @@ const restaurants = [
       cuisine: "wine",
       resPhotos: photos,
       review: "4.5",
-      tableid: ["s1","s2","s3"],
+      tables: [
+        {
+          id: 1,
+          status: "Unavailable",
+          pax: 4,
+        },
+        {
+          id: 2,
+          status: "Available",
+          pax: 2,
+        },
+        {
+          id: 3,
+          status: "Available",
+          pax: 8,
+        },
+      ],
     },
     {
       id: 3,
@@ -66,7 +98,23 @@ const restaurants = [
       cuisine: "local Malaysia",
       resPhotos: photos,
       review: "3.5",
-      tableid: ["c1","c2","c3"],
+      tables: [
+        {
+          id: 1,
+          status: "Available",
+          pax: 4,
+        },
+        {
+          id: 2,
+          status: "Unavailable",
+          pax: 4,
+        },
+        {
+          id: 3,
+          status: "Available",
+          pax: 4,
+        },
+      ],
     },
     {
       id: 4,
@@ -82,6 +130,23 @@ const restaurants = [
       cuisine: "steakhouse",
       resPhotos: photos,
       review: "4.5",
+      tables: [
+        {
+          id: 1,
+          status: "Available",
+          pax: 4,
+        },
+        {
+          id: 2,
+          status: "Available",
+          pax: 2,
+        },
+        {
+          id: 3,
+          status: "Available",
+          pax: 8,
+        },
+      ],
     },
     {
       id: 5,
@@ -96,6 +161,23 @@ const restaurants = [
       cuisine: "chinese",
       resPhotos: photos,
       review: "3.5",
+      tables: [
+        {
+          id: 1,
+          status: "Available",
+          pax: 10,
+        },
+        {
+          id: 2,
+          status: "Available",
+          pax: 6,
+        },
+        {
+          id: 3,
+          status: "Available",
+          pax: 8,
+        },
+      ],
     },
     {
       id: 6,
@@ -111,6 +193,23 @@ const restaurants = [
       cuisine: "dessert",
       resPhotos: photos,
       review: "3.5",
+      tables: [
+        {
+          id: 1,
+          status: "Available",
+          pax: 4,
+        },
+        {
+          id: 2,
+          status: "Available",
+          pax: 2,
+        },
+        {
+          id: 3,
+          status: "Available",
+          pax: 4,
+        },
+      ],
     },
   ];
   
