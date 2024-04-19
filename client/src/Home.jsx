@@ -83,7 +83,7 @@ const Home = () => {
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="customized-h1">Discover Restaurants</h1>
           <div className="ml-auto">
-            <Link to="/FavRestaurant">
+            <Link to="/fav-restaurant">
               <small className="text-muted">
                 <i className="bi bi-heart-fill custom-icon"></i>Favourites
               </small>

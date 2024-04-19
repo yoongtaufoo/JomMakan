@@ -29,7 +29,7 @@ const WorkshopPage = () => {
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="customized-h1 workshop-header">Discover Workshops</h1>
           <div className="ml-auto">
-            <a href="/FavWorkshop">
+            <a href="/fav-workshop">
               <small className="text-muted">
                 <i className="bi bi-heart-fill custom-icon"></i>Favourites
               </small>

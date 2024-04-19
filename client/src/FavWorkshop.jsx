@@ -9,7 +9,9 @@ const FavWorkshop = () => {
   const navigate = useNavigate();
 
   // Filter workshops with status "T" (favorites)
-  const favoriteWorkshops = workshopData.filter((workshop) => workshop.status === "T");
+  const favoriteWorkshops = workshopData.filter(
+    (workshop) => workshop.status === "T"
+  );
 
   // Limit the display to only 3 favorite workshops
   const limitedWorkshops = favoriteWorkshops.slice(0, 3);
@@ -27,13 +29,10 @@ const FavWorkshop = () => {
         >
           <i className="bi bi-arrow-left-circle"></i> Back
         </div>
-        <h1 className="customized-h1 workshop-header">Favorite Workshops</h1>
+        <h1 className="customized-h1 workshop-header">Favourite Workshops</h1>
         <div className="workshop-grid">
           {limitedWorkshops.map((workshop) => (
-            <WorkshopCard
-              key={workshop.id}
-              workshop={workshop}
-            />
+            <WorkshopCard key={workshop.id} workshop={workshop} />
           ))}
         </div>
       </div>
