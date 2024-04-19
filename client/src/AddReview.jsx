@@ -42,16 +42,13 @@ const AddReview = () => {
       <Navbar />
       <div id="main-container">
         <div className="back">
-          <Link to="/home" className="back-btn">
-            <i className="bi bi-arrow-left-circle"></i> Back
-          </Link>
           <div
-          className="back-btn"
-          style={{ cursor: "pointer" }}
-          onClick={() => navigate(-1)}
-        ><i class="bi-view-list"></i> View All Reviews</div>
-            
-
+            className="back-btn"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate(-1)}
+          >
+            <i class="bi bi-arrow-left-circle"></i> Back
+          </div>
         </div>
 
         <div id="form">
