@@ -12,8 +12,8 @@ const WorkshopPage = () => {
 
   //For filtering
   const filteredWorkshops = workshopData.filter((workshop) => {
-    if (activeTab === 0) return workshop.status === "T";
-    if (activeTab === 1) return workshop.status === "F";
+    if (activeTab === 0) return workshop;
+    if (activeTab === 1) return workshop.isFresh === 1;
     return true; // Default case
   });
 
@@ -29,7 +29,7 @@ const WorkshopPage = () => {
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="customized-h1 workshop-header">Discover Workshops</h1>
           <div className="ml-auto">
-            <a href="/FavWorkshop">
+            <a href="/fav-workshop">
               <small className="text-muted">
                 <i className="bi bi-heart-fill custom-icon"></i>Favourites
               </small>
@@ -44,7 +44,7 @@ const WorkshopPage = () => {
 
         <Tabs
           tabdata={{
-            one: "Top Picks",
+            one: "All",
             two: "Fresh Additions",
           }}
           activeTab={activeTab}
