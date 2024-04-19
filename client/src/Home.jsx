@@ -95,12 +95,7 @@ const Home = () => {
             </Link>
           </div>
         </div>
-        <div className="d-flex justify-content-between align-items-center mt-4">
-          <div className="mt-4">
-            <strong>
-              <u>Top Picks</u>
-            </strong>
-          </div>
+        <div className="d-flex justify-content-end align-items-center mt-4">
           <div>
             <SearchBar place="Locations, Restaurant, or Cuisines..." />
           </div>
