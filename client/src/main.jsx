@@ -7,6 +7,7 @@ import Home from "./Home.jsx";
 import LogIn from "./LogIn.jsx";
 import SignUp from "./SignUp.jsx";
 import Workshop from "./WorkshopPage.jsx";
+import FavWorkshop from "./FavWorkshop.jsx";
 import WRegistration from "./Registration.jsx";
 import FavRestaurant from "./FavRestaurant.jsx";
 import Restaurant from "./Restaurant.jsx";
@@ -24,6 +25,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/home" element={<Home />} />
         <Route exact path="/workshop" element={<Workshop />} />
+        <Route exact path="/FavWorkshop" element={<FavWorkshop />} />
         <Route exact path="/workshop/:id" element={<WRegistration />} />
         <Route exact path="/FavRestaurant" element={<FavRestaurant />} />
         <Route exact path="/restaurant/:id" element={<Restaurant />} />

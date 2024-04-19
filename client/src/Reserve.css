@@ -160,3 +160,32 @@
 {
     font-size: 30px;
 }
+
+#buttonPopupCancel{
+    background-color: gray;
+}
+button:hover {
+    outline-color: transparent;
+    outline-style:solid;
+    box-shadow: 0 0 0 4px lightgray;
+}
+
+button:hover{
+    transform: translate(0px, -5px);
+    box-shadow: 0px 37px 20px -15px rgba(0,0,0,0.2);
+
+}
+
+.back-btn:hover{
+    color: darkgoldenrod;
+}
+
+.bi-calendar2-check-fill{
+    color: #ff7f0e;
+    font-size: 300%;
+}
+
+.bi-calendar-x-fill{
+    color: #ff7f0e;
+    font-size: 300%;
+}

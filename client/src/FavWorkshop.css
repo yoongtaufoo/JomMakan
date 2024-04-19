@@ -1,0 +1,46 @@
+.custom-col {
+    display: inline-block;
+    margin-right: 10spx;
+    margin-bottom: 30px;
+  }
+  
+.container{
+    padding: 0;
+}
+  
+  .card-img-top {
+    width: 100%; /* Ensure the image takes up the full width of the card */
+    height: 300px; /* Set the height of the image */
+    object-fit: cover; /* Ensure the image fills its container without stretching */
+  }
+  
+  .card-body {
+    flex: 1; /* Make the title part take up the available vertical space */
+  }
+  
+  .custom-h1{
+    margin-top: 40px;
+    margin-bottom: 20px;
+  }
+  
+  .custom-icon{
+    color: #FCA311;
+    margin-right: 5px;
+  }
+
+  .text-muted{
+    margin-right: 15px;
+  }
+
+  .custom-row{
+    margin-bottom: 10px;
+    background-color: #fff0d7;
+  }
+
+  .custom-button{
+    float: right;
+  }
+
+  .card-title{
+    font-weight: bold;
+  }
