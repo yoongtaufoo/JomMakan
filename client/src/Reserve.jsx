@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import DetailCard from './components/DetailCard';
 import {restaurants} from './RestaurantData';
 import Form from "./components/Form";
-import { reservations } from './ReservationData';
+// import { reservations } from './ReservationData';
 
 const Reserve = () => {
 
@@ -43,7 +43,7 @@ const Reserve = () => {
                     <i className="bi bi-arrow-left-circle"></i> Back
                 </Link>
                 <div className="ml-auto">
-                    <Link to="/reservations">
+                    <Link to="/reservations" className='back-btn'>
                         <i className="bi bi-calendar-heart custom-icon"></i>View My Reservations
                     </Link>
                 </div>

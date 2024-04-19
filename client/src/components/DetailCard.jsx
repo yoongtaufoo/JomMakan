@@ -1,8 +1,19 @@
 import React from "react";
 
 const DetailCard = ({ workshop, restaurant }) => {
+  
+  const getAvailableTables = (restaurant) => {
+    if (!restaurant || !restaurant.tables) {
+      return 0; // Return 0 if restaurant or tables data is missing
+    }
+  
+    const availableTables = restaurant.tables.filter(table => table.status === "Available");
+    return availableTables.length;
+  };
+  
   return (
     <div style={{ padding: "10px", display: "block", margin: "5% auto" }}>
+    {/* // <div className="card customized-workshop-card"> */}
       <img
         src={workshop ? workshop.photo : restaurant.image}
         alt={workshop ? workshop.title : restaurant.name}
@@ -30,7 +41,7 @@ const DetailCard = ({ workshop, restaurant }) => {
       </p>
       <p className="card-text">
         <i className="bi bi-egg-fried custom-icon"></i>
-        {workshop ? `${workshop.current} / ${workshop.total}` : ""}
+        {workshop ? `${workshop.current} / ${workshop.total}` : `${getAvailableTables(restaurant)} tables available`}
       </p>
     </div>
   );
