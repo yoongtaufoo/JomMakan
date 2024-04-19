@@ -123,11 +123,15 @@ const MyRegistration = () => {
       <img src={image} alt="" style={{ width: "100%" }} />
       <div className="container">
         <br />
-        <div className='back-btn' style={{ cursor: "pointer" }} onClick={() => navigate(-1)}>
-            <i class="bi bi-arrow-left-circle"></i> Back
+        <div
+          className="back-btn"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate(-1)}
+        >
+          <i class="bi bi-arrow-left-circle"></i> Back
         </div>
 
-        <h1 className="custom-h1">My Workshop</h1>
+        <h1 className="custom-h1">My Workshops</h1>
 
         <Tabs
           tabdata={{ one: "Upcoming", two: "Completed", three: "Cancelled" }}
