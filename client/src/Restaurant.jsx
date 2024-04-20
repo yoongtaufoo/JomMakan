@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
 
 // import res1 from "./assets/Restaurant1.jpg";
@@ -192,6 +192,9 @@ const renderRatingStars = (rating) => {
 
 const Restaurant = () => {
   const { id } = useParams();
+  const popRef = useRef(null);
+  const [deleted, setDelete] = useState(false);
+  const [confirm, setConfirm] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [hasLiked, setHasLiked] = useState(
     new Array(reviews.length).fill(false)
@@ -257,11 +260,20 @@ const Restaurant = () => {
     console.log("Edit review at index:", index);
     setOpenDropdownIndex(null);
   };
+  useEffect(() => {
+    let handler = (e) => {
+      if (!popRef.current.contains(e.target)) {
+        setDelete(false);
+      }
+    };
 
-  const handleDelete = (index) => {
-    console.log("Delete review at index:", index);
-    setOpenDropdownIndex(null);
-  };
+    document.addEventListener("mousedown", handler);
+
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
+  
 
   // const restaurant = restaurants.find(
   //   (restaurant) => restaurant.id === parseInt(id)
@@ -489,9 +501,8 @@ const Restaurant = () => {
                     </button>
                   </li>
                   <li>
-                    <button
-                      className="dropdown-item"
-                      onClick={() => handleDelete(index)}
+                    <button className="dropdown-item"
+                      onClick={() => setDelete(!deleted)}
                     >
                       <i className="bi bi-trash"></i> Delete
                     </button>
@@ -499,6 +510,37 @@ const Restaurant = () => {
                 </ul>
               </p>
             </div>
+            {deleted && (
+              <div id="popup-overlay">
+                <div id="popup" ref={popRef}>
+                  <div>Confirm delete?</div>
+                  <div>
+                    <button
+                      onClick={() => {
+                        setConfirm(true);
+                        setDelete(false);
+                      }}
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      id="buttonPopupCancel"
+                      onClick={() => setDelete(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {confirm && (
+              <div id="popup-overlay">
+                <div id="popup" ref={popRef}>
+                  <i class="bi bi-calendar2-check-fill"></i>
+                  <div>Deleted</div>
+                </div>
+              </div>
+            )}
             {/* <span
                 className="review-options"
                 onClick={() => togglePopup(index)}
