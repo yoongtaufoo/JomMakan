@@ -58,7 +58,7 @@
   margin-top: 20px;
   margin-bottom: 20px;
 } */
-.dropdown-menu {
+.dropdown-view-more{
   margin-left: 1115px;
 }
 .button-add-reviews {
@@ -139,7 +139,7 @@
   border: none;
   font-size: 15px;
 }
-#dropdownViewMoreButton {
+#dropdownViewMoreButton{
   background-color: transparent;
   color: black;
   border: none;

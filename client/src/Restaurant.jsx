@@ -476,7 +476,7 @@ const Restaurant = () => {
                   <i className="bi-three-dots"></i>
                 </button>
                 <ul
-                  className={`dropdown-menu ${
+                  className={`dropdown-menu dropdown-view-more ${
                     openDropdownIndex === index ? "show" : ""
                   }`}
                 >
