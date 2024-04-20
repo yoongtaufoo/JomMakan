@@ -12,7 +12,7 @@ const SignUp = () => {
 
   const [username, setUsername] = useState("");
   const [location, setLocation] = useState("");
-  const [birthday, setBirthday] = useState("");
+  const [birthday, setBirthday] = useState(new Date());
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -28,9 +28,9 @@ const SignUp = () => {
   return (
     <div>
       <nav className="navbar">
-        <img src={logo} id="logo"></img>
+        <img className="ms-4" src={logo} id="logo"></img>
       </nav>
-      <div className=" register-content d-flex flex-row justify-content-center align-items-center">
+      <div className="register-content d-flex flex-row justify-content-center align-items-center">
         <div className="register-container">
           <h1 className="register-header mt-1 mb-3">Register an account</h1>
           <form
@@ -123,13 +123,13 @@ const SignUp = () => {
                 />
                 {showPassword ? (
                   <i
-                    class="bi bi-eye fs-4 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    class="bi bi-eye fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
                     onClick={handleClickShowPassword}
                     style={{ cursor: "pointer" }}
                   ></i>
                 ) : (
                   <i
-                    class="bi bi-eye-slash fs-4 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    class="bi bi-eye-slash fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
                     onClick={handleClickShowPassword}
                     style={{ cursor: "pointer" }}
                   ></i>
@@ -160,13 +160,13 @@ const SignUp = () => {
                 />
                 {showPassword2 ? (
                   <i
-                    class="bi bi-eye fs-4 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    class="bi bi-eye fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
                     onClick={handleClickShowPassword2}
                     style={{ cursor: "pointer" }}
                   ></i>
                 ) : (
                   <i
-                    class="bi bi-eye-slash fs-4 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    class="bi bi-eye-slash fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
                     onClick={handleClickShowPassword2}
                     style={{ cursor: "pointer" }}
                   ></i>
@@ -194,7 +194,11 @@ const SignUp = () => {
             Click here to log in !
           </a>
         </div>
-        <img className="register-pic" src={registerPic} alt="register-pic" />
+        <img
+          className="register-pic ms-3"
+          src={registerPic}
+          alt="register-pic"
+        />
       </div>
     </div>
   );

@@ -1,0 +1,57 @@
+.profile-wrapper{
+    gap: 100px;
+}
+
+.profile-section{
+    margin: 20px 0px;
+
+}
+
+.profile-details-wrapper{
+    margin: 50px 0px;
+    width: 800px;
+    /* background-color: blue; */
+}
+
+.profile-card{
+    /* background-color: aqua; */
+    width: 800px;
+    height: fit-content;
+    padding: 50px 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-radius: 25px;
+    border: 2px solid rgb(150, 150, 150);
+}
+
+.prof-cancel-btn{
+    background-color: rgb(205, 205, 205);
+    color: black;
+    font-weight: bold;
+}
+
+.profile-icons{
+    padding: 20px;
+    width:120px;
+    height:110px;
+    object-fit: contain;
+}
+
+.profile-selections{
+    border: 2px solid rgb(150,150,150);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 35px 20px;
+    border-radius: 15px;
+    margin-top: 40px;
+    width:230px;
+    height:230px;
+}
+
+.profile-selections-wrapper{
+    width:800px;
+    justify-content: space-between;
+    align-items: center;
+}

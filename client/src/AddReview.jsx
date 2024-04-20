@@ -8,10 +8,10 @@ import { useNavigate } from "react-router-dom";
 
 const AddReview = () => {
   const { id } = useParams();
-    const navigate = useNavigate();
-   const location = useLocation();
-   const params = new URLSearchParams(location.search);
-   const restaurantName = params.get("restaurantName");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const restaurantName = params.get("restaurantName");
 
   const [submit, setSubmit] = useState(false);
   const [confirm, setConfirm] = useState(false);
