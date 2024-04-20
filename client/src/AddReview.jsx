@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import MyDropzone from "./components/MyDropzone"; 
+import MyDropzone from "./components/MyDropzone";
 
 const AddReview = () => {
   const { id } = useParams();
@@ -18,29 +18,18 @@ const AddReview = () => {
   const [confirm, setConfirm] = useState(false);
   const popRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadStatus, setUploadStatus] = useState("idle"); 
+  const [uploadStatus, setUploadStatus] = useState("idle");
 
-   const handleUploadFile = async (selectedFile) => {
-     console.log("Uploading file:", selectedFile);
-     setUploadStatus("loading");
-     setTimeout(() => {
-       setUploadStatus("success");
-     }, 3000);
-   };
-
-
-   const resetUploadStatus = () => {
-     setUploadStatus("idle");
-   };
-
-  const handleReviewSubmit = () => {
-    setSubmit(true); 
+  const handleUploadFile = async (selectedFile) => {
+    console.log("Uploading file:", selectedFile);
+    setUploadStatus("loading");
+    setTimeout(() => {
+      setUploadStatus("success");
+    }, 3000);
   };
 
-  const handleClickOutside = (event) => {
-    if (popRef.current && !popRef.current.contains(event.target)) {
-      setConfirm(false);
-    }
+  const resetUploadStatus = () => {
+    setUploadStatus("idle");
   };
 
   const handleRating = (rate) => {
@@ -48,12 +37,18 @@ const AddReview = () => {
   };
 
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
+    let handler = (e) => {
+      if (!popRef.current.contains(e.target)) {
+        setConfirm(false);
+      }
     };
-  }, []);
 
+    document.addEventListener("mousedown", handler);
+
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
   return (
     <div>
       <Navbar />
@@ -110,12 +105,12 @@ const AddReview = () => {
               <br />
             </div>
           </div>
-          <button id="submitButton" onClick={handleReviewSubmit}>
+          <button id="form-submitButton" onClick={() => setSubmit(!submit)}>
             Submit Review
           </button>
           {submit && (
             <div id="popup-overlay">
-              <div id="popup">
+              <div id="popup" ref={popRef}>
                 <div>Confirm submit?</div>
                 <div>
                   <button
@@ -126,15 +121,21 @@ const AddReview = () => {
                   >
                     Confirm
                   </button>
-                  <button onClick={() => setSubmit(false)}>Cancel</button>
+                  <button
+                    id="buttonPopUpCancel"
+                    onClick={() => setSubmit(false)}
+                  >
+                    Cancel
+                  </button>
                 </div>
               </div>
             </div>
           )}
           {confirm && (
-            <div id="popup-overlay" ref={popRef}>
-              <div id="popup">
-                <div>Confirmed</div>
+            <div id="popup-overlay">
+              <div id="popup" ref={popRef}>
+                <i class="bi bi-calendar2-check-fill"></i>
+                <div>Submitted</div>
               </div>
             </div>
           )}
