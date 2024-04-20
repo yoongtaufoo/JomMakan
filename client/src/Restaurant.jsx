@@ -467,38 +467,36 @@ const Restaurant = () => {
               <p>
                 <strong>{review.userName}</strong>
 
-                <div className="dropdown-view-more">
-                  <button
-                    className="btn btn-secondary dropdown-toggle"
-                    type="button"
-                    id="dropdownViewMoreButton"
-                    onClick={() => toggleDropdown(index)}
-                  >
-                    <i className="bi-three-dots"></i>
-                  </button>
-                  <ul
-                    className={`dropdown-menu ${
-                      openDropdownIndex === index ? "show" : ""
-                    }`}
-                  >
-                    <li>
-                      <button
-                        className="dropdown-item"
-                        onClick={() => handleEdit(index)}
-                      >
-                        <i className="bi bi-pencil"></i> Edit
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className="dropdown-item"
-                        onClick={() => handleDelete(index)}
-                      >
-                        <i className="bi bi-trash"></i> Delete
-                      </button>
-                    </li>
-                  </ul>
-                </div>
+                <button
+                  className="btn btn-secondary dropdown-toggle dropdown-view-more"
+                  type="button"
+                  id="dropdownViewMoreButton"
+                  onClick={() => toggleDropdown(index)}
+                >
+                  <i className="bi-three-dots"></i>
+                </button>
+                <ul
+                  className={`dropdown-menu ${
+                    openDropdownIndex === index ? "show" : ""
+                  }`}
+                >
+                  <li>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => handleEdit(index)}
+                    >
+                      <i className="bi bi-pencil"></i> Edit
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => handleDelete(index)}
+                    >
+                      <i className="bi bi-trash"></i> Delete
+                    </button>
+                  </li>
+                </ul>
               </p>
             </div>
             {/* <span

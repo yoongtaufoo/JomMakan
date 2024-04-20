@@ -58,7 +58,9 @@
   margin-top: 20px;
   margin-bottom: 20px;
 } */
-
+.dropdown-menu {
+  margin-left: 1115px;
+}
 .button-add-reviews {
   background-color: #fca311;
   color: black;
@@ -137,11 +139,12 @@
   border: none;
   font-size: 15px;
 }
-#dropdownViewMoreButton{
+#dropdownViewMoreButton {
   background-color: transparent;
   color: black;
   border: none;
   font-size: 15px;
+  margin-left: 1115px;
 }
 .info-reviews-rating-section {
   display: flex;
