@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import MyDropzone from "./components/MyDropzone"; 
 
 const AddReview = () => {
   const { id } = useParams();
@@ -16,26 +17,42 @@ const AddReview = () => {
   const [submit, setSubmit] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const popRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState("idle"); 
+
+   const handleUploadFile = async (selectedFile) => {
+     console.log("Uploading file:", selectedFile);
+     setUploadStatus("loading");
+     setTimeout(() => {
+       setUploadStatus("success");
+     }, 3000);
+   };
+
+
+   const resetUploadStatus = () => {
+     setUploadStatus("idle");
+   };
+
+  const handleReviewSubmit = () => {
+    setSubmit(true); 
+  };
 
   const handleClickOutside = (event) => {
     if (popRef.current && !popRef.current.contains(event.target)) {
       setConfirm(false);
     }
   };
-  const [rating, setRating] = useState(0);
 
   const handleRating = (rate) => {
-    setRating(rate);
+    console.log("Rating:", rate);
   };
+
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-  const onPointerEnter = () => console.log("Enter");
-  const onPointerLeave = () => console.log("Leave");
-  const onPointerMove = (value, index) => console.log(value, index);
 
   return (
     <div>
@@ -67,12 +84,7 @@ const AddReview = () => {
             <div id="ratings">
               Overall Ratings:
               <br />
-              <Rating
-                onClick={handleRating}
-                onPointerEnter={onPointerEnter}
-                onPointerLeave={onPointerLeave}
-                onPointerMove={onPointerMove}
-              />
+              <Rating onClick={handleRating} />
             </div>
             <br></br>
             <div>
@@ -83,8 +95,13 @@ const AddReview = () => {
             <br></br>
             <div>
               Media Upload:
-              <input type="file" />
+              <MyDropzone
+                onUploadFile={handleUploadFile}
+                uploadStatus={uploadStatus}
+                resetUploadStatus={resetUploadStatus}
+              />
             </div>
+
             <br></br>
             <div id="checkbox">
               <input type="checkbox" />
@@ -93,7 +110,7 @@ const AddReview = () => {
               <br />
             </div>
           </div>
-          <button id="submitButton" onClick={() => setSubmit(!submit)}>
+          <button id="submitButton" onClick={handleReviewSubmit}>
             Submit Review
           </button>
           {submit && (
