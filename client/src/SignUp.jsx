@@ -123,13 +123,13 @@ const SignUp = () => {
                 />
                 {showPassword ? (
                   <i
-                    class="bi bi-eye fs-4 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    class="bi bi-eye fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
                     onClick={handleClickShowPassword}
                     style={{ cursor: "pointer" }}
                   ></i>
                 ) : (
                   <i
-                    class="bi bi-eye-slash fs-4 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    class="bi bi-eye-slash fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
                     onClick={handleClickShowPassword}
                     style={{ cursor: "pointer" }}
                   ></i>
@@ -166,7 +166,7 @@ const SignUp = () => {
                   ></i>
                 ) : (
                   <i
-                    class="bi bi-eye-slash fs-4 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    class="bi bi-eye-slash fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
                     onClick={handleClickShowPassword2}
                     style={{ cursor: "pointer" }}
                   ></i>
