@@ -2,6 +2,7 @@ import React from "react";
 import "./Navbar.css";
 import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
+import profilePic from "../assets/default-pfp.png";
 
 const Navbar = () => {
   const name = "User123";
@@ -26,6 +27,7 @@ const Navbar = () => {
               <button id="invisible">
                 <strong>{name}</strong>
               </button>
+              <img id="nav-pfp" src={profilePic} alt="nav profile pic"></img>
             </Link>
           </li>
         </div>
