@@ -10,10 +10,10 @@
 
 .carousel-control-next,
 .carousel-control-prev {
-    filter: invert(100%);
+  filter: invert(100%);
 }
 
-.back-btn{
+.back-btn {
   font-size: 20px;
   cursor: pointer;
 }
@@ -88,7 +88,10 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
-
+.name-and-view-more {
+  display: flex;
+  align-items: center;
+}
 #timePost {
   margin-left: 20px;
 }
@@ -109,11 +112,15 @@
   color: #fca311;
 }
 
-.bi-arrow-left-circle{
+.bi-arrow-left-circle {
   color: #fca311;
 }
 #star-container {
   display: inline-flex;
+  align-items: center;
+}
+.photo-buttons {
+  display: flex;
   align-items: center;
 }
 .btn-like {
@@ -124,15 +131,18 @@
   white-space: nowrap;
 }
 
-.btn-share {
+#dropdownMenuButton {
   background-color: transparent;
   color: black;
+  border: none;
+  font-size: 15px;
 }
-.review-options-popup{
-  white-space: nowrap;
-  margin-left:1050px;
+#dropdownViewMoreButton{
+  background-color: transparent;
+  color: black;
+  border: none;
+  font-size: 15px;
 }
-
 .info-reviews-rating-section {
   display: flex;
   align-items: center;
@@ -156,20 +166,17 @@
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
-  
 }
 
 .rating-bar {
   display: flex;
   align-items: center;
   margin-bottom: 5px;
- 
 }
 
-.star-indicator{
+.star-indicator {
   margin-right: 20px;
 }
-
 
 .percentage {
   position: relative;
@@ -183,7 +190,7 @@
   align-items: flex-start;
 }
 
-.review-options{
+.review-options {
   align-items: flex-end;
   margin-left: 1200px;
   background-color: transparent;
@@ -192,10 +199,10 @@
   border: none;
 }
 
-#reserve-btn{
+#reserve-btn {
   padding: 15px 30px;
   font-size: 16px;
-  width:fit-content;
+  width: fit-content;
   /* margin: 30px; */
 }
 
@@ -209,6 +216,6 @@
   background-color: orange;
 }
 
-.btn-default{
-  width:150px;
+.btn-default {
+  width: 150px;
 }
