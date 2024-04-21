@@ -405,7 +405,7 @@ const Restaurant = () => {
               {renderRatingStars(restaurant.review)}
             </div>
             <div class="f-title-xlarge-secondary-font-size fw-title-xlarge-secondary-font-weight">
-              All ratings (318)
+              All ratings (6)
             </div>
           </div>
 
@@ -417,10 +417,10 @@ const Restaurant = () => {
               <div className="rectangle-box">
                 <div
                   className="fillable-box"
-                  style={{ width: `78%`, height: "100%" }}
+                  style={{ width: `67%`, height: "100%" }}
                 />
               </div>
-              <div className="percentage">78%</div>
+              <div className="percentage">67%</div>
             </div>
             <div className="rating-bar">
               <div className="star-indicator">
@@ -429,10 +429,10 @@ const Restaurant = () => {
               <div className="rectangle-box">
                 <div
                   className="fillable-box"
-                  style={{ width: `15%`, height: "100%" }}
+                  style={{ width: `33%`, height: "100%" }}
                 />
               </div>
-              <div className="percentage">15%</div>
+              <div className="percentage">33%</div>
             </div>
             <div className="rating-bar">
               <div className="star-indicator">
@@ -441,10 +441,10 @@ const Restaurant = () => {
               <div className="rectangle-box">
                 <div
                   className="fillable-box"
-                  style={{ width: `5%`, height: "100%" }}
+                  style={{ width: `0%`, height: "100%" }}
                 />
               </div>
-              <div className="percentage">5%</div>
+              <div className="percentage">0%</div>
             </div>
             <div className="rating-bar">
               <div className="star-indicator">
@@ -453,10 +453,10 @@ const Restaurant = () => {
               <div className="rectangle-box">
                 <div
                   className="fillable-box"
-                  style={{ width: `2%`, height: "100%" }}
+                  style={{ width: `0%`, height: "100%" }}
                 />
               </div>
-              <div className="percentage">2%</div>
+              <div className="percentage">0%</div>
             </div>
             <div className="rating-bar">
               <div className="star-indicator">
