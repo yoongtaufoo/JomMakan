@@ -8,7 +8,7 @@ import res5 from "./assets/Restaurant5.jpg";
 import res6 from "./assets/Restaurant6.jpg";
 import image from "./assets/image 3.png";
 import SearchBar from "./components/SearchBar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import "./FavRestaurant.css";
 
@@ -132,7 +132,9 @@ const FavRestaurant = () => {
               </div>
               <div className="col-md-8">
                 <div className="card-body">
-                  <h5 className="card-title">{restaurant.name}</h5>
+                  <Link to={`/restaurant/${restaurant.id}`}> 
+                    <h5 className="card-title">{restaurant.name}</h5>
+                  </Link>
                   <p className="card-text">{restaurant.description}</p>
                   <p className="card-text">
                     <i className="bi-geo-alt-fill custom-icon"></i>

@@ -31,8 +31,8 @@ const restaurants = [
       address:
         "2, Jalan Stesen Sentral, Kuala Lumpur Sentral, 50470 Kuala Lumpur",
       phone: "03-22637434",
-      openinghours: "Mon-Sat 12–2:30 pm, 6:30–10:30 pm",
-      cuisine: "steakhouse",
+      openinghours: "Mon-Sat 12:00 pm – 10:30 pm",
+      cuisine: "Steakhouse",
       resPhotos: photos,
       review: "3.5",
       tables: [
@@ -63,8 +63,8 @@ const restaurants = [
       address:
         "2, Jalan Stesen Sentral, Kuala Lumpur Sentral, 50470 Kuala Lumpur",
       phone: "03-22637434",
-      openinghours: "Mon-Sat 12–2:30 pm, 6:30–10:30 pm",
-      cuisine: "wine",
+      openinghours: "Mon-Sat 12:00 pm – 10:30 pm",
+      cuisine: "Wine",
       resPhotos: photos,
       review: "4.5",
       tables: [
@@ -94,8 +94,8 @@ const restaurants = [
       location: "Kajang",
       address: "Colonial Cafe, The Majestic Hotel, 5, Jalan Sultan Hishamuddin",
       phone: "03-22637434",
-      openinghours: "Mon-Sat 12–2:30 pm, 6:30–10:30 pm",
-      cuisine: "local Malaysia",
+      openinghours: "Mon-Sat 10:00 am – 8:30 pm",
+      cuisine: "Malaysian",
       resPhotos: photos,
       review: "3.5",
       tables: [
@@ -126,8 +126,8 @@ const restaurants = [
       address:
         "2, Jalan Stesen Sentral, Kuala Lumpur Sentral, 50470 Kuala Lumpur",
       phone: "03-22637434",
-      openinghours: "Mon-Sat 12–3 pm, 6–10 pm",
-      cuisine: "steakhouse",
+      openinghours: "Mon-Sat 10:00 am – 11:00 pm",
+      cuisine: "Steakhouse",
       resPhotos: photos,
       review: "4.5",
       tables: [
@@ -157,8 +157,8 @@ const restaurants = [
       location: "Petaling Jaya",
       address: "Yue, Lorong Utara C, Pjs 52, 46200 Petaling Jaya, Selangor",
       phone: "03-22637434",
-      openinghours: "Mon-Sat 12–3 pm, 6–10 pm",
-      cuisine: "chinese",
+      openinghours: "Mon-Sat 10:00 am – 10:00 pm",
+      cuisine: "Chinese",
       resPhotos: photos,
       review: "3.5",
       tables: [
@@ -189,8 +189,8 @@ const restaurants = [
       address:
         "2, Jalan Stesen Sentral, Kuala Lumpur Sentral, 50470 Kuala Lumpur",
       phone: "03-22637434",
-      openinghours: "Mon-Sat 12–2:30 pm, 6:30–10:30 pm",
-      cuisine: "dessert",
+      openinghours: "Mon-Sat 9:00 am – 8:30 pm",
+      cuisine: "Dessert",
       resPhotos: photos,
       review: "3.5",
       tables: [

@@ -30,12 +30,12 @@ const WorkshopPage = () => {
           <h1 className="customized-h1 workshop-header">Discover Workshops</h1>
           <div className="ml-auto">
             <a href="/fav-workshop">
-              <small className="text-muted">
+              <small className="back-btn">
                 <i className="bi bi-heart-fill custom-icon"></i>Favourites
               </small>
             </a>
             <a href="/schedule">
-              <small className="text-muted">
+              <small className="back-btn">
                 <i className="bi bi-calendar-heart custom-icon"></i>My Workshops
               </small>
             </a>

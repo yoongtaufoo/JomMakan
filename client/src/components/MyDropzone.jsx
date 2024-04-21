@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import Dropzone from "react-dropzone";
 import "./MyDropzone.css";
 
+// npm install --save react-dropzone
+
 export default function MyDropzone({
   onUploadFile,
   uploadStatus,

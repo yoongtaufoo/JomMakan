@@ -28,6 +28,13 @@ const AddReview = () => {
     }, 3000);
   };
 
+  const handleClickOutside = (event) => {
+    if (popRef.current && !popRef.current.contains(event.target)) {
+      setConfirm(false);
+      setSubmit(false);
+    }
+  };
+
   const resetUploadStatus = () => {
     setUploadStatus("idle");
   };
@@ -37,19 +44,28 @@ const AddReview = () => {
   };
 
   useEffect(() => {
-    let handler = (e) => {
-      if (!popRef.current.contains(e.target)) {
-        setConfirm(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handler);
-
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handler);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-  });
+  },[]);
+
+  // useEffect(() => {
+  //   let handler = (e) => {
+  //     if (!popRef.current.contains(e.target)) {
+  //       setConfirm(false);
+  //     }
+  //   };
+
+  //   document.addEventListener("mousedown", handler);
+
+  //   return () => {
+  //     document.removeEventListener("mousedown", handler);
+  //   };
+  // });
+
   return (
+    <div>
     <div>
       <Navbar />
       <div id="main-container">
@@ -121,26 +137,24 @@ const AddReview = () => {
                   >
                     Confirm
                   </button>
-                  <button
-                    id="buttonPopUpCancel"
-                    onClick={() => setSubmit(false)}
-                  >
-                    Cancel
-                  </button>
+                  <button onClick={() => setSubmit(false)}>Cancel</button>
                 </div>
               </div>
             </div>
           )}
           {confirm && (
-            <div id="popup-overlay">
+            <div id="popup-overlay" >
               <div id="popup" ref={popRef}>
-                <i class="bi bi-calendar2-check-fill"></i>
-                <div>Submitted</div>
+                <div>Confirmed</div>
               </div>
             </div>
           )}
         </div>
+        
       </div>
+      
+    </div>
+    
     </div>
   );
 };

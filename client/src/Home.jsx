@@ -82,15 +82,15 @@ const Home = () => {
       <div className="container">
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="customized-h1">Discover Restaurants</h1>
-          <div className="ml-auto">
+          <div className="ml-auto ">
             <Link to="/fav-restaurant">
-              <small className="text-muted">
+              <small className="back-btn">
                 <i className="bi bi-heart-fill custom-icon"></i>Favourites
               </small>
             </Link>
             <Link to="/reservations">
-              <small className="text-muted">
-                <i className="bi bi-calendar-heart custom-icon"></i>Reservations
+              <small className="back-btn">
+                <i className="bi bi-calendar-heart custom-icon"></i>My Reservations
               </small>
             </Link>
           </div>

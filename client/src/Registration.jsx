@@ -55,7 +55,7 @@ const Registration = () => {
           </div>
           <div id="Rform-container">
             <h2 id="form-header">Registration Form</h2>
-            <Form date={workshop.dateAndTime} tables={null}/>
+            <Form date={workshop.dateAndTime}/>
           </div>
         </div>
       </div>

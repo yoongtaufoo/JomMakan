@@ -1,6 +1,7 @@
 // This card can be used for displaying registration or reservation made
 import React , { useState , useEffect,useRef } from "react";
 import { restaurants } from "../RestaurantData";
+import { Link } from "react-router-dom";
 
 const CollectionCard = ({ workshops, reservations }) => {
     // let workshops=props.workshop;
@@ -8,22 +9,18 @@ const CollectionCard = ({ workshops, reservations }) => {
     const [confirm, setConfirm] = useState(false);
     const popRef = useRef(null);
 
-
+    const handleClickOutside = (event) => {
+        if (popRef.current && !popRef.current.contains(event.target)) {
+            setConfirm(false);
+            setSubmit(false);
+        }
+    };
     useEffect(() => {
-      let handler = (e)=>{
-        if(!popRef.current.contains(e.target)){
-          setConfirm(false);
-        }      
-      };
-  
-      document.addEventListener("mousedown", handler);
-      
-  
-      return() =>{
-        document.removeEventListener("mousedown", handler);
-      }
-  
-    });
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const getRestaurantData = (reservations, restaurants) => {
         if (reservations && restaurants) {
@@ -53,7 +50,9 @@ const CollectionCard = ({ workshops, reservations }) => {
                 </div>
                 <div className="col-md-4">
                     <div className="card-body">
-                        <h5 className="card-title">{workshops.name}</h5>
+                        <Link to={`/workshop/${workshops.id}`}>
+                            <h5 className="card-title">{workshops.name}</h5>
+                        </Link>
                         <p className="card-text">{workshops.description}</p>
                         <p className="card-text">
                             <i className='bi-geo-alt-fill custom-icon'></i>
@@ -81,28 +80,12 @@ const CollectionCard = ({ workshops, reservations }) => {
                     <div className="card-body"><button type="button" className="btn btn-outline-dark custom-button" onClick={() => setSubmit(!submit)}>Cancel</button></div>
                     </div>
 
-                    {submit &&
-                        <div id='popup-overlay'>
-                        <div id='popup'>
-                        <div>Confirm Cancellation?</div>
-                        <div>
-                            <button id="buttonPopupCancel" onClick={() => setSubmit(false)}>No</button>
-                            <button  onClick={() => {setConfirm(true); setSubmit(false);}}>Yes</button>
-                        </div>
-                        </div>
-                        </div>
-                    }
-                    {confirm &&
-                        <div id='popup-overlay' >
-                        <div id='popup' ref={popRef}>
-                        <i class="bi bi-calendar-x-fill"></i>
-                        <div>Cancelled</div>
-                        </div>
-                        </div>
-                    }
+                    
             </div>
             }
+            
         </div>
+        
     );
     }
 
@@ -112,19 +95,21 @@ const CollectionCard = ({ workshops, reservations }) => {
         return (
             <div className="row g-0 custom-row">
                 <div className="col-md-4">
-                    <img src={restaurantData ? restaurantData.image : ''} className="img-fluid rounded-start card-img-top" alt="..." />
+                    <img src={restaurantData.image} className="img-fluid rounded-start card-img-top" alt="..." />
                 </div>
                 <div className="col-md-4">
                     <div className="card-body">
-                        <h5 className="card-title">{restaurantData ? restaurantData.name : ''}</h5>
-                        <p className="card-text">{restaurantData ? restaurantData.description : ''}</p>
+                        <Link to={`/restaurant/${restaurantData.id}`}>
+                            <h5 className="card-title">{ restaurantData.name }</h5>
+                        </Link>
+                        <p className="card-text">{ restaurantData.description }</p>
                         <p className="card-text">
                             <i className='bi-geo-alt-fill custom-icon'></i>
-                            {restaurantData ? restaurantData.address : ''}
+                            { restaurantData.address }
                         </p>
                         <p className="card-text">
                             <i className="bi bi-telephone-fill custom-icon"></i>
-                            {restaurantData ? restaurantData.phone : ''}
+                            { restaurantData.phone }
                         </p>
                     </div>
                 </div>
@@ -157,7 +142,7 @@ const CollectionCard = ({ workshops, reservations }) => {
                         }
                         {confirm &&
                             <div id='popup-overlay' >
-                                <div id='popup' ref={popRef}>
+                                <div id='popup'>
                                 <i class="bi bi-calendar-x-fill"></i>
                                     <div>Cancelled</div>
                                 </div>
@@ -174,6 +159,25 @@ const CollectionCard = ({ workshops, reservations }) => {
         <div>
             {workshops ? renderWorkshop(workshops) : null}
             {reservations ? renderReservation(reservations) : null}
+            {submit && (
+                        <div id='popup-overlay'>
+                        <div id='popup' ref={popRef}>
+                        <div>Confirm Cancellation?</div>
+                        <div>
+                            <button id="buttonPopupCancel" onClick={() => setSubmit(false)}>No</button>
+                            <button  onClick={() => {setConfirm(true); setSubmit(false);}}>Yes</button>
+                        </div>
+                        </div>
+                        </div>
+                    )}
+                    {confirm && (
+                        <div id='popup-overlay' >
+                        <div id='popup' ref={popRef}>
+                        <i class="bi bi-calendar-x-fill"></i>
+                        <div>Cancelled</div>
+                        </div>
+                        </div>
+                    )}
         </div>
     );
 };
