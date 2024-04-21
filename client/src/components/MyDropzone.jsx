@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Dropzone from "react-dropzone";
+import "./MyDropzone.css";
 
 export default function MyDropzone({
   onUploadFile,
@@ -10,7 +11,6 @@ export default function MyDropzone({
   const [uploadInvalid, setUploadInvalid] = useState(false);
   const previewRef = useRef(null);
 
-  // Accept both images and videos
   const accept = {
     "image/jpeg": [".jpg", ".jpeg"],
     "image/png": [".png"],
@@ -102,7 +102,7 @@ export default function MyDropzone({
                     />
                   )}
                   <div className="p-2 ps-4 d-flex flex-column justify-content-start">
-                    <span className="fs-4">{selectedFile.name}</span>
+                    <span className="fs-4" >{selectedFile.name}</span>
                     {isUploading && (
                       <span className="text-body-tertiary">⌛Uploading...</span>
                     )}
