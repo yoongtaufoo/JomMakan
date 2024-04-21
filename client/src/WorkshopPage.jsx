@@ -10,15 +10,15 @@ import image from "./assets/image 3.png";
 const WorkshopPage = () => {
   const [activeTab, setActiveTab] = useState(0);
 
-  //For filtering
+  
   const filteredWorkshops = workshopData.filter((workshop) => {
     if (activeTab === 0) return workshop;
     if (activeTab === 1) return workshop.isFresh === 1;
-    return true; // Default case
+    return true; 
   });
 
   const handleTabClick = (index) => {
-    setActiveTab(index); // Update the activeTab state
+    setActiveTab(index); 
   };
 
   return (

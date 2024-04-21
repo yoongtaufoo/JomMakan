@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import MyDropzone from "./components/MyDropzone";
 
 const AddReview = () => {
   const { id } = useParams();
@@ -16,28 +17,49 @@ const AddReview = () => {
   const [submit, setSubmit] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const popRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState("idle");
+
+  const handleUploadFile = async (selectedFile) => {
+    console.log("Uploading file:", selectedFile);
+    setUploadStatus("loading");
+    setTimeout(() => {
+      setUploadStatus("success");
 
   const handleClickOutside = (event) => {
-    console.log("click")
     if (popRef.current && !popRef.current.contains(event.target)) {
       setConfirm(false);
-      setSubmit(false);
     }
   };
-  const [rating, setRating] = useState(0);
+
+  const resetUploadStatus = () => {
+    setUploadStatus("idle");
+  };
 
   const handleRating = (rate) => {
-    setRating(rate);
+    console.log("Rating:", rate);
   };
+
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
-  }, []);
-  const onPointerEnter = () => console.log("Enter");
-  const onPointerLeave = () => console.log("Leave");
-  const onPointerMove = (value, index) => console.log(value, index);
+  },[]);
+
+  useEffect(() => {
+    let handler = (e) => {
+      if (!popRef.current.contains(e.target)) {
+        setConfirm(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handler);
+
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
 
   return (
     <div>
@@ -70,12 +92,7 @@ const AddReview = () => {
             <div id="ratings">
               Overall Ratings:
               <br />
-              <Rating
-                onClick={handleRating}
-                onPointerEnter={onPointerEnter}
-                onPointerLeave={onPointerLeave}
-                onPointerMove={onPointerMove}
-              />
+              <Rating onClick={handleRating} />
             </div>
             <br></br>
             <div>
@@ -86,8 +103,13 @@ const AddReview = () => {
             <br></br>
             <div>
               Media Upload:
-              <input type="file" />
+              <MyDropzone
+                onUploadFile={handleUploadFile}
+                uploadStatus={uploadStatus}
+                resetUploadStatus={resetUploadStatus}
+              />
             </div>
+
             <br></br>
             <div id="checkbox">
               <input type="checkbox" />
@@ -96,34 +118,34 @@ const AddReview = () => {
               <br />
             </div>
           </div>
-          <button id="submitButton" onClick={() => setSubmit(true)}>
+          <button id="form-submitButton" onClick={() => setSubmit(!submit)}>
             Submit Review
           </button>
           {submit && (
-        <div id="popup-overlay">
-          <div id="popup" ref={popRef}>
-            <div>Confirm submit?</div>
-            <div>
-            <button id="buttonPopupCancel" onClick={() => setSubmit(false)}>Cancel</button>
-              <button
-                onClick={() => {
-                  setConfirm(true);
-                  setSubmit(false);
-                }}
-              >
-                Confirm
-              </button>
+            <div id="popup-overlay">
+              <div id="popup" ref={popRef}>
+                <div>Confirm submit?</div>
+                <div>
+                  <button
+                    onClick={() => {
+                      setConfirm(true);
+                      setSubmit(false);
+                    }}
+                  >
+                    Confirm
+                  </button>
+                  <button onClick={() => setSubmit(false)}>Cancel</button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
-      {confirm && (
-        <div id="popup-overlay">
-          <div id="popup" ref={popRef}>
-            <div>Review Submitted!</div>
-          </div>
-        </div>
-      )}
+          )}
+          {confirm && (
+            <div id="popup-overlay" ref={popRef}>
+              <div id="popup">
+                <div>Confirmed</div>
+              </div>
+            </div>
+          )}
         </div>
         
       </div>

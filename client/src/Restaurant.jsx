@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
 
 // import res1 from "./assets/Restaurant1.jpg";
@@ -192,7 +192,11 @@ const renderRatingStars = (rating) => {
 
 const Restaurant = () => {
   const { id } = useParams();
+  
   const navigate = useNavigate();
+  const popRef = useRef(null);
+  const [deleted, setDelete] = useState(false);
+  const [confirm, setConfirm] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [hasLiked, setHasLiked] = useState(
     new Array(reviews.length).fill(false)
@@ -202,7 +206,24 @@ const Restaurant = () => {
     new Array(reviews.length).fill(false)
   );
   const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
+  const [selectedShareOption, setSelectedShareOption] = useState(null);
+  const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
+  const [isDropdownIndex, setIsDropdownIndex] = useState(null);
 
+  const handleFacebook = (index) => {
+    console.log("Share on Facebook clicked for review at index:", index);
+    setIsDropdownIndex(null);
+  };
+  const handleEmail = (index) => {
+    console.log("Share via email clicked for review at index:", index);
+    setIsDropdownIndex(null);
+  };
+  const toggleDropdown = (index) => {
+    setOpenDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
+  const toggleShareDropdown = (index) => {
+    setIsDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
   const handleSaveToggle = () => {
     setIsSaved((prevState) => !prevState);
   };
@@ -229,22 +250,32 @@ const Restaurant = () => {
     });
   };
 
-  const togglePopup = (index) => {
-    setShowDetailsPopups((prevState) => {
-      const newState = [...prevState];
-      newState[index] = !newState[index];
-      return newState;
-    });
-    setSelectedReviewIndex(index);
-  };
+  // const togglePopup = (index) => {
+  //   setShowDetailsPopups((prevState) => {
+  //     const newState = [...prevState];
+  //     newState[index] = !newState[index];
+  //     return newState;
+  //   });
+  // };
 
   const handleEdit = (index) => {
     console.log("Edit review at index:", index);
+    setOpenDropdownIndex(null);
   };
+  useEffect(() => {
+    let handler = (e) => {
+      if (!popRef.current.contains(e.target)) {
+        setDelete(false);
+      }
+    };
 
-  const handleDelete = (index) => {
-    console.log("Delete review at index:", index);
-  };
+    document.addEventListener("mousedown", handler);
+
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
+  
 
   // const restaurant = restaurants.find(
   //   (restaurant) => restaurant.id === parseInt(id)
@@ -380,7 +411,7 @@ const Restaurant = () => {
               {renderRatingStars(restaurant.review)}
             </div>
             <div class="f-title-xlarge-secondary-font-size fw-title-xlarge-secondary-font-weight">
-              All ratings (318)
+              All ratings (6)
             </div>
           </div>
 
@@ -392,10 +423,10 @@ const Restaurant = () => {
               <div className="rectangle-box">
                 <div
                   className="fillable-box"
-                  style={{ width: `78%`, height: "100%" }}
+                  style={{ width: `67%`, height: "100%" }}
                 />
               </div>
-              <div className="percentage">78%</div>
+              <div className="percentage">67%</div>
             </div>
             <div className="rating-bar">
               <div className="star-indicator">
@@ -404,10 +435,10 @@ const Restaurant = () => {
               <div className="rectangle-box">
                 <div
                   className="fillable-box"
-                  style={{ width: `15%`, height: "100%" }}
+                  style={{ width: `33%`, height: "100%" }}
                 />
               </div>
-              <div className="percentage">15%</div>
+              <div className="percentage">33%</div>
             </div>
             <div className="rating-bar">
               <div className="star-indicator">
@@ -416,10 +447,10 @@ const Restaurant = () => {
               <div className="rectangle-box">
                 <div
                   className="fillable-box"
-                  style={{ width: `5%`, height: "100%" }}
+                  style={{ width: `0%`, height: "100%" }}
                 />
               </div>
-              <div className="percentage">5%</div>
+              <div className="percentage">0%</div>
             </div>
             <div className="rating-bar">
               <div className="star-indicator">
@@ -428,10 +459,10 @@ const Restaurant = () => {
               <div className="rectangle-box">
                 <div
                   className="fillable-box"
-                  style={{ width: `2%`, height: "100%" }}
+                  style={{ width: `0%`, height: "100%" }}
                 />
               </div>
-              <div className="percentage">2%</div>
+              <div className="percentage">0%</div>
             </div>
             <div className="rating-bar">
               <div className="star-indicator">
@@ -450,14 +481,76 @@ const Restaurant = () => {
 
         {reviews.map((review, index) => (
           <div key={index} className="review-card">
-            <p>
-              <strong>{review.userName}</strong>
-              <span
+            <div className="name-and-view-more">
+              <p>
+                <strong>{review.userName}</strong>
+
+                <button
+                  className="btn btn-secondary dropdown-toggle dropdown-view-more"
+                  type="button"
+                  id="dropdownViewMoreButton"
+                  onClick={() => toggleDropdown(index)}
+                >
+                  <i className="bi-three-dots"></i>
+                </button>
+                <ul
+                  className={`dropdown-menu dropdown-view-more ${
+                    openDropdownIndex === index ? "show" : ""
+                  }`}
+                >
+                  <li>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => handleEdit(index)}
+                    >
+                      <i className="bi bi-pencil"></i> Edit
+                    </button>
+                  </li>
+                  <li>
+                    <button className="dropdown-item"
+                      onClick={() => setDelete(!deleted)}
+                    >
+                      <i className="bi bi-trash"></i> Delete
+                    </button>
+                  </li>
+                </ul>
+              </p>
+            </div>
+            {deleted && (
+              <div id="popup-overlay">
+                <div id="popup" ref={popRef}>
+                  <div>Confirm delete?</div>
+                  <div>
+                    <button
+                      onClick={() => {
+                        setConfirm(true);
+                        setDelete(false);
+                      }}
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      id="buttonPopupCancel"
+                      onClick={() => setDelete(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {confirm && (
+              <div id="popup-overlay">
+                <div id="popup" ref={popRef}>
+                  <i class="bi bi-calendar2-check-fill"></i>
+                  <div>Deleted</div>
+                </div>
+              </div>
+            )}
+            {/* <span
                 className="review-options"
                 onClick={() => togglePopup(index)}
-              >
-                <i class="bi-three-dots"></i>
-              </span>
+              ></span>
               {showDetailsPopups[index] && (
                 <div className="review-options-popup">
                   <button onClick={() => handleEdit(index)}>
@@ -469,8 +562,7 @@ const Restaurant = () => {
                     <i className="bi bi-trash"></i> Delete
                   </button>
                 </div>
-              )}
-            </p>
+              )} */}
 
             <div className="d-flex justify-content-start">
               <div>{renderRatingStars(review.rating)}</div>
@@ -501,9 +593,39 @@ const Restaurant = () => {
                 ></i>{" "}
                 Helpful ({likes[index]})
               </button>
-              <button className="btn-share">
-                <i className="bi bi-share"></i> Share
-              </button>
+
+              <div className="dropdown-share">
+                <button
+                  className="btn btn-secondary dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton"
+                  onClick={() => toggleShareDropdown(index)}
+                >
+                  <i className="bi bi-share"></i> Share
+                </button>
+                <ul
+                  className={`dropdown-menu ${
+                    isDropdownIndex === index ? "show" : ""
+                  }`}
+                >
+                  <li>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => handleFacebook(index)}
+                    >
+                      Share On Facebook
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => handleEmail(index)}
+                    >
+                      Share On Email
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         ))}
