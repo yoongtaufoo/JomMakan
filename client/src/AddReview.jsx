@@ -25,10 +25,13 @@ const AddReview = () => {
     setUploadStatus("loading");
     setTimeout(() => {
       setUploadStatus("success");
+    }, 3000);
+  };
 
   const handleClickOutside = (event) => {
     if (popRef.current && !popRef.current.contains(event.target)) {
       setConfirm(false);
+      setSubmit(false);
     }
   };
 
@@ -41,25 +44,25 @@ const AddReview = () => {
   };
 
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   },[]);
 
-  useEffect(() => {
-    let handler = (e) => {
-      if (!popRef.current.contains(e.target)) {
-        setConfirm(false);
-      }
-    };
+  // useEffect(() => {
+  //   let handler = (e) => {
+  //     if (!popRef.current.contains(e.target)) {
+  //       setConfirm(false);
+  //     }
+  //   };
 
-    document.addEventListener("mousedown", handler);
+  //   document.addEventListener("mousedown", handler);
 
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  });
+  //   return () => {
+  //     document.removeEventListener("mousedown", handler);
+  //   };
+  // });
 
   return (
     <div>
@@ -140,8 +143,8 @@ const AddReview = () => {
             </div>
           )}
           {confirm && (
-            <div id="popup-overlay" ref={popRef}>
-              <div id="popup">
+            <div id="popup-overlay" >
+              <div id="popup" ref={popRef}>
                 <div>Confirmed</div>
               </div>
             </div>

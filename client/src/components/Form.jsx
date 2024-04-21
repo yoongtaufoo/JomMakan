@@ -5,13 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 const RegistrationForm = (props) => {
   const [submit, setSubmit] = useState(false);
   const [confirm, setConfirm] = useState(false);
-  // const Rworkshop = props.registrationInfo;
-  const tables = props.tables;
-  const [numberOfPax, setNumberOfPax] = useState(1);
   const popRef = useRef(null);
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowString = tomorrow.toISOString().split('T')[0];
 
   const handleClickOutside = (event) => {
     if (popRef.current && !popRef.current.contains(event.target)) {
@@ -26,155 +20,14 @@ const RegistrationForm = (props) => {
     };
   }, []);
 
-  // Handle change event for the number of pax input
-  const handlePaxChange = (event) => {
-    if(props.tables!==null){
-    setNumberOfPax(parseInt(event.target.value));
-    }
-  };
-  
-
-  // Generate select options for pax no
-  const nopaxOptions = [];
-  if(props.tables!==null){
-    for (let i = 1; i <= Math.max(...tables.map(table => table.pax)); i++) {
-      nopaxOptions.push(<option key={i} value={i}>{i}</option>);
-    }
-  }
-
-  // Generate select options for restaurant tables
-  const tableOptions = props.tables && props.tables.map((table, index) => (
-    <option
-      key={index}
-      value={table.id}
-      disabled={numberOfPax > table.pax || table.status === 'Unavailable'}
-    >
-      Table {table.id} - ({table.pax} pax capacity)
-    </option>
-  ));
-
-  // Parse the opening hours string and extract opening and closing times
-  const parseOpeningHours = (openingHours) => {
-    if(props.tables!==null){
-    const timePattern = /\b\d{1,2}:\d{2}\s*(?:am|pm)?\b/gi;
-    const times = openingHours.match(timePattern);
-  
-    // If times are found
-    if (times && times.length >= 2) {
-      const [openingTime, closingTime] = times;
-      return { openingTime, closingTime };
-    }
-    return null;
-  }
-  };
-  
-
-  let openingHoursInfo = null;
-  if (props.openingHours) {
-    openingHoursInfo = parseOpeningHours(props.openinghours);
-  }
-  
-  const { openingTime, closingTime } = openingHoursInfo || {};
-
-const parseTime = (timeString) => {
-  if(props.tables!==null){
-  if (typeof timeString !== 'string') {
-    // If timeString is not a string, return default values
-    return { hours: 0, minutes: 0 };
-  }
-  // Split the time string by colon and space
-  const [time, period] = timeString.split(' ');
-
-  // Split the time by colon to get hours and minutes
-  const [hoursString, minutesString] = time.split(':');
-
-  // Parse hours and minutes as numbers
-  let hours = parseInt(hoursString, 10);
-  let minutes = parseInt(minutesString, 10);
-
-  // Adjust hours if it's PM
-  if (period && period.toLowerCase() === 'pm' && hours !== 12) {
-    hours += 12; // Convert hours to 24-hour format if it's PM
-  }
-
-  return { hours, minutes };
-}
-};
-
-
-// Generate time options for opening and closing hours
-const generateEndTimeOptions = (openingTime, closingTime) => {
-  if(props.tables!==null){
-  
-  const parsedOpeningTime = parseTime(openingTime);
-  const parsedClosingTime = parseTime(closingTime);
-
-  const options = [];
-
-  for (let hour = parsedOpeningTime.hours + 1; hour <= parsedClosingTime.hours; hour++) {
-    // Loop through each minute (0 and 30)
-    for (let minute of [0, 30]) {
-      const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-      options.push(<option key={time} value={time}>{time}</option>);
-    }
-  }
-
-  return options;
-}
-};
-
-  
-const generateStartTimeOptions = (openingTime, closingTime) => {
-  if(props.tables!==null){
-  const parsedOpeningTime = parseTime(openingTime);
-  const parsedClosingTime = parseTime(closingTime);
-
-  const options = [];
-
-  for (let hour = parsedOpeningTime.hours; hour <= parsedClosingTime.hours - 1; hour++) {
-    // Loop through each minute (0 and 30)
-    for (let minute of [0, 30]) {
-      const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-      options.push(<option key={time} value={time}>{time}</option>);
-    }
-  }
-
-  return options;
-}
-};
-
   return (
     <div id="Rform">
       <div id="Rinputs">
-        {props.date !== null ? (
-          <div>
-            Date:
-            <br />
-            <div id="Rinput">{props.date}</div>
-          </div>
-        ) : (
-          <div>
-            Date:
-            <br />
-            <input id="Rinput" type="date" min={tomorrowString} required></input>
-          </div>
-        )}
-        {/* restaurant reservation time input  */}
-        {props.tables !== null ? (
-          <div>
-            Time:
-            <br />
-            <select id="Rtimeinput" required>
-              {generateStartTimeOptions(openingTime, closingTime)}
-            </select>
-            to  
-            <select id="Rtimeinput">
-              {generateEndTimeOptions(openingTime, closingTime)}
-            </select>
-          </div>
-        ) : (
-          null
-        )}
+        <div>
+          Date:
+          <br />
+          <div id="Rinput">{props.date}</div>
+        </div>
         <div>
           Name:
           <br />
@@ -188,26 +41,8 @@ const generateStartTimeOptions = (openingTime, closingTime) => {
         <div>
           No of pax:
           <br />
-          {props.tables !== null ? (
-            //if its a reservation form
-            <select id="Rinput" value={numberOfPax} onChange={handlePaxChange} required>
-              {nopaxOptions}
-            </select>
-          ) : (
-            //if its a registration form
             <input id='Rinput' type="number" required></input>
-          ) }
-          
         </div>
-        {props.tables !== null ? (
-          <div>
-            Table:
-            <br />
-              <select id="Rinput">
-                {tableOptions}
-              </select>
-          </div>
-        ) : null }
         <div id="Check">
           <label id="Rtext">
             <input id="checkbox" type="checkbox" name="" if="" required />I have
