@@ -77,7 +77,7 @@ const LogIn = () => {
                   ></i>
                 ) : (
                   <i
-                    class="bi bi-eye-slash fs-3 position-absolute me-4 pe-1 mt-0 end-0 top-0"
+                    class="bi bi-eye-slash fs-4 position-absolute me-4 pe-1 mt-2 end-0 top-0"
                     onClick={handleClickShowPassword}
                     style={{ cursor: "pointer" }}
                   ></i>
