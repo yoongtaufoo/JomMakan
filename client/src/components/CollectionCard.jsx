@@ -1,7 +1,7 @@
 // This card can be used for displaying registration or reservation made
-import React , { useState , useEffect,useRef } from "react";
-import { restaurants } from "../RestaurantData";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { restaurants } from "../RestaurantData";
 
 const CollectionCard = ({ workshops, reservations }) => {
     // let workshops=props.workshop;
@@ -129,25 +129,7 @@ const CollectionCard = ({ workshops, reservations }) => {
                                 <button type="button" className="btn btn-outline-dark custom-button" onClick={() => setSubmit(!submit)}>Cancel</button>
                             </div>
                         </div>
-                        {submit &&
-                            <div id='popup-overlay'>
-                                <div id='popup'>
-                                    <div>Confirm Cancellation?</div>
-                                    <div>
-                                        <button onClick={() => setSubmit(false)}>No</button>
-                                        <button onClick={() => { setConfirm(true); setSubmit(false); }}>Yes</button>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        {confirm &&
-                            <div id='popup-overlay' >
-                                <div id='popup'>
-                                <i class="bi bi-calendar-x-fill"></i>
-                                    <div>Cancelled</div>
-                                </div>
-                            </div>
-                        }
+                        
                     </div>
                 }
             </div>
@@ -160,8 +142,8 @@ const CollectionCard = ({ workshops, reservations }) => {
             {workshops ? renderWorkshop(workshops) : null}
             {reservations ? renderReservation(reservations) : null}
             {submit && (
-                        <div id='popup-overlay'>
-                        <div id='popup' ref={popRef}>
+                        <div className='popup-overlay'>
+                        <div className='popup' ref={popRef}>
                         <div>Confirm Cancellation?</div>
                         <div>
                             <button id="buttonPopupCancel" onClick={() => setSubmit(false)}>No</button>
@@ -171,8 +153,8 @@ const CollectionCard = ({ workshops, reservations }) => {
                         </div>
                     )}
                     {confirm && (
-                        <div id='popup-overlay' >
-                        <div id='popup' ref={popRef}>
+                        <div className='popup-overlay' >
+                        <div className='popup' ref={popRef}>
                         <i class="bi bi-calendar-x-fill"></i>
                         <div>Cancelled</div>
                         </div>
