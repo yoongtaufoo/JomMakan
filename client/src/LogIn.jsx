@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import "./LogIn.css";
 import { Link } from "react-router-dom";
-import logo from "./assets/logo.png";
+import "./LogIn.css";
 import loginLeft from "./assets/log-in-left.jpg";
 import loginRight from "./assets/log-in-right.jpg";
+import logo from "./assets/logo.png";
 
 const LogIn = () => {
   const handleSubmit = (event) => {
@@ -22,7 +22,7 @@ const LogIn = () => {
       <nav className="navbar">
         <img className="ms-4" src={logo} id="logo"></img>
       </nav>
-      <div class="w-100 d-flex flex-row justify-content-between align-items-center">
+      <div class="login-wrapper w-100 d-flex flex-row justify-content-between align-items-center">
         <img
           className="log-in-pic pic-left"
           src={loginLeft}
@@ -71,13 +71,13 @@ const LogIn = () => {
                 />
                 {showPassword ? (
                   <i
-                    class="bi bi-eye fs-4 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    class="bi bi-eye fs-3 position-absolute me-4 pe-1 mt-0 end-0 top-0"
                     onClick={handleClickShowPassword}
                     style={{ cursor: "pointer" }}
                   ></i>
                 ) : (
                   <i
-                    class="bi bi-eye-slash fs-4 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    class="bi bi-eye-slash fs-3 position-absolute me-4 pe-1 mt-0 end-0 top-0"
                     onClick={handleClickShowPassword}
                     style={{ cursor: "pointer" }}
                   ></i>
@@ -94,9 +94,9 @@ const LogIn = () => {
           </form>
           <br />
 
-          <p>
+          <div>
             <strong>Don't have an account ?</strong>
-          </p>
+          </div>
           <a
             class="link-danger link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
             href="/signup"
