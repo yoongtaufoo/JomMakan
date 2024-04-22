@@ -9,14 +9,14 @@ const RegistrationForm = (props) => {
 
   const handleClickOutside = (event) => {
     if (popRef.current && !popRef.current.contains(event.target)) {
-        setConfirm(false);
-        setSubmit(false);
+      setConfirm(false);
+      setSubmit(false);
     }
   };
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -41,7 +41,7 @@ const RegistrationForm = (props) => {
         <div>
           No of pax:
           <br />
-            <input id='Rinput' type="number" required></input>
+          <input id="Rinput" type="number" required></input>
         </div>
         <div id="Check">
           <label id="Rtext">
@@ -55,11 +55,13 @@ const RegistrationForm = (props) => {
       </div>
 
       {submit && (
-        <div id="popup-overlay" >
-          <div id="popup" ref={popRef}>
+        <div className="popup-overlay">
+          <div className="popup" ref={popRef}>
             <div>Confirm reservation?</div>
             <div>
-              <button id="buttonPopupCancel" onClick={() => setSubmit(false)}>Cancel</button>
+              <button id="buttonPopupCancel" onClick={() => setSubmit(false)}>
+                Cancel
+              </button>
               <button
                 onClick={() => {
                   setConfirm(true);
@@ -73,9 +75,9 @@ const RegistrationForm = (props) => {
         </div>
       )}
       {confirm && (
-        <div id="popup-overlay" >
-          <div id="popup"  ref={popRef}>
-          <i class="bi bi-calendar2-check-fill"></i>
+        <div className="popup-overlay">
+          <div className="popup" ref={popRef}>
+            <i class="bi bi-calendar2-check-fill"></i>
             <div>Confirmed</div>
           </div>
         </div>

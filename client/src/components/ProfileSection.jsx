@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import profilePic from "../assets/default-pfp.png";
+import Popup from "reactjs-popup";
+
 import "./ProfileSection.css";
 
 const ProfileSection = () => {
@@ -70,11 +72,34 @@ const ProfileSection = () => {
         >
           Update Image
         </button>
-        <Link to={"/"}>
-          <button className="log-out-btn">
-            <div>Log Out</div>
-          </button>
-        </Link>
+        <Popup
+          contentStyle={{ width: "450px", borderRadius: "20px" }}
+          trigger={
+            <button className="log-out-btn">
+              <div>
+                <strong>Log Out</strong>
+              </div>
+            </button>
+          }
+          modal
+          nested
+        >
+          {(close) => (
+            <div className="popup-overlay">
+              <div className="popup log-put-popup">
+                <div id="log-out-popup-title">Log Out</div>
+                <div className="popup-buttons">
+                  <button id="cancel-button" onClick={close}>
+                    Cancel
+                  </button>
+                  <Link to={"/"}>
+                    <button id="yes-button">Yes</button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+        </Popup>
       </div>
     </>
   );

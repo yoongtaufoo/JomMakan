@@ -48,7 +48,7 @@ const AddReview = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  },[]);
+  }, []);
 
   // useEffect(() => {
   //   let handler = (e) => {
@@ -66,95 +66,98 @@ const AddReview = () => {
 
   return (
     <div>
-    <div>
-      <Navbar />
-      <div id="main-container">
-        <div className="back">
-          <div
-            className="back-btn"
-            style={{ cursor: "pointer" }}
-            onClick={() => navigate(-1)}
-          >
-            <i class="bi bi-arrow-left-circle"></i> Back
-          </div>
-        </div>
-
-        <div id="form">
-          <h2>
-            <b>Rate a restaurant</b>
-          </h2>
-          <p id="desc">
-            It only takes a minute! And your review will help other restaurant
-            seekers.
-          </p>
-          <div id="inputs">
-            <div id="restaurantName">
-              Restaurant Name: <span className="input">{restaurantName}</span>
-            </div>
-            <br></br>
-            <div id="ratings">
-              Overall Ratings:
-              <br />
-              <Rating onClick={handleRating} />
-            </div>
-            <br></br>
-            <div>
-              Review:
-              <br />
-              <textarea className="textArea" rows="4" cols="50" />
-            </div>
-            <br></br>
-            <div>
-              Media Upload:
-              <MyDropzone
-                onUploadFile={handleUploadFile}
-                uploadStatus={uploadStatus}
-                resetUploadStatus={resetUploadStatus}
-              />
-            </div>
-
-            <br></br>
-            <div id="checkbox">
-              <input type="checkbox" />
-              &nbsp;I agree to the JomMakan Terms of Use and that this review is
-              an honest and accurate account of my experience at the restaurant.
-              <br />
+      <div>
+        <Navbar />
+        <div id="main-container">
+          <div className="back">
+            <div
+              className="back-btn"
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate(-1)}
+            >
+              <i class="bi bi-arrow-left-circle"></i> Back
             </div>
           </div>
-          <button id="form-submitButton" onClick={() => setSubmit(!submit)}>
-            Submit Review
-          </button>
-          {submit && (
-            <div id="popup-overlay">
-              <div id="popup" ref={popRef}>
-                <div>Confirm submit?</div>
-                <div>
-                  <button
-                    onClick={() => {
-                      setConfirm(true);
-                      setSubmit(false);
-                    }}
-                  >
-                    Confirm
-                  </button>
-                  <button onClick={() => setSubmit(false)}>Cancel</button>
+
+          <div id="form">
+            <h2>
+              <b>Rate a restaurant</b>
+            </h2>
+            <p id="desc">
+              It only takes a minute! And your review will help other restaurant
+              seekers.
+            </p>
+            <div id="inputs">
+              <div id="restaurantName">
+                Restaurant Name: <span className="input">{restaurantName}</span>
+              </div>
+              <br></br>
+              <div id="ratings">
+                Overall Ratings:
+                <br />
+                <Rating onClick={handleRating} />
+              </div>
+              <br></br>
+              <div>
+                Review:
+                <br />
+                <textarea className="textArea" rows="4" cols="50" />
+              </div>
+              <br></br>
+              <div>
+                Media Upload:
+                <MyDropzone
+                  onUploadFile={handleUploadFile}
+                  uploadStatus={uploadStatus}
+                  resetUploadStatus={resetUploadStatus}
+                />
+              </div>
+
+              <br></br>
+              <div id="checkbox">
+                <input type="checkbox" />
+                &nbsp;I agree to the JomMakan Terms of Use and that this review
+                is an honest and accurate account of my experience at the
+                restaurant.
+                <br />
+              </div>
+            </div>
+            <button id="form-submitButton" onClick={() => setSubmit(!submit)}>
+              Submit Review
+            </button>
+            {submit && (
+              <div className="popup-overlay">
+                <div className="popup" ref={popRef}>
+                  <div>Confirm submit?</div>
+                  <div>
+                    <button
+                      id="review-cancel-button"
+                      onClick={() => setSubmit(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        setConfirm(true);
+                        setSubmit(false);
+                      }}
+                    >
+                      Confirm
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-          {confirm && (
-            <div id="popup-overlay" >
-              <div id="popup" ref={popRef}>
-                <div>Confirmed</div>
+            )}
+            {confirm && (
+              <div className="popup-overlay">
+                <div className="popup" ref={popRef}>
+                  <div>Confirmed</div>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-        
       </div>
-      
-    </div>
-    
     </div>
   );
 };

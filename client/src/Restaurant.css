@@ -7,7 +7,7 @@
   /* background-color: rgb(243, 243, 243) !important; */
   border-radius: 10px;
 }
-#popup-overlay {
+.popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -19,7 +19,11 @@
   align-items: center;
   z-index: 9; /* Ensure it's on top of other content */
 }
-#popup {
+.popup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background-color: #fff;
   border-radius: 15px;
   font-size: 40px;

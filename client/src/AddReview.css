@@ -67,3 +67,7 @@ button:hover {
   margin-left: 0px;
   margin-top: 10px;
 }
+
+#review-cancel-button{
+  background-color: rgb(100, 100, 100);
+}

@@ -21,7 +21,7 @@ import Navbar from "./components/Navbar";
 // import review5 from "./assets/Review5.jpeg";
 // import review6 from "./assets/Review6.jpeg";
 import "./Restaurant.css";
-import { useParams, Link , useNavigate} from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import { restaurants, reviews } from "./RestaurantData";
 
@@ -192,7 +192,7 @@ const renderRatingStars = (rating) => {
 
 const Restaurant = () => {
   const { id } = useParams();
-  
+
   const navigate = useNavigate();
   const popRef = useRef(null);
   const [deleted, setDelete] = useState(false);
@@ -275,7 +275,6 @@ const Restaurant = () => {
       document.removeEventListener("mousedown", handler);
     };
   });
-  
 
   // const restaurant = restaurants.find(
   //   (restaurant) => restaurant.id === parseInt(id)
@@ -291,13 +290,13 @@ const Restaurant = () => {
       <div className="container">
         <br />
         <div className="d-flex justify-content-between align-items-center">
-        <div
-          className="back-btn"
-          style={{ cursor: "pointer" }}
-          onClick={() => navigate(-1)}
-        >
-          <i class="bi bi-arrow-left-circle"></i> Back
-        </div>
+          <div
+            className="back-btn"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate(-1)}
+          >
+            <i class="bi bi-arrow-left-circle"></i> Back
+          </div>
           <div className="ml-auto">
             <small className="back-btn" onClick={handleSaveToggle}>
               <i
@@ -507,7 +506,8 @@ const Restaurant = () => {
                     </button>
                   </li>
                   <li>
-                    <button className="dropdown-item"
+                    <button
+                      className="dropdown-item"
                       onClick={() => setDelete(!deleted)}
                     >
                       <i className="bi bi-trash"></i> Delete
@@ -517,8 +517,8 @@ const Restaurant = () => {
               </p>
             </div>
             {deleted && (
-              <div id="popup-overlay">
-                <div id="popup" ref={popRef}>
+              <div className="popup-overlay">
+                <div className="popup" ref={popRef}>
                   <div>Confirm delete?</div>
                   <div>
                     <button
@@ -540,8 +540,8 @@ const Restaurant = () => {
               </div>
             )}
             {confirm && (
-              <div id="popup-overlay">
-                <div id="popup" ref={popRef}>
+              <div classNamec="popup-overlay">
+                <div className="popup" ref={popRef}>
                   <i class="bi bi-calendar2-check-fill"></i>
                   <div>Deleted</div>
                 </div>

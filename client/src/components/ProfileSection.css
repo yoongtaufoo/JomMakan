@@ -57,15 +57,56 @@ input[type="file"] {
     /* border-radius: 30px; */
 }
 
+
+
 .log-out-btn{
     width: fit-content;
     /* background-color: orange; */
-    font-weight: bold;
+    font-weight:bolder;
     color: white;
     font-size: 13px ;
     padding: 13px 40px; 
     /* border-radius: 30px;*/
 }
+
+#log-out-popup-title{
+    font-size: 35px;
+    margin-bottom: 3px;
+    font-weight: bold;
+}
+
+
+.popup-buttons{
+    display: flex;
+    flex-direction: row;
+    gap:40px;
+    margin: 20px;
+    margin-top: 20px;
+}
+
+#cancel-button{
+    border-radius: 20px;
+    background-color: gray;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 14px 10px;
+    width: 150px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+#yes-button{
+    border: 2px solid transparent;
+    border-radius: 20px;
+    background-color: #000000;
+    color: #FDFFEA;
+    font-size: 15px;
+    padding: 14px 10px;
+    width: 150px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
 
 
 
