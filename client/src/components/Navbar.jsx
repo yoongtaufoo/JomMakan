@@ -24,10 +24,10 @@ const Navbar = () => {
           </li>
           <li>
             <Link to="/profile">
-              <button id="invisible">
+              <div id="invisible" className="d-flex align-items-center align-self-center">
                 <strong>{name}</strong>
-              </button>
-              <img id="nav-pfp" src={profilePic} alt="nav profile pic"></img>
+                <img id="nav-pfp" src={profilePic} alt="nav profile pic"></img>
+              </div>
             </Link>
           </li>
         </div>

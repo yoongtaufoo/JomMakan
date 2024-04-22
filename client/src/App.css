@@ -15,20 +15,20 @@ h1{
   font-family: "Montserrat", sans-serif;
   font-weight: bold;
 }
-
-nav{
-  color: black;
+.navbar{
+  /* color: black; */
   background-color: #FBC355;
-  width: 100%;
-  position:absolute;
+  /* background-color: #29251d; */
+  /* width: 100%; */
+  position:relative;
   padding: 4px 5px;
   top:0;
   left: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   z-index: 10;
-  
+  height: 100px;
 }
 nav li{
   display: inline-block;
@@ -51,9 +51,22 @@ button{
   width: 14%;
 }
 
+.landing-wrapper{
+  overflow: hidden;
+}
+
+.parallax-wrapper{
+  /* overflow: hidden; */
+  position: relative;
+  top:0;
+  left:0;
+  padding-top: 160px;
+}
+
 #first-view{
   /* background-color: #FDFFEA; */
-  height: 100vh;
+  /* overflow: hidden; */
+  height: calc(100vh-200px);
   padding-left: 5%;
   padding-right: 5%;
   display: flex;
@@ -73,7 +86,8 @@ button{
 }
 #second-view{
   /* background-color: #FDFFEA; */
-  height: 100vh;
+  /* height: 100vh; */
+  position: relative;
   padding-left: 5%;
   padding-right: 5%;
   display: flex;
