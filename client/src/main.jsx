@@ -17,28 +17,31 @@ import AddReview from "./AddReview.jsx";
 import Scehdule from "./MyRegistration.jsx";
 import Reserve from "./Reserve.jsx";
 import Reservations from "./Reservations.jsx";
+import { AuthContextProvider } from "./context/AuthContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Router>
-      <Routes>
-        <Route exact path="/" element={<App />} />
-        <Route exact path="/login" element={<LogIn />} />
-        <Route exact path="/signup" element={<SignUp />} />
-        <Route exact path="/profile" element={<Profile />} />
-        <Route exact path="/report" element={<Report />} />
-        <Route exact path="/home" element={<Home />} />
-        <Route exact path="/workshop" element={<Workshop />} />
-        <Route exact path="/fav-workshop" element={<FavWorkshop />} />
-        <Route exact path="/workshop/:id" element={<WRegistration />} />
-        <Route exact path="/fav-restaurant" element={<FavRestaurant />} />
-        <Route exact path="/restaurant/:id" element={<Restaurant />} />
-        <Route exact path="/addreview" element={<AddReview />} />
-        <Route exact path="/schedule" element={<Scehdule />} />
-        <Route exact path="/restaurant/:id/reserve" element={<Reserve />} />
-        <Route exact path="/reservations" element={<Reservations />} />
-        {/* add route for new pages here, import the component*/}
-      </Routes>
+      <AuthContextProvider>
+        <Routes>
+          <Route exact path="/" element={<App />} />
+          <Route exact path="/login" element={<LogIn />} />
+          <Route exact path="/signup" element={<SignUp />} />
+          <Route exact path="/profile" element={<Profile />} />
+          <Route exact path="/report" element={<Report />} />
+          <Route exact path="/home" element={<Home />} />
+          <Route exact path="/workshop" element={<Workshop />} />
+          <Route exact path="/fav-workshop" element={<FavWorkshop />} />
+          <Route exact path="/workshop/:id" element={<WRegistration />} />
+          <Route exact path="/fav-restaurant" element={<FavRestaurant />} />
+          <Route exact path="/restaurant/:id" element={<Restaurant />} />
+          <Route exact path="/addreview" element={<AddReview />} />
+          <Route exact path="/schedule" element={<Scehdule />} />
+          <Route exact path="/restaurant/:id/reserve" element={<Reserve />} />
+          <Route exact path="/reservations" element={<Reservations />} />
+          {/* add route for new pages here, import the component*/}
+        </Routes>
+      </AuthContextProvider>
     </Router>
   </React.StrictMode>
 );

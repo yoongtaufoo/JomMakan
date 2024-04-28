@@ -1,20 +1,47 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import "./LogIn.css";
 import loginLeft from "./assets/log-in-left.jpg";
 import loginRight from "./assets/log-in-right.jpg";
 import logo from "./assets/logo.png";
+import { AuthContext } from "./context/AuthContext";
+import axios from "axios";
 
 const LogIn = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  };
-
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { updateUser } = useContext(AuthContext);
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/api/auth/login",
+        {
+          email,
+          password: pass, // pass from useState()
+          //later destructuring in auth controller
+          //const { username, location, email, password } = req.body;
+        }
+      );
+      // const token = response.data.token;
+      alert("Login successful");
+      setEmail("");
+      setPass("");
+      navigate("/home");
+      window.location.reload();
+
+      // localStorage.setItem("token", token);
+      updateUser(response.data);
+    } catch (error) {
+      console.log("Login Error", error);
+    }
   };
 
   return (

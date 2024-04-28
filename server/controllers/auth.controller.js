@@ -16,7 +16,7 @@ const register = async (req, res) => {
 
     // HASH THE PASSWORD
     const hashedPassword = await bcrypt.hash(password, salt);
-    console.log(hashedPassword);
+    // console.log(hashedPassword);
 
     // CREATE A NEW USER AND SAVE TO DB
     const newUser = new User({
