@@ -1,37 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SignUp.css";
 import logo from "./assets/logo.png";
-import { Link } from "react-router-dom";
 import PasswordStrengthMeter from "./components/PasswordStrengthMeter";
 import registerPic from "./assets/register-pic.png";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    axios
-      .post("http://localhost:3001/api/auth/register", {
-        username,
-        location,
-        // birthday,
-        email,
-        pass,
-      })
-      .then(() => {
-        alert("Registration Successful");
-        setUsername("");
-        setLocation("");
-        // setBirthday("");
-        setEmail("");
-        setPass("");
-        fetchUsers();
-        // navigate("/login");
-      })
-      .catch((error) => {
-        console.log("Unable to register user");
-      });
-  };
-
   const [username, setUsername] = useState("");
   const [location, setLocation] = useState("");
   const [birthday, setBirthday] = useState(new Date());
@@ -47,11 +22,43 @@ const SignUp = () => {
     setShowPassword2(!showPassword2);
   };
 
-  const fetchUsers = () => {
-    axios.get("http://localhost:3001/api/auth/register").then((res) => {
-      console.log(res.data);
-    });
+  const navigate = useNavigate();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    axios
+      .post("http://localhost:3001/api/auth/register", {
+        username,
+        location,
+        // birthday,
+        email, // email from useState
+        password: pass, // pass from useState
+
+        // later in auth.controller
+        // obj destructuring, must use same name "password"
+        // const { username, location, email, password } = req.body;
+      })
+      .then(() => {
+        alert("Registration Successful");
+        setUsername("");
+        setLocation("");
+        // setBirthday("");
+        setEmail("");
+        setPass("");
+        setPass2("");
+        // navigate("/login");
+      })
+      .catch((error) => {
+        console.log("Unable to register user");
+      });
   };
+
+  // const fetchUsers = () => {
+  //   axios.get("http://localhost:3001/api/auth/register").then((res) => {
+  //     console.log(res.data);
+  //   });
+  // };
 
   return (
     <div>
@@ -73,7 +80,7 @@ const SignUp = () => {
               <input
                 type="text"
                 class="form-control auth register"
-                name="username"
+                name="username" // sent via req.body
                 id="username"
                 placeholder="Enter username"
                 required
@@ -143,7 +150,7 @@ const SignUp = () => {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
                   required
-                  noValidate
+                  // noValidate
                   // validated={false}
                   // value={pass}
                   value={pass}
@@ -168,7 +175,7 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* <div class="form-group position-relative">
+            <div class="form-group position-relative">
               <label htmlFor="retype-password">
                 <strong>Retype Password</strong>
               </label>
@@ -180,7 +187,7 @@ const SignUp = () => {
                   type={showPassword2 ? "text" : "password"}
                   placeholder="Enter password"
                   required
-                  noValidate
+                  // noValidate
                   // validated={false}
                   // value={pass}
                   value={pass2}
@@ -203,7 +210,7 @@ const SignUp = () => {
               <div className="ms-4">
                 <PasswordStrengthMeter password={pass2} />
               </div>
-            </div> */}
+            </div>
 
             <button className="mt-0 mb-8 pt-3 pb-3" type="submit">
               Register
