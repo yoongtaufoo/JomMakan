@@ -86,11 +86,9 @@ const LogIn = () => {
               {/* <PasswordStrengthMeter password={pass} /> */}
             </div>
 
-            <Link to="/home">
-              <button type="submit" id="auth-button">
-                Log In
-              </button>
-            </Link>
+            <button type="submit" id="auth-button">
+              Log In
+            </button>
           </form>
           <br />
 

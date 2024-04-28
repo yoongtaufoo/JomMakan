@@ -4,6 +4,7 @@ import logo from "./assets/logo.png";
 import { Link } from "react-router-dom";
 import PasswordStrengthMeter from "./components/PasswordStrengthMeter";
 import registerPic from "./assets/register-pic.png";
+import axios from "axios";
 
 const SignUp = () => {
   const handleSubmit = (event) => {
@@ -19,8 +20,8 @@ const SignUp = () => {
       .then(() => {
         alert("Registration Successful");
         setUsername("");
-        setLocation(""),
-        setBirthday(""),
+        setLocation("");
+        setBirthday("");
         setEmail("");
         setPass("");
         fetchUsers();
@@ -47,11 +48,10 @@ const SignUp = () => {
   };
 
   const fetchUsers = () => {
-    axios.get("http://localhost:3002/register").then((res) => {
-      // console.log(res.data)
+    axios.get("http://localhost:3001/api/register").then((res) => {
+      console.log(res.data);
     });
   };
-
 
   return (
     <div>
