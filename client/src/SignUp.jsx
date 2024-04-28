@@ -8,6 +8,27 @@ import registerPic from "./assets/register-pic.png";
 const SignUp = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
+    axios
+      .post("http://localhost:3002/register", {
+        username,
+        location,
+        birthday,
+        email,
+        pass,
+      })
+      .then(() => {
+        alert("Registration Successful");
+        setUsername("");
+        setLocation(""),
+        setBirthday(""),
+        setEmail("");
+        setPass("");
+        fetchUsers();
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log("Unable to register user");
+      });
   };
 
   const [username, setUsername] = useState("");
@@ -24,6 +45,13 @@ const SignUp = () => {
   const handleClickShowPassword2 = () => {
     setShowPassword2(!showPassword2);
   };
+
+  const fetchUsers = () => {
+    axios.get("http://localhost:3002/register").then((res) => {
+      // console.log(res.data)
+    });
+  };
+
 
   return (
     <div>

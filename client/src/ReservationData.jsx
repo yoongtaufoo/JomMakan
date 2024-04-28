@@ -31,7 +31,7 @@ const reservations = [
         pax: 2,
         tableid: 2,
         restaurantid: 1,
-        status: "U",
+        status: "C",
     },
     {
         id: 4,
