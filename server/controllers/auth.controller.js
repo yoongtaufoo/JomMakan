@@ -4,19 +4,26 @@ const User = require("../models/userModel");
 
 // POST register users
 const register = async (req, res) => {
-  const { username, email, password, referral } = req.body;
+  const { username, location, email, password } = req.body;
 
   try {
+    // Ensure password is not empty
+    if (!password) {
+      return res.status(400).json({ message: "Password is required" });
+    }
+    // Generate a salt
+    const salt = await bcrypt.genSalt(10);
+
     // HASH THE PASSWORD
-    const hashedPassword = await bcrypt.hash(password, 10);
-    // console.log(hashedPassword);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    console.log(hashedPassword);
 
     // CREATE A NEW USER AND SAVE TO DB
     const newUser = new User({
-      email,
       username,
+      location,
+      email,
       password: hashedPassword,
-      referral,
     });
     await newUser.save();
     res.status(201).json({ message: "User created successfully" });

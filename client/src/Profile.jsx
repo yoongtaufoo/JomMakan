@@ -81,7 +81,7 @@ const Profile = () => {
               />
             </div>
 
-            <div class="form-group">
+            {/* <div class="form-group">
               <label htmlFor="birthday">
                 <strong>Birthday</strong>
               </label>
@@ -97,7 +97,7 @@ const Profile = () => {
                 value={birthday}
                 onChange={(e) => setBirthday(e.target.value)}
               />
-            </div>
+            </div> */}
 
             <div class="form-group was-validated">
               <label htmlFor="email">

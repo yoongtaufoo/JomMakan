@@ -10,10 +10,10 @@ const SignUp = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .post("http://localhost:3002/register", {
+      .post("http://localhost:3001/api/auth/register", {
         username,
         location,
-        birthday,
+        // birthday,
         email,
         pass,
       })
@@ -21,11 +21,11 @@ const SignUp = () => {
         alert("Registration Successful");
         setUsername("");
         setLocation("");
-        setBirthday("");
+        // setBirthday("");
         setEmail("");
         setPass("");
         fetchUsers();
-        navigate("/login");
+        // navigate("/login");
       })
       .catch((error) => {
         console.log("Unable to register user");
@@ -48,7 +48,7 @@ const SignUp = () => {
   };
 
   const fetchUsers = () => {
-    axios.get("http://localhost:3001/api/register").then((res) => {
+    axios.get("http://localhost:3001/api/auth/register").then((res) => {
       console.log(res.data);
     });
   };
@@ -98,7 +98,7 @@ const SignUp = () => {
               />
             </div>
 
-            <div class="form-group">
+            {/* <div class="form-group">
               <label htmlFor="birthday">
                 <strong>Birthday</strong>
               </label>
@@ -113,7 +113,7 @@ const SignUp = () => {
                 value={birthday}
                 onChange={(e) => setBirthday(e.target.value)}
               />
-            </div>
+            </div> */}
 
             <div class="form-group was-validated">
               <label htmlFor="email">
@@ -168,7 +168,7 @@ const SignUp = () => {
               </div>
             </div>
 
-            <div class="form-group position-relative">
+            {/* <div class="form-group position-relative">
               <label htmlFor="retype-password">
                 <strong>Retype Password</strong>
               </label>
@@ -203,13 +203,11 @@ const SignUp = () => {
               <div className="ms-4">
                 <PasswordStrengthMeter password={pass2} />
               </div>
-            </div>
+            </div> */}
 
-            <Link to="/login">
-              <button className="mt-0 mb-8 pt-3 pb-3" type="submit">
-                Register
-              </button>
-            </Link>
+            <button className="mt-0 mb-8 pt-3 pb-3" type="submit">
+              Register
+            </button>
           </form>
 
           <div className="mt-1 mb-1">
