@@ -22,7 +22,14 @@ const Profile = () => {
     event.preventDefault();
   };
 
-  const [username, setUsername] = useState(userInfo.username);
+  //get username from local storage
+  const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
+  let storedUsername = "";
+  if (storedUser) {
+    storedUsername = storedUser._doc.username;
+  }
+
+  const [username, setUsername] = useState(storedUsername);
   const [location, setLocation] = useState(userInfo.location);
   const [birthday, setBirthday] = useState(userInfo.birthday);
   const [email, setEmail] = useState(userInfo.email);

@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./Navbar.css";
 import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
 import profilePic from "../assets/default-pfp.png";
 
 const Navbar = () => {
-  const name = "User123";
+  // default name
+  let name = "User123";
+
+  //get username from local storage
+  const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
+  if (storedUser) {
+    name = storedUser._doc.username;
+  }
 
   return (
     <div>
@@ -24,7 +31,10 @@ const Navbar = () => {
           </li>
           <li>
             <Link to="/profile">
-              <div id="invisible" className="d-flex align-items-center align-self-center">
+              <div
+                id="invisible"
+                className="d-flex align-items-center align-self-center"
+              >
                 <strong>{name}</strong>
                 <img id="nav-pfp" src={profilePic} alt="nav profile pic"></img>
               </div>

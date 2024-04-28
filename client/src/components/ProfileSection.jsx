@@ -1,11 +1,21 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import profilePic from "../assets/default-pfp.png";
 import Popup from "reactjs-popup";
-
+import axios from "axios";
+import { AuthContext } from ".././context/AuthContext";
 import "./ProfileSection.css";
 
 const ProfileSection = () => {
+  //Get username from local storage
+  const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
+  let storedUsername = "";
+  if (storedUser) {
+    storedUsername = storedUser._doc.username;
+  }
+
+  // Profile Pic
+
   const [previewImage, setPreviewImage] = useState(profilePic);
   const [uploadedImage, setUploadedImage] = useState(null);
 
@@ -31,6 +41,21 @@ const ProfileSection = () => {
         setUploadedImage(imageResponse);
       })
       .catch((err) => {});
+  };
+
+  // Log Out
+  const navigate = useNavigate();
+
+  const { updateUser } = useContext(AuthContext);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:3001/api/auth/logout");
+      updateUser(null);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -64,7 +89,7 @@ const ProfileSection = () => {
           />
         ) : null} */}
 
-        <h1 className="mt-4 mb-5">User123</h1>
+        <h1 className="mt-4 mb-5">{storedUsername}</h1>
         <button
           className="upload-image-btn orange-btn"
           type="submit"
@@ -92,9 +117,9 @@ const ProfileSection = () => {
                   <button id="cancel-button" onClick={close}>
                     Cancel
                   </button>
-                  <Link to={"/"}>
-                    <button id="yes-button">Yes</button>
-                  </Link>
+                  <button id="yes-button" onClick={handleLogout}>
+                    Yes
+                  </button>
                 </div>
               </div>
             </div>
