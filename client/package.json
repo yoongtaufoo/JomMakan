@@ -19,6 +19,7 @@
     "@mui/material": "^5.15.15",
     "@react-spring/parallax": "^9.7.3",
     "@react-spring/web": "^9.7.3",
+    "axios": "^1.6.8",
     "primereact": "^10.6.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
