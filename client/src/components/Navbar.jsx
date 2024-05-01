@@ -11,7 +11,6 @@ const Navbar = () => {
   //get username from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
   if (storedUser) {
-    console.log(storedUser);
     name = storedUser.user.username;
   }
 

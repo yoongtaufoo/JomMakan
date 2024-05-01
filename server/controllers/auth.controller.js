@@ -1,24 +1,36 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
+const zxcvbn = require("zxcvbn");
 
 // POST register users
 const register = async (req, res) => {
-  const { username, location, email, password } = req.body;
+  const { username, location, email, password, password2 } = req.body;
 
   try {
-    // Ensure password is not empty
-    if (!password) {
-      return res.status(400).json({ message: "Password is required" });
+    // Check password strength
+    const passwordStrength = zxcvbn(password).score;
+    console.log(passwordStrength);
+    if (passwordStrength < 3) {
+      return res.status(400).json({
+        message: "Password strength must be at least 'Good' to sign up.",
+      });
     }
+
+    // Check retype password
+    if (password !== password2) {
+      return res.status(400).json({
+        message: "Passwords do not match.",
+      });
+    }
+
     // Generate a salt
     const salt = await bcrypt.genSalt(10);
 
-    // HASH THE PASSWORD
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, salt);
-    // console.log(hashedPassword);
 
-    // CREATE A NEW USER AND SAVE TO DB
+    // Create a new user ans dave to db
     const newUser = new User({
       username,
       location,
@@ -36,19 +48,19 @@ const register = async (req, res) => {
 // POST Log in user
 const login = async (req, res) => {
   try {
-    // CHECK IF THE USER EXISTS
+    // Check if the user exists
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Email not found!" });
     }
 
-    // CHECK IF THE PASSWORD IS CORRECT
+    // Check password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid)
-      return res.status(400).json({ message: "Invalid Credentials!" });
+      return res.status(400).json({ message: "Wrong Password!" });
 
-    // GENERATE COOKIE TOKEN AND SEND TO THE USER
+    // Generate cookie token and send to the user
 
     // res.setHeader("Set-Cookie", "test=" + "myValue").json("success")
     const age = 1000 * 60 * 60 * 24 * 7; // expired in one week (in millisecond)
@@ -80,7 +92,7 @@ const login = async (req, res) => {
   }
 };
 
-// LOG OUT USER
+// Log out
 const logout = (req, res) => {
   res.clearCookie("token").status(200).json({ message: "Logout Successful" });
 };

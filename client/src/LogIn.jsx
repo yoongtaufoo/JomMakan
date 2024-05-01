@@ -40,6 +40,7 @@ const LogIn = () => {
       // localStorage.setItem("token", token);
       updateUser(response.data);
     } catch (error) {
+      alert(error.response.data.message);
       console.log("Login Error", error);
     }
   };

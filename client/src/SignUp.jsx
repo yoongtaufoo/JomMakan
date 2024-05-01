@@ -34,7 +34,7 @@ const SignUp = () => {
         // birthday,
         email, // email from useState
         password: pass, // pass from useState
-
+        password2: pass2,
         // later in auth.controller
         // obj destructuring, must use same name "password"
         // const { username, location, email, password } = req.body;
@@ -47,18 +47,13 @@ const SignUp = () => {
         setEmail("");
         setPass("");
         setPass2("");
-        navigate("/login");
+        // navigate("/login");
       })
       .catch((error) => {
+        alert(error.response.data.message);
         console.log("Unable to register user");
       });
   };
-
-  // const fetchUsers = () => {
-  //   axios.get("http://localhost:3001/api/auth/register").then((res) => {
-  //     console.log(res.data);
-  //   });
-  // };
 
   return (
     <div>
@@ -80,7 +75,7 @@ const SignUp = () => {
               <input
                 type="text"
                 class="form-control auth register"
-                name="username" // sent via req.body
+                name="username"
                 id="username"
                 placeholder="Enter username"
                 required
@@ -152,7 +147,6 @@ const SignUp = () => {
                   required
                   // noValidate
                   // validated={false}
-                  // value={pass}
                   value={pass}
                   onChange={(e) => setPass(e.target.value)}
                 />
