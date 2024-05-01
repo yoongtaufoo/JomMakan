@@ -24,6 +24,20 @@ const register = async (req, res) => {
       });
     }
 
+    // Check if the email or username already exists
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) {
+      let errorMessage = "";
+      if (existingUser.email === email && existingUser.username === username) {
+        errorMessage = "Email and Username already exists";
+      } else if (existingUser.email === email) {
+        errorMessage = "Email already exists";
+      } else {
+        errorMessage = "Username already exists";
+      }
+      return res.status(400).json({ message: errorMessage });
+    }
+
     // Generate a salt
     const salt = await bcrypt.genSalt(10);
 
@@ -52,13 +66,13 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: "Email not found!" });
+      return res.status(401).json({ message: "Email is not registered." });
     }
 
     // Check password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid)
-      return res.status(400).json({ message: "Wrong Password!" });
+      return res.status(400).json({ message: "Wrong Password." });
 
     // Generate cookie token and send to the user
 
@@ -68,12 +82,7 @@ const login = async (req, res) => {
       expiresIn: age,
     });
 
-    // get all userInfo except password
-    // const { password: userPassword, ...userInfo } = user;
-
-    // const { _id, username } = user._doc;
-
-    console.log(user);
+    // console.log(user);
 
     res
       .cookie("token", token, {
@@ -88,13 +97,13 @@ const login = async (req, res) => {
       });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to login!" });
+    res.status(500).json({ message: "Failed to login." });
   }
 };
 
 // Log out
 const logout = (req, res) => {
-  res.clearCookie("token").status(200).json({ message: "Logout Successful" });
+  res.clearCookie("token").status(200).json({ message: "Logout Successful." });
 };
 
 module.exports = {

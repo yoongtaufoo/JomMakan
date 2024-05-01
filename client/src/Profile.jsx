@@ -26,7 +26,6 @@ const Profile = () => {
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
   let storedUsername = "";
   if (storedUser) {
-    console.log(storedUser);
     storedUsername = storedUser.user.username;
   }
 

@@ -47,7 +47,7 @@ const SignUp = () => {
         setEmail("");
         setPass("");
         setPass2("");
-        // navigate("/login");
+        navigate("/login");
       })
       .catch((error) => {
         alert(error.response.data.message);

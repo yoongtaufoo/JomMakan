@@ -11,7 +11,6 @@ const ProfileSection = () => {
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
   let username = "";
   if (storedUser) {
-    console.log(storedUser);
     username = storedUser.user.username;
   }
 
@@ -53,6 +52,7 @@ const ProfileSection = () => {
     try {
       await axios.post("http://localhost:3001/api/auth/logout");
       updateUser(null);
+      alert("Log out successful");
       navigate("/");
     } catch (err) {
       console.log(err);
