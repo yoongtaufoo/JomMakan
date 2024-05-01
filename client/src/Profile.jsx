@@ -22,11 +22,12 @@ const Profile = () => {
     event.preventDefault();
   };
 
-  //get username from local storage
+  //Get username from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
   let storedUsername = "";
   if (storedUser) {
-    storedUsername = storedUser._doc.username;
+    console.log(storedUser);
+    storedUsername = storedUser.user.username;
   }
 
   const [username, setUsername] = useState(storedUsername);

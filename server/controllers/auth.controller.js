@@ -57,22 +57,23 @@ const login = async (req, res) => {
     });
 
     // get all userInfo except password
-    const { password: userPassword, ...userInfo } = user;
+    // const { password: userPassword, ...userInfo } = user;
 
     // const { _id, username } = user._doc;
 
-    // add the token to the user object
-    const userWithToken = { ...userInfo, token };
-    // const userWithToken = { token, _id, username, email };
+    console.log(user);
 
     res
       .cookie("token", token, {
         httpOnly: true,
-        // secure:true,
+        secure: true,
         maxAge: age,
       })
       .status(200)
-      .json(userWithToken);
+      .json({
+        token,
+        user: { _id: user._id, username: user.username, email: user.email },
+      });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Failed to login!" });

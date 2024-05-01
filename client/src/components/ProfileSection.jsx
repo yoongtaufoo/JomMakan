@@ -9,9 +9,10 @@ import "./ProfileSection.css";
 const ProfileSection = () => {
   //Get username from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
-  let storedUsername = "";
+  let username = "";
   if (storedUser) {
-    storedUsername = storedUser._doc.username;
+    console.log(storedUser);
+    username = storedUser.user.username;
   }
 
   // Profile Pic
@@ -89,7 +90,7 @@ const ProfileSection = () => {
           />
         ) : null} */}
 
-        <h1 className="mt-4 mb-5">{storedUsername}</h1>
+        <h1 className="mt-4 mb-5">{username}</h1>
         <button
           className="upload-image-btn orange-btn"
           type="submit"
