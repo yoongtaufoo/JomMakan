@@ -1,16 +1,32 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
 import "./Reservations.css"
 import Navbar from './components/Navbar'
 import SearchBar from "./components/SearchBar";
 import image from "./assets/image 3.png";
 import Tabs from './components/Tabs';
-import { reservations } from './ReservationData';
+// import { reservations } from './ReservationData';
 import CollectionCard from './components/CollectionCard';
+import axios from "axios";
 
 const Reservations = () => {
   const navigate = useNavigate();
+  const [reservations, setReservations] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
+
+  useEffect(() => {
+    fetchReservations(); // Fetch reservations when component mounts
+  }, []);
+
+  const fetchReservations = async () => {
+    try {
+      const response = await axios.get("/api/reservation/getUpcomingReservations"); // Assuming backend endpoint is /api/reservations
+      setReservations(response.data); // Update reservations state with fetched data
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching reservations:", error);
+    }
+  };
 
   const filteredReservations = reservations.filter((reservation) => {
     if (activeTab === 0) return reservation.status === "U";
@@ -37,6 +53,7 @@ const Reservations = () => {
         >
           <i class="bi bi-arrow-left-circle"></i> Back
         </div>
+        {/* <SearchBar/> */}
 
         <h1 className="custom-h1">My Reservations</h1>
         <Tabs

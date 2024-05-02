@@ -21,11 +21,12 @@ const ReservationForm = (props) => {
 
   let userid = "User123";
 
-  // get username from local storage
+  // get userid from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
   if (storedUser) {
     userid = storedUser.user._id;
   }
+
   const { id } = useParams();
   const restaurantid = parseInt(id);
 
@@ -111,8 +112,8 @@ const ReservationForm = (props) => {
       paxinput,
       "tableinput",
       tableinput,
-      "userid",
-      userid,
+      // "userid",
+      // userid,
       "restaurantid",
       restaurantid
     );
@@ -143,6 +144,11 @@ const ReservationForm = (props) => {
       );
       return; // Stop further execution if isChecked is false
     }
+    const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
+    if (!token) {
+      alert("User is not authenticated."); // Handle case where user is not authenticated
+      return;
+    }
     axios
       .post("http://localhost:3001/api/reservation/reserve", {
         date: dateinput,
@@ -153,9 +159,14 @@ const ReservationForm = (props) => {
         pax: paxinput,
         table: tableinput,
         status: "U",
-        // userid,
         restaurant: restaurantid,
-      })
+      }
+        , {
+        headers: {
+          Authorization: token, // Include JWT in request headers
+        },
+        }
+      )
       .then(() => {
         alert("Reserved Successfully");
         setDateInput("");
