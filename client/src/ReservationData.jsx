@@ -1,5 +1,3 @@
-import { restaurants } from "./RestaurantData"
-
 const reservations = [
     {
         id: 1,
@@ -11,7 +9,6 @@ const reservations = [
         tableid: 1,
         restaurantid: 1,
         status: "D",
-        //userid:
     },
     {
         id: 2,
