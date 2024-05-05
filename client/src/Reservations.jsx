@@ -14,20 +14,25 @@ const Reservations = () => {
   const [reservations, setReservations] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
 
-  useEffect(() => {
-    fetchReservations(); // Fetch reservations when component mounts
-  }, []);
+  //get username from local storage
+  const token = localStorage.getItem("JomMakanUser");
 
-  const fetchReservations = async () => {
-    try {
-      const response = await axios.get("/api/reservation/getUpcomingReservations"); // Assuming backend endpoint is /api/reservations
-      setReservations(response.data); // Update reservations state with fetched data
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching reservations:", error);
+    // fetchReservations(); // Fetch reservations when component mounts
+    if (!token) {
+      alert("User is not authenticated."); // Handle case where user is not authenticated
+      return;
     }
-  };
-
+    axios
+      .get("http://localhost:3001/api/reservation/reservations", {
+        headers: {
+          Authorization: token // Include JWT in request headers
+        },
+      })
+      .then(({ data }) => {
+        // console.log("data", data);
+        setReservations(data);
+      });
+  console.log(reservations)
   const filteredReservations = reservations.filter((reservation) => {
     if (activeTab === 0) return reservation.status === "U";
     if (activeTab === 1) return reservation.status === "D";
@@ -38,7 +43,6 @@ const Reservations = () => {
   const handleTabClick = (index) => {
     setActiveTab(index); // Update the activeTab state
   };
-
 
   return (
     <div>
@@ -62,11 +66,11 @@ const Reservations = () => {
           onTabClick={handleTabClick}
           searchBarPlaceholder={"Restaurants, Name..."}
         />
-        
+
         <br />
         <div className="card mb-3">
           {filteredReservations.map((reservation) => (
-            <CollectionCard key={reservation.id} reservations={reservation}/>
+            <CollectionCard key={reservation._id} reservations={reservation} />
           ))}
         </div>
       </div>

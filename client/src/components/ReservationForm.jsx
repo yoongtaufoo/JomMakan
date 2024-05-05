@@ -95,7 +95,8 @@ const ReservationForm = (props) => {
       phoneinput !== "" &&
       paxinput !== "" &&
       tableinput !== "";
-
+    //CHANGE
+    
     // Log current input values
     console.log(
       "dateinput: ",
@@ -157,9 +158,9 @@ const ReservationForm = (props) => {
         name: nameinput,
         phone: phoneinput,
         pax: paxinput,
-        table: tableinput,
+        table_id: tableinput,
         status: "U",
-        restaurant: restaurantid,
+        restaurant_id: restaurantid,
       }
         , {
         headers: {

@@ -7,9 +7,9 @@ const reservationSchema = new mongoose.Schema({
   name: { type: String, required: true },
   phone: { type: String, required: true },
   pax: { type: Number, required: true },
-  table: { type: String, required: true },
+  table_id: { type: String, required: true },
   status: { type: String, required: true },
-  restaurant: { type: Number, required: true },
+  restaurant_id: { type: Number, required: true },
 });
 
 const userSchema = new mongoose.Schema({
@@ -18,7 +18,8 @@ const userSchema = new mongoose.Schema({
   // birthday: { type: Date, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  reservations: [reservationSchema]
+  reservations: [reservationSchema],
+  
 });
 
 const User = mongoose.model("Users", userSchema);

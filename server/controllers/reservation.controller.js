@@ -10,9 +10,9 @@ const reserve = async (req, res) => {
     name,
     phone,
     pax,
-    table,
+    table_id,
     status,
-    restaurant,
+    restaurant_id,
   } = req.body;
   console.log("Creating a new reservation...");
   try {
@@ -38,9 +38,9 @@ const reserve = async (req, res) => {
       name,
       phone,
       pax,
-      table,
+      table_id,
       status,
-      restaurant,
+      restaurant_id,
     });
 
     // Save the updated user object with the new reservation
@@ -53,33 +53,40 @@ const reserve = async (req, res) => {
   }
 };
 
-//get upcoming reservations
-const getUpcomingReservations = async (req, res) => {
+//get reservations
+const reservations = async (req, res) => {
   try {
-    // Query the database for users with reservations having status "U"
-    const UpcomingReservations = await User.find({
-      "reservations.status": "U",
-    });
 
-    // Extract reservations with status "U" from each user
-    const reservations = UpcomingReservations.reduce((acc, user) => {
-      const userReservations = user.reservations.filter(
-        (reservation) => reservation.status === "U"
-      );
-      console.log(acc.concat(userReservations));
-      return acc.concat(userReservations);
-    }, []);
+    // res.setHeader("Content-Type", "application/json");
 
-    // Return the retrieved reservations
-    res.status(200).json(reservations);
-  } catch (error) {
-    console.error("Error fetching reservations:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.log( "header", req.headers.authorization);
+    const authHeader = req.headers.authorization;
+    const token = JSON.parse(authHeader);
+    console.log("token", authHeader);
+    // Decode the token
+
+    // Access the userId from the decoded token
+    const userId = token.user._id;
+    console.log("userid",userId)
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    //
+    console.log("reservations:", user.reservations);
+    res.json(user.reservations)
+
+    // res.status(201).json({ message: "Reservations fetched successfully" });
+  } catch (err) {
+    console.error("Error fetching reservation:", err);
+    res.status(500).json({ message: "Failed to fetch reservations" });
   }
 };
 
 module.exports = {
   reserve,
-  getUpcomingReservations,
+  reservations,
 
 };
