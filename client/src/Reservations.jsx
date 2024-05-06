@@ -14,25 +14,48 @@ const Reservations = () => {
   const [reservations, setReservations] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
 
-  //get username from local storage
-  const token = localStorage.getItem("JomMakanUser");
+  // //get username from local storage
+  // const token = localStorage.getItem("JomMakanUser");
 
-    // fetchReservations(); // Fetch reservations when component mounts
+  //   // fetchReservations(); // Fetch reservations when component mounts
+  //   if (!token) {
+  //     alert("User is not authenticated."); // Handle case where user is not authenticated
+  //     return;
+  //   }
+  //   axios
+  //     .get("http://localhost:3001/api/reservation/reservations", {
+  //       headers: {
+  //         Authorization: token // Include JWT in request headers
+  //       },
+  //     })
+  //     .then(({ data }) => {
+  //       // console.log("data", data);
+  //       setReservations(data);
+  //     });
+
+  useEffect(() => {
+    //get username from local storage
+    const token = localStorage.getItem("JomMakanUser");
+
     if (!token) {
-      alert("User is not authenticated."); // Handle case where user is not authenticated
+      alert("User is not authenticated.");
       return;
     }
+
     axios
       .get("http://localhost:3001/api/reservation/reservations", {
         headers: {
-          Authorization: token // Include JWT in request headers
+          Authorization: token,
         },
       })
       .then(({ data }) => {
-        // console.log("data", data);
         setReservations(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching reservations:", error);
       });
-  console.log(reservations)
+  }, []); // Empty dependency array to fetch data only once when component mounts
+
   const filteredReservations = reservations.filter((reservation) => {
     if (activeTab === 0) return reservation.status === "U";
     if (activeTab === 1) return reservation.status === "D";
