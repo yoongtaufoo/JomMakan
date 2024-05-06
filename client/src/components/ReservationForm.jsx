@@ -95,7 +95,8 @@ const ReservationForm = (props) => {
       phoneinput !== "" &&
       paxinput !== "" &&
       tableinput !== "";
-
+    //CHANGE
+    
     // Log current input values
     console.log(
       "dateinput: ",
@@ -157,9 +158,9 @@ const ReservationForm = (props) => {
         name: nameinput,
         phone: phoneinput,
         pax: paxinput,
-        table: tableinput,
+        table_id: tableinput,
         status: "U",
-        restaurant: restaurantid,
+        restaurant_id: restaurantid,
       }
         , {
         headers: {
@@ -168,7 +169,7 @@ const ReservationForm = (props) => {
         }
       )
       .then(() => {
-        alert("Reserved Successfully");
+        // alert("Reserved Successfully");
         setDateInput("");
         setTimeStartInput("");
         setTimeEndInput("");
@@ -177,6 +178,7 @@ const ReservationForm = (props) => {
         setPaxInput("");
         setTableInput("");
         setConfirm(true);
+        window.location.reload();
       })
       .catch((error) => {
         console.log("Unable to reserve user");
@@ -204,19 +206,8 @@ const ReservationForm = (props) => {
         ),
       ]
     : [];
-
-  // const nopaxOptions = [];
-  // if (props.tables !== null) {
-  //   for (let i = 1; i <= Math.max(...tables.map((table) => table.pax)); i++) {
-  //     nopaxOptions.push(
-  //       <option key={i} value={i}>
-  //         {i}
-  //       </option>
-  //     );
-  //   }
-  // }
-
-  // Generate select options for restaurant tables
+  
+  //generate table options based on no of pax and availability
   const tableOptions = props.tables
     ? [
         <option key="null" value="">
