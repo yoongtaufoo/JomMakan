@@ -33,3 +33,9 @@ app.use("/api/reservation", reserveRoute);
 
 // app.use("/api/users", userRoute);
 // app.use("/api/community", communityRoute);
+
+
+// Import workshop route
+const workshopRoute = require("./routes/workshop.route");
+// Use workshop routes
+app.use("/api/workshop", workshopRoute);
