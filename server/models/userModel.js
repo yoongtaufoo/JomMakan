@@ -1,16 +1,5 @@
+const reservationSchema = require("./reservationModel");
 const mongoose = require("mongoose");
-
-const reservationSchema = new mongoose.Schema({
-  date: { type: Date, required: true },
-  timestart: { type: String, required: true },
-  timeend: { type: String, required: true },
-  name: { type: String, required: true },
-  phone: { type: String, required: true },
-  pax: { type: Number, required: true },
-  table_id: { type: String, required: true },
-  status: { type: String, required: true },
-  restaurant_id: { type: Number, required: true },
-});
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -23,5 +12,11 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model("Users", userSchema);
+const Reservation = mongoose.model("Reservation", reservationSchema);
 
-module.exports = User;
+// module.exports = Reservation;
+// module.exports = User;
+module.exports = {
+  User, // User: User
+  Reservation,
+};

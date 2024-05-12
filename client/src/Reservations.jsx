@@ -43,7 +43,7 @@ const Reservations = () => {
     }
 
     axios
-      .get("http://localhost:3001/api/reservation/reservations", {
+      .get("http://localhost:3001/api/reservation/myreservations", {
         headers: {
           Authorization: token,
         },
@@ -58,8 +58,8 @@ const Reservations = () => {
 
   const filteredReservations = reservations.filter((reservation) => {
     if (activeTab === 0) return reservation.status === "U";
-    if (activeTab === 1) return reservation.status === "D";
-    if (activeTab === 2) return reservation.status === "C";
+    if (activeTab === 1) return reservation.status === "C";
+    if (activeTab === 2) return reservation.status === "D";
     return true; // Default case
   });
 
