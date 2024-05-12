@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { restaurants } from "../RestaurantData";
 import axios from "axios";
+const today = new Date(); // Get today's date
 
 const CollectionCard = ({ workshops, reservations }) => {
     // let workshops=props.workshop;
@@ -33,26 +34,6 @@ const CollectionCard = ({ workshops, reservations }) => {
         }
         return null;
     };
-
-    // const getRestaurantData = (reservations, restaurants) => {
-    //   if (reservations && restaurants) {
-    //     // Sort reservations by date
-    //     const sortedReservations = reservations.slice().sort((a, b) => {
-    //       const dateA = new Date(a.date);
-    //       const dateB = new Date(b.date);
-    //       return dateA - dateB;
-    //     });
-
-    //     // Find matching restaurant for the first reservation (assuming sortedReservations is sorted)
-    //     const matchingRestaurant = restaurants.find(
-    //       (restaurant) => restaurant.id === sortedReservations[0]?.restaurant_id
-    //     );
-    //     console.log(matchingRestaurant)
-    //     // Return matching restaurant
-    //     return matchingRestaurant;
-    //   }
-    //   return null;
-    // };
 
     // For workshop
     const renderWorkshop = (workshops) => {

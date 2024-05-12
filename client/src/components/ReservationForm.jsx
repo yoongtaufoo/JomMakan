@@ -3,8 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 const ReservationForm = (props) => {
-  const [submit, setSubmit] = useState(false);
-  const [confirm, setConfirm] = useState(false);
+  // for checking if all fields are inputted
   const [dateinput, setDateInput] = useState("");
   const [timestartinput, setTimeStartInput] = useState("");
   const [timeendinput, setTimeEndInput] = useState("");
@@ -12,45 +11,13 @@ const ReservationForm = (props) => {
   const [phoneinput, setPhoneInput] = useState("");
   const [paxinput, setPaxInput] = useState("");
   const [tableinput, setTableInput] = useState("");
-
-  const [isChecked, setIsChecked] = useState(false);
-
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
-
-  let userid = "User123";
-
-  // get userid from local storage
-  const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
-  if (storedUser) {
-    userid = storedUser.user._id;
-  }
-
-  const { id } = useParams();
-  const restaurantid = parseInt(id);
-
-  const tables = props.tables;
-  const [numberOfPax, setNumberOfPax] = useState(0);
-  const popRef = useRef(null);
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowString = tomorrow.toISOString().split("T")[0];
-
-  const handleClickOutside = (event) => {
-    if (popRef.current && !popRef.current.contains(event.target)) {
-      setConfirm(false);
-      setSubmit(false);
-    }
-  };
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   const [isFormValid, setIsFormValid] = useState(false); // State to track overall form validity
+  const [tables, setTables] = useState(""); // Handle table option change
+  const [isChecked, setIsChecked] = useState(false); // Check if Reservation Policy is ticked
+  const [date, setDate] = useState(0); // Handle change event for date input
+  const [numberOfPax, setNumberOfPax] = useState(0); // Handle change event for the number of pax input
+  const [submit, setSubmit] = useState(false); // submit pop up
+  const [confirm, setConfirm] = useState(false); // confirm pop up
 
   // Function to handle input changes and check form validity
   const handleInputChange = (e) => {
@@ -84,6 +51,173 @@ const ReservationForm = (props) => {
     }
   };
 
+  // Function to handle change in start time
+  const handleStartTimeChange = (event) => {
+    const selectedStartTime = event.target.value;
+    // setStartTime(selectedStartTime);
+    console.log(selectedStartTime);
+    // Calculate end time by adding one hour to the start time
+    const [startHour, startMinute] = selectedStartTime.split(":").map(Number);
+    const endHour = startHour + 1;
+    const endMinute = startMinute < 30 ? 0 : 30; // Round up to nearest half hour
+    const formattedEndHour = endHour.toString().padStart(2, "0");
+    const formattedEndMinute = endMinute.toString().padStart(2, "0");
+    const calculatedEndTime = `${formattedEndHour}:${formattedEndMinute}`;
+    console.log(calculatedEndTime);
+    setTimeEndInput(calculatedEndTime);
+  };
+
+  // Handle change event for the number of pax input
+  const handlePaxChange = (event) => {
+    setNumberOfPax(parseIntevent.target.value);
+  };
+
+  // Handle change event for date
+  const handleDateChange = (event) => {
+    setDate(event.target.value);
+  };
+
+  useEffect(() => {
+    if (date) {
+      // Check if the date is not empty
+      // Make API call when the date input changes
+      axios
+        .get(
+          `http://localhost:3001/api/reservation/reservations?date=${date}&restaurantId=${restaurantid}`
+        )
+        .then((response) => {
+          setReservations(response.data); // Update reservations state with API response data
+        })
+        .catch((error) => {
+          console.error("Error fetching reservations:", error);
+        });
+    }
+  }, [date]); // Run this effect whenever the 'date' state changes
+
+  // Generate select options for pax no
+  const nopaxOptions = props.tables
+    ? [
+        <option key="null" value=""></option>,
+        ...Array.from(
+          { length: Math.max(...props.tables.map((table) => table.pax)) },
+          (_, index) => (
+            <option key={index + 1} value={index + 1}>
+              {index + 1}
+            </option>
+          )
+        ),
+      ]
+    : [];
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+  const handleConfirm = () => {
+    if (!isFormValid) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+    if (!isChecked) {
+      alert(
+        "Please check the box to indicate that you have read and understood the Registration Policy."
+      );
+      return; // Stop further execution if isChecked is false
+    }
+    const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
+    if (!token) {
+      alert("User is not authenticated."); // Handle case where user is not authenticated
+      return;
+    }
+    axios
+      .post(
+        "http://localhost:3001/api/reservation/reserve",
+        {
+          date: dateinput,
+          timestart: timestartinput,
+          timeend: timeendinput,
+          name: nameinput,
+          phone: phoneinput,
+          pax: paxinput,
+          table_id: tableinput,
+          status: "U",
+          restaurant_id: restaurantid,
+        },
+        {
+          headers: {
+            Authorization: token, // Include JWT in request headers
+          },
+        }
+      )
+      .then(() => {
+        // alert("Reserved Successfully");
+        setDateInput("");
+        setTimeStartInput("");
+        setTimeEndInput("");
+        setNameInput("");
+        setPhoneInput("");
+        setPaxInput("");
+        setTableInput("");
+        setConfirm(true);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log("Unable to reserve user");
+      });
+  };
+
+  let userid = "User123";
+
+  // get userid from local storage
+  const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
+  if (storedUser) {
+    userid = storedUser.user._id;
+  }
+
+  // Get restaurant id from url
+  const { id } = useParams();
+  const restaurantid = parseInt(id);
+
+  // const tables = props.tables;
+
+  const popRef = useRef(null);
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowString = tomorrow.toISOString().split("T")[0];
+
+  const handleClickOutside = (event) => {
+    if (popRef.current && !popRef.current.contains(event.target)) {
+      setConfirm(false);
+      setSubmit(false);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const fetchRestaurants = async () => {
+    try {
+      const response = await axios.get("api/");
+    } catch (error) {
+      console.error("Error fetching restaurants:", error);
+    }
+  };
+
+  const fetchReservations = async () => {
+    axios
+      .get("http://localhost:3001/api/reservation/myreservations")
+      .then(({ data }) => {
+        setReservations(data);
+      })
+      .catch((error) => {
+        reservations;
+        console.error("Error fetching :", error);
+      });
+  };
+
   // Effect to check form validity and log state values
   useEffect(() => {
     // Check if all required fields are filled
@@ -95,8 +229,7 @@ const ReservationForm = (props) => {
       phoneinput !== "" &&
       paxinput !== "" &&
       tableinput !== "";
-    //CHANGE
-    
+
     // Log current input values
     console.log(
       "dateinput: ",
@@ -129,85 +262,9 @@ const ReservationForm = (props) => {
     phoneinput,
     paxinput,
     tableinput,
-    // status,
-    // userid,
-    // restaurantid,
   ]);
 
-  const handleConfirm = () => {
-    if (!isFormValid) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-    if (!isChecked) {
-      alert(
-        "Please check the box to indicate that you have read and understood the Registration Policy."
-      );
-      return; // Stop further execution if isChecked is false
-    }
-    const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
-    if (!token) {
-      alert("User is not authenticated."); // Handle case where user is not authenticated
-      return;
-    }
-    axios
-      .post("http://localhost:3001/api/reservation/reserve", {
-        date: dateinput,
-        timestart: timestartinput,
-        timeend: timeendinput,
-        name: nameinput,
-        phone: phoneinput,
-        pax: paxinput,
-        table_id: tableinput,
-        status: "U",
-        restaurant_id: restaurantid,
-      }
-        , {
-        headers: {
-          Authorization: token, // Include JWT in request headers
-        },
-        }
-      )
-      .then(() => {
-        // alert("Reserved Successfully");
-        setDateInput("");
-        setTimeStartInput("");
-        setTimeEndInput("");
-        setNameInput("");
-        setPhoneInput("");
-        setPaxInput("");
-        setTableInput("");
-        setConfirm(true);
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.log("Unable to reserve user");
-      });
-  };
-
-  // Handle change event for the number of pax input
-  const handlePaxChange = (event) => {
-    if (props.tables !== null) {
-      setNumberOfPax(parseInt(event.target.value));
-    }
-  };
-
-  // Generate select options for pax no
-  const nopaxOptions = props.tables
-    ? [
-        <option key="null" value=""></option>,
-        ...Array.from(
-          { length: Math.max(...props.tables.map((table) => table.pax)) },
-          (_, index) => (
-            <option key={index + 1} value={index + 1}>
-              {index + 1}
-            </option>
-          )
-        ),
-      ]
-    : [];
-  
-  //generate table options based on no of pax and availability
+  // generate table options based on no of pax and availability
   const tableOptions = props.tables
     ? [
         <option key="null" value="">
@@ -224,6 +281,39 @@ const ReservationForm = (props) => {
         )),
       ]
     : [];
+
+  // const tableOptions = tables.map((table) => (
+  //   <option
+  //     key={table.id}
+  //     value={table.id}
+  //     disabled={!isTableAvailable(table.id)}
+  //   >
+  //     Table {table.id}
+  //   </option>
+  // ));
+
+  const isTableAvailable = (tableId) => {
+    // Check if the table has sufficient capacity
+    const table = tables.find((table) => table.id === tableId);
+    if (!table || table.capacity < noPax) {
+      return false; // Table does not exist or has insufficient capacity
+    }
+
+    // Check if there are any reservations for the selected date and time range
+    if (
+      reservations.some(
+        (reservation) =>
+          reservation.table_id === tableId &&
+          reservation.date === date &&
+          reservation.timestart <= endTime &&
+          reservation.timeend >= startTime
+      )
+    ) {
+      return false; // Table is already reserved
+    }
+
+    return true; // Table is available
+  };
 
   // Parse the opening hours string and extract opening and closing times
   const parseOpeningHours = (openingHours) => {
@@ -267,34 +357,34 @@ const ReservationForm = (props) => {
   // console.log(openingTime);
 
   // Generate time options for opening and closing hours
-  const generateEndTimeOptions = (openingTime, closingTime) => {
-    const options = [<option key="null" value=""></option>];
-    if (openingTime && closingTime) {
-      const parsedOpeningTime = parseTime(openingTime);
-      const parsedClosingTime = parseTime(closingTime);
+  // const generateEndTimeOptions = (openingTime, closingTime) => {
+  //   const options = [<option key="null" value=""></option>];
+  //   if (openingTime && closingTime) {
+  //     const parsedOpeningTime = parseTime(openingTime);
+  //     const parsedClosingTime = parseTime(closingTime);
 
-      for (
-        let hour = parsedOpeningTime.hours + 1;
-        hour <= parsedClosingTime.hours;
-        hour++
-      ) {
-        // Loop through each minute (0 and 30)
-        for (let minute of [0, 30]) {
-          const time = `${hour.toString().padStart(2, "0")}:${minute
-            .toString()
-            .padStart(2, "0")}`;
-          options.push(
-            <option key={time} value={time}>
-              {time}
-            </option>
-          );
-        }
-      }
+  //     for (
+  //       let hour = parsedOpeningTime.hours + 1;
+  //       hour <= parsedClosingTime.hours;
+  //       hour++
+  //     ) {
+  //       // Loop through each minute (0 and 30)
+  //       for (let minute of [0, 30]) {
+  //         const time = `${hour.toString().padStart(2, "0")}:${minute
+  //           .toString()
+  //           .padStart(2, "0")}`;
+  //         options.push(
+  //           <option key={time} value={time}>
+  //             {time}
+  //           </option>
+  //         );
+  //       }
+  //     }
 
-      return options;
-    }
-    return [];
-  };
+  //     return options;
+  //   }
+  //   return [];
+  // };
 
   const generateStartTimeOptions = (openingTime, closingTime) => {
     const options = [<option key="null" value=""></option>];
@@ -336,7 +426,11 @@ const ReservationForm = (props) => {
             type="date"
             name="dateinput"
             min={tomorrowString}
-            onChange={handleInputChange}
+            value={date}
+            onChange={(e) => {
+              handleInputChange(e);
+              handleDateChange(e);
+            }}
             required
           ></input>
         </div>
@@ -347,20 +441,18 @@ const ReservationForm = (props) => {
           <select
             id="Rtimeinput"
             name="timestartinput"
-            onChange={handleInputChange}
+            onChange={(event) => {
+              handleInputChange(event);
+              handleStartTimeChange(event);
+            }}
             required
           >
             {generateStartTimeOptions(openingTime, closingTime)}
           </select>
           to
-          <select
-            id="Rtimeinput"
-            name="timeendinput"
-            onChange={handleInputChange}
-            required
-          >
-            {generateEndTimeOptions(openingTime, closingTime)}
-          </select>
+          <div id="Rtimeinput" name="timeendinput" required>
+            {timeendinput}
+          </div>
         </div>
 
         <div>
@@ -454,15 +546,14 @@ const ReservationForm = (props) => {
           </div>
         </div>
       )}
-      {confirm &&
-        (
-          <div className="popup-overlay">
-            <div className="popup" ref={popRef}>
-              <i class="bi bi-calendar2-check-fill"></i>
-              <div>Confirmed</div>
-            </div>
+      {confirm && (
+        <div className="popup-overlay">
+          <div className="popup" ref={popRef}>
+            <i class="bi bi-calendar2-check-fill"></i>
+            <div>Confirmed</div>
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 };
