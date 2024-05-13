@@ -26,30 +26,30 @@ import { BsStarFill, BsStar } from "react-icons/bs";
 import { restaurants, reviews } from "./RestaurantData";
 import axios from "axios";
 
-const renderRatingStars = (rating) => {
-  const filledStars = Math.floor(rating);
-  const hasHalfStar = rating - filledStars === 0.5;
+// const renderRatingStars = (rating) => {
+//   const filledStars = Math.floor(rating);
+//   const hasHalfStar = rating - filledStars === 0.5;
 
-  return (
-    <div className="star-container">
-      {[...Array(filledStars)].map((_, index) => (
-        <BsStarFill key={index} className="star-icon filled-star" />
-      ))}
-      {hasHalfStar && (
-        <i
-          key="halfStar"
-          className="bi bi-star-half star-icon filled-star half-star"
-        ></i>
-      )}
-      {[...Array(5 - filledStars - (hasHalfStar ? 1 : 0))].map((_, index) => (
-        <BsStar key={filledStars + index} className="star-icon empty-star" />
-      ))}
-    </div>
-  );
-};
+//   return (
+//     <div className="star-container">
+//       {[...Array(filledStars)].map((_, index) => (
+//         <BsStarFill key={index} className="star-icon filled-star" />
+//       ))}
+//       {hasHalfStar && (
+//         <i
+//           key="halfStar"
+//           className="bi bi-star-half star-icon filled-star half-star"
+//         ></i>
+//       )}
+//       {[...Array(5 - filledStars - (hasHalfStar ? 1 : 0))].map((_, index) => (
+//         <BsStar key={filledStars + index} className="star-icon empty-star" />
+//       ))}
+//     </div>
+//   );
+// };
+
 
 const Restaurant = () => {
-  const { id } = useParams();
 
   const navigate = useNavigate();
   const popRef = useRef(null);
@@ -82,9 +82,71 @@ const Restaurant = () => {
   const toggleShareDropdown = (index) => {
     setIsDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
   };
-  const handleSaveToggle = () => {
-    setIsSaved((prevState) => !prevState);
+  // const handleSaveToggle = () => {
+  //   setIsSaved((prevState) => !prevState);
+  // };
+
+  const  restaurantId  = useParams()._id;
+  console.log(useParams())
+  // const restaurantid = parseInt(id);
+  console.log("restaurantId:", restaurantId);
+
+  const id = typeof restaurantId === 'object' ? restaurantId._id : restaurantId;
+  console.log("id:", id);
+
+  let userid = "User123";
+
+  // get userid from local storage
+  const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
+  if (storedUser) {
+    userid = storedUser.user._id;
+  }
+
+  const handleSaveToggle = async () => {
+
+    const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
+    if (!token) {
+      alert("User is not authenticated."); // Handle case where user is not authenticated
+      return;
+    }
+
+    if (!id|| !_id) {
+      console.log("favRestaurantId is undefined.");
+      return;
+  }
+
+    try{
+    const response = await axios.post(`http://localhost:3001/api/restaurant/${_id}/addFavRestaurant`, {
+        
+        favRestaurantId: id
+      }
+        , {
+        headers: {
+          Authorization: token, // Include JWT in request headers
+        },
+        }
+      );
+      console.log("restaurant saved successfully" + response.data.message);
+      
+    }catch(error) {
+        console.log("Unable to save restaurant:"+error);
+      }
   };
+
+    // const id = typeof restaurantId === 'object' ? restaurantId._id : restaurantId;
+
+    // try {
+    //   const response = await axios.post(
+    //     "http://localhost:3001/api/restaurant/addFavRestaurant",
+    //     { restaurantId: id, isSaved: !isSaved } // Toggle the save state
+    //   );
+    //   console.log(response.data.message); // Log success message or handle as needed
+    //   setIsSaved(!isSaved); // Update the UI state
+    // } catch (error) {
+    //   console.error('Error toggling favorite:', error);
+    //   // Handle error
+    // }
+
 
   const handleLike = (index) => {
     setLikes((prevLikes) => {
@@ -108,23 +170,16 @@ const Restaurant = () => {
     });
   };
 
-  // const togglePopup = (index) => {
-  //   setShowDetailsPopups((prevState) => {
-  //     const newState = [...prevState];
-  //     newState[index] = !newState[index];
-  //     return newState;
-  //   });
-  // };
-
   const handleEdit = (index) => {
     console.log("Edit review at index:", index);
     setOpenDropdownIndex(null);
   };
+
   useEffect(() => {
     let handler = (e) => {
-      if (!popRef.current.contains(e.target)) {
-        setDelete(false);
-      }
+      // if (!popRef.current.contains(e.target)) {
+      //   setDelete(false);
+      // }
     };
 
     document.addEventListener("mousedown", handler);
@@ -134,19 +189,27 @@ const Restaurant = () => {
     };
   });
 
-  const restaurant = restaurants.find(
-    (restaurant) => restaurant.id === parseInt(id)
-  );
 
-  // const fetchRestaurantById = async (id) => {
-  //   try {
-  //     const response = await axios.get(`/api/restaurants/${id}`);
-  //     return response.data.restaurant;
-  //   } catch (error) {
-  //     console.error(error);
-  //     return null;
-  //   }
-  // };
+
+  const { _id } = useParams();
+  console.log(_id);
+  const [restaurant, setRestaurant] = useState([]);
+
+ 
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3001/api/restaurant/${_id}`)
+      .then(({ data }) => {
+        setRestaurant(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching restaurant:", error);
+      });
+  }, []); 
+
+  
+
+  
 
   return (
     <div>
@@ -177,7 +240,7 @@ const Restaurant = () => {
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="custom-h1">{restaurant.name}</h1>
           <div>
-            <Link to={`/restaurant/${id}/reserve`}>
+            <Link to={`/restaurant/${_id}/reserve`}>
               <button id="reserve-btn">
                 {/* <i className="bi bi-calendar-heart custom-icon"></i>Make */}
                 Make Reservation
@@ -210,11 +273,11 @@ const Restaurant = () => {
         </h5>
         <div
           id="carouselExampleControls"
-          class="carousel slide"
+          className="carousel slide"
           data-bs-ride="carousel"
         >
           <div className="carousel-inner">
-            {restaurant.resPhotos.map((photo, index) => (
+            {restaurant.foodImage && restaurant.foodImage.map((photo, index) => (
               <div
                 className={`carousel-item ${index === 0 ? "active" : ""}`}
                 key={index}
@@ -229,22 +292,22 @@ const Restaurant = () => {
             ))}
           </div>
           <button
-            class="carousel-control-prev"
+            className="carousel-control-prev"
             type="button"
             data-bs-target="#carouselExampleControls"
             data-bs-slide="prev"
           >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
+            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Previous</span>
           </button>
           <button
-            class="carousel-control-next"
+            className="carousel-control-next"
             type="button"
             data-bs-target="#carouselExampleControls"
             data-bs-slide="next"
           >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
+            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Next</span>
           </button>
         </div>
         <br />
@@ -261,20 +324,20 @@ const Restaurant = () => {
           </div>
         </div>
         <div
-          class="box-flex fd-column info-reviews-rating-section"
+          className="box-flex fd-column info-reviews-rating-section"
           data-testid="info-reviews-rating"
         >
-          <div class="info-left">
-            <div class="box-flex fd-row ai-center">{restaurant.review}</div>
+          <div className="info-left">
+            <div className="box-flex fd-row ai-center">{restaurant.review}</div>
             <div id="star-container">
-              {renderRatingStars(restaurant.review)}
+              {/* {renderRatingStars(restaurant.review)} */}
             </div>
-            <div class="f-title-xlarge-secondary-font-size fw-title-xlarge-secondary-font-weight">
+            <div className="f-title-xlarge-secondary-font-size fw-title-xlarge-secondary-font-weight">
               All ratings (6)
             </div>
           </div>
 
-          <div class="rating-bar-container">
+          <div className="rating-bar-container">
             <div className="rating-bar">
               <div className="star-indicator">
                 5 <i className="bi bi-star-fill"></i>
@@ -340,7 +403,7 @@ const Restaurant = () => {
 
         {reviews.map((review, index) => (
           <div key={index} className="review-card">
-            <div className="name-and-view-more">
+            {/* <div className="name-and-view-more">
               <p>
                 <strong>{review.userName}</strong>
 
@@ -375,7 +438,7 @@ const Restaurant = () => {
                   </li>
                 </ul>
               </p>
-            </div>
+            </div> */}
             {deleted && (
               <div className="popup-overlay">
                 <div className="popup" ref={popRef}>
@@ -407,7 +470,7 @@ const Restaurant = () => {
                 </div>
               </div>
             )}
-            {/* <span
+            <span
                 className="review-options"
                 onClick={() => togglePopup(index)}
               ></span>
@@ -422,10 +485,10 @@ const Restaurant = () => {
                     <i className="bi bi-trash"></i> Delete
                   </button>
                 </div>
-              )} */}
+              )}
 
             <div className="d-flex justify-content-start">
-              <div>{renderRatingStars(review.rating)}</div>
+              {/* <div>{renderRatingStars(review.rating)}</div> */}
               <p className="time-post">{review.timePosted}</p>
             </div>
 

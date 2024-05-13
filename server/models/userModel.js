@@ -1,5 +1,11 @@
 const reservationSchema = require("./reservationModel");
 const mongoose = require("mongoose");
+const restaurantSchema = require("./restaurantModel")
+
+
+const favRestaurantSchema = new mongoose.Schema({
+  favRestaurantId: { type: mongoose.Schema.Types.ObjectId, ref: "restaurants",required: true }
+});
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -8,6 +14,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   reservations: [reservationSchema],
+  favRestaurants: [favRestaurantSchema]
   
 });
 

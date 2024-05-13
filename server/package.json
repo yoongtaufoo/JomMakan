@@ -19,6 +19,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.3",
     "nodemon": "^3.1.0",
+    "react-dropzone": "^14.2.3",
+    "reactjs-popup": "^2.0.6",
     "zxcvbn": "^4.4.2"
   }
 }
