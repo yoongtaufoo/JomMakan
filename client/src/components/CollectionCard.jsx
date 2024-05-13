@@ -1,12 +1,14 @@
 // This card can be used for displaying registration or reservation made
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { restaurants } from "../RestaurantData";
+// import { restaurants } from "../RestaurantData";
 import axios from "axios";
 const today = new Date(); // Get today's date
 
 const CollectionCard = ({ workshops, reservations }) => {
-    // let workshops=props.workshop;
+  // let workshops=props.workshop;
+    const [restaurantData, setRestaurantData] = useState(null);
+  
     const [submit, setSubmit] = useState(false);
     const [confirm, setConfirm] = useState(false);
     const popRef = useRef(null);
@@ -24,16 +26,69 @@ const CollectionCard = ({ workshops, reservations }) => {
         };
     }, []);
 
-    const getRestaurantData = (reservations, restaurants) => {
-        if (reservations && restaurants) {
-        const matchingRestaurant = restaurants.find(
-            (restaurant) => restaurant.id === reservations.restaurant_id
-        );
-        console.log("matching", matchingRestaurant);
-        return matchingRestaurant;
+  // Get restaurants that user reserved
+  useEffect(() => {
+    if (reservations) {
+      axios
+        .get(
+          `http://localhost:3001/api/restaurant/${reservations.restaurant_id}`
+        )
+        .then(({ data }) => {
+          setRestaurantData(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching restaurant data:", error);
+        });
+    }
+  }, [reservations]);
+
+  const cancelReservation = async (reservationId) => {
+    console.log("humba", reservationId);
+    const token = localStorage.getItem("JomMakanUser");
+
+    if (!token) {
+      alert("User is not authenticated.");
+      return;
+    }
+
+    axios
+      .put(
+        `http://localhost:3001/api/reservation/${reservationId}/cancel`,
+        {
+          headers: {
+            Authorization: token,
+          },
         }
-        return null;
-    };
+      )
+      .catch((error) => {
+        alert("Error cancelling reservation:", error);
+      });
+  };
+
+  const handleCancel = (reservationId) => {
+    // console.log(reservationId);
+    cancelReservation(reservationId);
+  };
+
+  const [tableName, setTableName] = useState(null);
+
+  useEffect(() => {
+    if (
+      restaurantData &&
+      restaurantData.tables &&
+      reservations &&
+      restaurantData.tables.find(
+        (table) => table._id === reservations.table_id
+      )
+    ) {
+      const matchedTable = restaurantData.tables.find(
+        (table) => table._id === reservations.table_id
+      );
+      console.log(matchedTable);
+      console.log(matchedTable.name);
+      setTableName(matchedTable.name);
+    }
+  }, [reservations, restaurantData]);
 
     // For workshop
     const renderWorkshop = (workshops) => {
@@ -117,40 +172,13 @@ const CollectionCard = ({ workshops, reservations }) => {
         );
     };
 
-    const cancelReservation = async (reservationId) => {
-        console.log("humba", reservationId)
-        const token = localStorage.getItem("JomMakanUser");
-
-        if (!token) {
-        alert("User is not authenticated.");
-        return;
-        }
-
-        axios.put(
-            `http://localhost:3001/api/reservation/${reservationId}/cancel`
-            , {
-                headers: {
-                Authorization: token,
-            } }).catch((error) => {
-            alert("Error cancelling reservation:", error);
-            // Handle error
-        });
-    };
-
-    const handleCancel = (reservationId) => {
-        console.log(reservationId);
-        cancelReservation(reservationId);
-    };
-    
     const renderReservation = (reservations) => {
-
-        const restaurantData = getRestaurantData(reservations, restaurants);
-        
+      // const restaurantData = getRestaurantData(reservations, restaurants);
       return (
         <div className="row g-0 custom-row">
           <div className="col-md-4">
             <img
-              src={restaurantData.image}
+              src={ restaurantData.image }
               className="img-fluid rounded-start card-img-top"
               alt="..."
             />
@@ -180,7 +208,7 @@ const CollectionCard = ({ workshops, reservations }) => {
               <p className="card-text">Name : {reservations.name}</p>
               <p className="card-text">Phone No: {reservations.phone}</p>
               <p className="card-text">No. Pax: {reservations.pax}</p>
-              <p className="card-text">Table: {reservations.table_id}</p>
+              <p className="card-text">Table: {tableName}</p>
             </div>
           </div>
           {reservations.status === "U" && (
@@ -239,26 +267,7 @@ const CollectionCard = ({ workshops, reservations }) => {
     return (
         <div>
         {workshops ? renderWorkshop(workshops) : null}
-        {reservations ? renderReservation(reservations) : null}
-        {/* {submit && (
-                            <div className='popup-overlay'>
-                            <div className='popup' ref={popRef}>
-                            <div>Confirm Cancellation?</div>
-                            <div>
-                                <button id="buttonPopupCancel" onClick={() => setSubmit(false)}>No</button>
-                                <button  onClick={() => {setConfirm(true); setSubmit(false);}}>Yes</button>
-                            </div>
-                            </div>
-                            </div>
-                        )}
-                        {confirm && (
-                            <div className='popup-overlay' >
-                            <div className='popup' ref={popRef}>
-                            <i class="bi bi-calendar-x-fill"></i>
-                            <div>Cancelled</div>
-                            </div>
-                            </div>
-                        )} */}
+        {reservations&&restaurantData ? renderReservation(reservations) : null}
         </div>
     );
 };

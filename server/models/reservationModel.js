@@ -9,9 +9,10 @@ const reservationSchema = new mongoose.Schema({
   pax: { type: Number, required: true },
   table_id: { type: String, required: true },
   status: { type: String, required: true },
-  restaurant_id: { type: Number, required: true },
+  restaurant_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  user_id: { type: mongoose.Schema.Types.ObjectId , required:true},
 });
 
-// const Reservation = mongoose.model("Reservation", reservationSchema);
+const Reservation = mongoose.model("Reservation", reservationSchema);
 
-// module.exports = Reservation;
+module.exports = Reservation;

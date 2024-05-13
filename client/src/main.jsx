@@ -38,7 +38,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route exact path="/restaurant/:restaurantId/addFavRestaurant" element={<Restaurant />} />
           <Route exact path="/addreview" element={<AddReview />} />
           <Route exact path="/schedule" element={<Scehdule />} />
-          <Route exact path="/restaurant/:id/reserve" element={<Reserve />} />
+          <Route exact path="/restaurant/:_id/reserve" element={<Reserve />} />
           <Route exact path="/reservations" element={<Reservations />} />
           {/* add route for new pages here, import the component*/}
         </Routes>

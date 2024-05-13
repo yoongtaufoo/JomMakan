@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
-const { User } = require("../models/userModel");
-const { Reservation } = require("../models/userModel");
-// const Reservation = require("../models/reservationModel");
+const User  = require("../models/userModel");
+const Reservation = require("../models/reservationModel");
 
 // POST reservation
 const reserve = async (req, res) => {
@@ -16,24 +15,15 @@ const reserve = async (req, res) => {
     status,
     restaurant_id,
   } = req.body;
-  console.log("Creating a new reservation...");
+
   try {
-    // Get token
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers.authorization; // Get token
     const token = JSON.parse(authHeader);
 
-    // Get the userId from the decoded token
-    const userId = token.user._id;
+    const userId = token.user._id; // Get the userId from the decoded token
 
-    //Find user by userId
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Add the new reservation to the user's reservations array
-    user.reservations.push({
+    // Create a new user ans dave to db
+    const newReservation = new Reservation({
       date,
       timestart,
       timeend,
@@ -43,10 +33,9 @@ const reserve = async (req, res) => {
       table_id,
       status,
       restaurant_id,
+      user_id: userId,
     });
-
-    // Save the updated user object with the new reservation
-    await user.save();
+    await newReservation.save();
 
     res.status(201).json({ message: "Reservation created successfully" });
   } catch (err) {
@@ -55,36 +44,29 @@ const reserve = async (req, res) => {
   }
 };
 
-//get reservations
+// Get reservations
 const myreservations = async (req, res) => {
   try {
-    // Get token
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers.authorization; // Get token
     const token = JSON.parse(authHeader);
 
-    // Get the userId from the decoded token
-    const userId = token.user._id;
-    const user = await User.findById(userId);
+    const userId = token.user._id; // Get the userId from the decoded token
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    const reservations = await Reservation.find({ user_id: userId }); // Find reservations with user_id = userId
 
-    // Sort reservations by date
-    user.reservations.sort((a, b) => new Date(a.date) - new Date(b.date));
+    reservations.sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort reservations by date
 
     // Update status based on current date
     const currentDate = new Date();
-    user.reservations.forEach(async (reservation) => {
+    reservations.forEach(async (reservation) => {
       if (new Date(reservation.date) < currentDate) {
-        reservation.status = "C";
-        // Save the updated reservation to the database
-        await reservation.save();
+        reservation.status = "C"; // Past reservations will have status "C" meaning "Completed"
+        await reservation.save(); // Save the changes
       }
     });
 
-    // Send sorted user.reservations array as response
-    res.json(user.reservations);
+    res.json(reservations); // Send sorted reservations array as response
+    
   } catch (err) {
     console.error("Error fetching reservation:", err);
     res.status(500).json({ message: "Failed to fetch reservations" });
@@ -93,28 +75,18 @@ const myreservations = async (req, res) => {
 
 // Cancel reservation
 const cancel = async (req, res) => {
-  const { reservationId } = req.params;
+  const { reservationId } = req.params; // Get reservationId
 
   try {
-    // Find the reservation by ID in your database
-    const userWithReservation = await User.findOne({ "reservations._id": reservationId });
-
-    if (!userWithReservation) {
-      return res.status(404).json({ message: "Reservation not found" });
-    }
-
-    // Find the reservation within the user's reservations array
-    const reservation = userWithReservation.reservations.find(r => r._id == reservationId);
+    const reservation = await Reservation.findById(reservationId); // Find the reservation by reservationId
 
     if (!reservation) {
       return res.status(404).json({ message: "Reservation not found" });
     }
 
-    // Update the status of the reservation to "Done"
-    reservation.status = "D";
+    reservation.status = "D"; // Update the status of the reservation to "Deleted"
 
-    // Save the updated user document
-    await userWithReservation.save();
+    await reservation.save(); // Save the changes
 
     res.json({ message: "Reservation cancelled successfully" });
   } catch (error) {
@@ -123,32 +95,26 @@ const cancel = async (req, res) => {
   }
 };
 
-const findReservationsByDate = async (req, res) => {
-  const { restaurantId, date } = req.query;
-  // Convert date string to Date object
-  const dateObject = new Date(date);
-  // Get ISO string representation of the date with milliseconds
-  const isoDateString = dateObject.toISOString();
-  // Append "+00:00" to the ISO string to indicate the UTC timezone
-  const isodate = isoDateString.replace("Z", "+00:00");
+const findReservationsByDateAndId = async (req, res) => {
+  const { restaurantId, date } = req.query; // Get restaurantId and date
 
-  // Convert ISO date string to Unix timestamp (milliseconds since Unix epoch)
-  // const formatteddate = new Date(date).getTime();
-  // const isoDateString = new Date(date).toISOString();
-  // console.log(isodate);
-  // console.log(restaurantId);
+  const dateObject = new Date(date); // Convert date string to Date object
+
+  const isoDateString = dateObject.toISOString(); // Get ISO string representation of the date with milliseconds
+
+  const isodate = isoDateString.replace("Z", "+00:00"); // Append "+00:00" to the ISO string to indicate the UTC timezone
+
   try {
     const reservations = await Reservation.find({
       restaurant_id: restaurantId,
-      // date: formatteddate,
-      date: { $gte: new Date(date) },
+      date: isodate,
       //2024-05-13T00:00:00.000+00:00
     });
     console.log(reservations);
     res.json(reservations);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Failed to fetch restaurants" });
   }
 };
 
@@ -156,5 +122,5 @@ module.exports = {
   reserve,
   myreservations,
   cancel,
-  findReservationsByDate
+  findReservationsByDateAndId
 };
