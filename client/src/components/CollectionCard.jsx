@@ -26,19 +26,7 @@ const CollectionCard = ({ workshops, reservations }) => {
         };
     }, []);
 
-  //   const getRestaurantData = (reservations, restaurants) => {
-  //       if (reservations && restaurants) {
-  //       const matchingRestaurant = restaurants.find(
-  //           (restaurant) => restaurant.id === reservations.restaurant_id
-  //       );
-  //       console.log("matching", matchingRestaurant);
-  //       return matchingRestaurant;
-  //       }
-  //       return null;
-  // };
-
-  // console.log(reservations.restaurant_id)
-  
+  // Get restaurants that user reserved
   useEffect(() => {
     if (reservations) {
       axios
@@ -53,6 +41,54 @@ const CollectionCard = ({ workshops, reservations }) => {
         });
     }
   }, [reservations]);
+
+  const cancelReservation = async (reservationId) => {
+    console.log("humba", reservationId);
+    const token = localStorage.getItem("JomMakanUser");
+
+    if (!token) {
+      alert("User is not authenticated.");
+      return;
+    }
+
+    axios
+      .put(
+        `http://localhost:3001/api/reservation/${reservationId}/cancel`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .catch((error) => {
+        alert("Error cancelling reservation:", error);
+      });
+  };
+
+  const handleCancel = (reservationId) => {
+    // console.log(reservationId);
+    cancelReservation(reservationId);
+  };
+
+  const [tableName, setTableName] = useState(null);
+
+  useEffect(() => {
+    if (
+      restaurantData &&
+      restaurantData.tables &&
+      reservations &&
+      restaurantData.tables.find(
+        (table) => table._id === reservations.table_id
+      )
+    ) {
+      const matchedTable = restaurantData.tables.find(
+        (table) => table._id === reservations.table_id
+      );
+      console.log(matchedTable);
+      console.log(matchedTable.name);
+      setTableName(matchedTable.name);
+    }
+  }, [reservations, restaurantData]);
 
     // For workshop
     const renderWorkshop = (workshops) => {
@@ -135,51 +171,6 @@ const CollectionCard = ({ workshops, reservations }) => {
         </div>
         );
     };
-
-    const cancelReservation = async (reservationId) => {
-        console.log("humba", reservationId)
-        const token = localStorage.getItem("JomMakanUser");
-
-        if (!token) {
-        alert("User is not authenticated.");
-        return;
-        }
-
-        axios.put(
-            `http://localhost:3001/api/reservation/${reservationId}/cancel`
-            , {
-                headers: {
-                Authorization: token,
-            } }).catch((error) => {
-            alert("Error cancelling reservation:", error);
-            // Handle error
-        });
-    };
-
-    const handleCancel = (reservationId) => {
-        console.log(reservationId);
-        cancelReservation(reservationId);
-    };
-    
-  const [tableName, setTableName] = useState(null);
-
-    useEffect(() => {
-    console.log("restaurantData:", restaurantData);
-    console.log("reservations:", reservations);
-      if (
-        restaurantData &&
-        restaurantData.table &&
-        reservations &&
-        restaurantData.tables.find((table) => table._id === reservations.table_id)
-      ) {
-        const matchedTable = restaurantData.tables.find(
-          (table) => table._id === reservations.table_id
-        );
-        console.log(matchedTable);
-        console.log(matchedTable.name);
-        setTableName(matchedTable.name);
-      }
-  }, [reservations])
 
     const renderReservation = (reservations) => {
       // const restaurantData = getRestaurantData(reservations, restaurants);
