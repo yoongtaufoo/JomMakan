@@ -195,7 +195,6 @@ const Restaurant = () => {
   console.log(_id);
   const [restaurant, setRestaurant] = useState([]);
 
- 
   useEffect(() => {
     axios
       .get(`http://localhost:3001/api/restaurant/${_id}`)

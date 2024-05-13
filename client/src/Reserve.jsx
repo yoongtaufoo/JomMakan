@@ -3,15 +3,26 @@ import "./Reserve.css";
 import Navbar from "./components/Navbar";
 import { Link, useParams } from "react-router-dom";
 import DetailCard from "./components/DetailCard";
-import { restaurants } from "./RestaurantData";
 import ReservationForm from "./components/ReservationForm";
-// import { reservations } from './ReservationData';
+import axios from "axios";
 
 const Reserve = () => {
-  const { id } = useParams();
-  const restaurant = restaurants.find(
-    (restaurant) => restaurant.id === parseInt(id)
-  );
+  const [restaurant, setRestaurant] = useState(null);
+  const { _id } = useParams();
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3001/api/restaurant/${_id}`)
+      .then(({ data }) => {
+        console.log("Received restaurant data:", data);
+        setRestaurant(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching restaurant:", error);
+      });
+  }, [_id]);
+
+
 
   function useOutsideAlerter(ref, onClick) {
     useEffect(() => {
@@ -43,7 +54,7 @@ const Reserve = () => {
         {/* <div id='Rmain-container'> */}
         <br />
         <div className="d-flex justify-content-between align-items-center">
-          <Link to={`/restaurant/${id}`} className="back-btn">
+          <Link to={`/restaurant/${_id}`} className="back-btn">
             <i className="bi bi-arrow-left-circle"></i> Back
           </Link>
           <div className="ml-auto">
@@ -57,7 +68,7 @@ const Reserve = () => {
           <div id="card">
             {/* restaurant card */}
             <div id="Fleft">
-              <DetailCard restaurant={restaurant} />
+              {restaurant && (<DetailCard restaurant={restaurant} />)}
               <div id="disclaimer">
                 <h3>Reservation Policy</h3>
                 <p>
@@ -82,10 +93,10 @@ const Reserve = () => {
           </div>
           <div id="Rform-container">
             <h2>Reservation Form</h2>
-            <ReservationForm
+            {restaurant && (<ReservationForm
               tables={restaurant.tables}
               openinghours={restaurant.openinghours}
-            />
+            />)}
           </div>
         </div>
       </div>

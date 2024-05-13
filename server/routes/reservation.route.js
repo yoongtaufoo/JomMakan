@@ -3,7 +3,7 @@ const {
     reserve,
     myreservations,
     cancel,
-    findReservationsByDate
+    findReservationsByDateAndId
 } = require("../controllers/reservation.controller.js");
 
 const router = express.Router();
@@ -11,6 +11,6 @@ const router = express.Router();
 router.post("/reserve", reserve);
 router.get("/myreservations", myreservations);
 router.put("/:reservationId/cancel", cancel);
-router.get("/reservations", findReservationsByDate);
+router.get("/reservations", findReservationsByDateAndId);
 
 module.exports = router;

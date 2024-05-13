@@ -14,25 +14,6 @@ const Reservations = () => {
   const [reservations, setReservations] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
 
-  // //get username from local storage
-  // const token = localStorage.getItem("JomMakanUser");
-
-  //   // fetchReservations(); // Fetch reservations when component mounts
-  //   if (!token) {
-  //     alert("User is not authenticated."); // Handle case where user is not authenticated
-  //     return;
-  //   }
-  //   axios
-  //     .get("http://localhost:3001/api/reservation/reservations", {
-  //       headers: {
-  //         Authorization: token // Include JWT in request headers
-  //       },
-  //     })
-  //     .then(({ data }) => {
-  //       // console.log("data", data);
-  //       setReservations(data);
-  //     });
-
   useEffect(() => {
     //get username from local storage
     const token = localStorage.getItem("JomMakanUser");
