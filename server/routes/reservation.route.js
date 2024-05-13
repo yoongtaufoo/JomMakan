@@ -1,14 +1,16 @@
 const express = require("express");
 const {
     reserve,
-    reservations,
-    cancel
+    myreservations,
+    cancel,
+    findReservationsByDate
 } = require("../controllers/reservation.controller.js");
 
 const router = express.Router();
 
 router.post("/reserve", reserve);
-router.get("/reservations", reservations);
+router.get("/myreservations", myreservations);
 router.put("/:reservationId/cancel", cancel);
+router.get("/reservations", findReservationsByDate);
 
 module.exports = router;
