@@ -1,6 +1,7 @@
 
 const Restaurant = require("../models/restaurantModel.js")
-const User = require("../models/userModel");
+// const User = require("../models/userModel");
+const { User } = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 
 const restaurants = async (req, res) => {
