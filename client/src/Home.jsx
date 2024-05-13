@@ -1,12 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import image from "./assets/image 3.png";
 import SearchBar from "./components/SearchBar";
 import "./Home.css";
-import { restaurants } from "./RestaurantData";
+import axios from "axios"
+
 
 const Home = () => {
+
+  const[restaurants, setRestaurants] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(()=>{
+    const fetchRestaurants = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/api/restaurant/restaurants");
+        // const data = await response.json();
+        setRestaurants(response.data);
+        console.log(response.data)
+      } catch (error) {
+        console.error("Error fetching restaurants:", error);
+      }
+    };
+
+    fetchRestaurants();
+    
+  }, [])
+
+  // Filter restaurants based on search query
+  const filteredRestaurants = restaurants.filter((restaurant) => {
+    const { name, location, cuisine } = restaurant;
+    const query = searchQuery.toLowerCase();
+    return (
+      name.toLowerCase().includes(query) ||
+      location.toLowerCase().includes(query) ||
+      cuisine.toLowerCase().includes(query)
+    );
+  });
+  
+
+
   return (
     <div>
       <Navbar />
@@ -30,15 +64,18 @@ const Home = () => {
         </div>
         <div className="d-flex justify-content-end align-items-center mt-4">
           <div>
-            <SearchBar place="Locations, Restaurant, or Cuisines..." />
+            <SearchBar 
+              place="Locations, Restaurant, or Cuisines..." 
+              onSearch={(query) => setSearchQuery(query)}
+            />
           </div>
         </div>
         <br />
         <div className="restaurants-list row row-cols-1 row-cols-md-3 row-cols-lg-3 row-cols-xl-3 g-4">
-          {restaurants.map((restaurant) => (
-            <div key={restaurant.id} className="col custom-col">
+          {filteredRestaurants.map((restaurant) => (
+            <div key={restaurant._id} className="col custom-col">
               <Link
-                to={`/restaurant/${restaurant.id}`}
+                to={`/restaurant/${restaurant._id}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <div className="card customized-restaurant-card">

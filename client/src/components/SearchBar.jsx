@@ -5,9 +5,14 @@ import searchIcon from "../assets/search.png";
 
 const SearchBar = (props) => {
   const [query, setQuery] = useState("");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Pass the search query to the parent component
+    props.onSearch(query);
+  };
 
   return (
-    <div className="search-bar">
+    <form onSubmit={handleSubmit} className="search-bar">
       <input
         className="search-term"
         style={{ backgroundColor: "" }}
@@ -17,9 +22,9 @@ const SearchBar = (props) => {
         placeholder={props.place}
       />
       <button type="submit" className="searchButton">
-        <i class="bi bi-search" id="search-icon"></i>
+        <i className="bi bi-search" id="search-icon"></i>
       </button>
-    </div>
+    </form>
   );
 };
 
