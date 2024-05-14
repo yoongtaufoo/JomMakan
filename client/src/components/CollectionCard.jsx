@@ -43,7 +43,6 @@ const CollectionCard = ({ workshops, reservations }) => {
   }, [reservations]);
 
   const cancelReservation = async (reservationId) => {
-    console.log("humba", reservationId);
     const token = localStorage.getItem("JomMakanUser");
 
     if (!token) {
@@ -66,7 +65,6 @@ const CollectionCard = ({ workshops, reservations }) => {
   };
 
   const handleCancel = (reservationId) => {
-    // console.log(reservationId);
     cancelReservation(reservationId);
   };
 
@@ -77,16 +75,14 @@ const CollectionCard = ({ workshops, reservations }) => {
       restaurantData &&
       restaurantData.tables &&
       reservations &&
-      restaurantData.tables.find(
+      restaurantData.tables.find( // Get tables in restaurant with the same table._id as reservation's table_id
         (table) => table._id === reservations.table_id
       )
     ) {
       const matchedTable = restaurantData.tables.find(
         (table) => table._id === reservations.table_id
       );
-      console.log(matchedTable);
-      console.log(matchedTable.name);
-      setTableName(matchedTable.name);
+      setTableName(matchedTable.name); // Set table name
     }
   }, [reservations, restaurantData]);
 

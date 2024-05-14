@@ -12,7 +12,9 @@ import axios from "axios";
 const Reservations = () => {
   const navigate = useNavigate();
   const [reservations, setReservations] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     //get username from local storage
@@ -37,15 +39,63 @@ const Reservations = () => {
       });
   }, []); // Empty dependency array to fetch data only once when component mounts
 
+  useEffect(() => {
+    const fetchRestaurants = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/api/restaurant/restaurants"
+        );
+        // const data = await response.json();
+        setRestaurants(response.data);
+      } catch (error) {
+        console.error("Error fetching restaurants:", error);
+      }
+    };
+
+    fetchRestaurants();
+  }, []);
+
   const filteredReservations = reservations.filter((reservation) => {
-    if (activeTab === 0) return reservation.status === "U";
-    if (activeTab === 1) return reservation.status === "C";
-    if (activeTab === 2) return reservation.status === "D";
-    return true; // Default case
+    const statusFilter = {
+      0: "U",
+      1: "C",
+      2: "D",
+    };
+    const status = statusFilter[activeTab];
+    // console.log(status)
+    const query = searchQuery.toLowerCase();
+    // if (status === undefined) return true; // Default case
+
+    const restaurant = restaurants.find(
+      (rest) => rest._id === reservation.restaurant_id
+    );
+    
+    const restaurantName = restaurant ? restaurant.name.toLowerCase() : "";
+    const restaurantLocation = restaurant ? restaurant.location.toLowerCase() : "";
+    const restaurantAddress = restaurant ? restaurant.address.toLowerCase() : "";
+    const restaurantCuisine = restaurant ? restaurant.cuisine.toLowerCase() : "";
+    if (reservation.status === status) {
+      return (
+        // (reservation.status === status &&
+        (reservation.name.toLowerCase().includes(query) ||
+          reservation.date.includes(query) ||
+          reservation.phone.includes(query) ||
+          restaurantName.includes(query) ||
+          restaurantLocation.includes(query) ||
+          restaurantAddress.includes(query)) ||
+        restaurantCuisine.includes(query)
+      );
+    }
   });
 
+
   const handleTabClick = (index) => {
+    // console.log(index)
     setActiveTab(index); // Update the activeTab state
+  };
+
+  const handleSearchInputChange = (query) => {
+    setSearchQuery(query);
   };
 
   return (
@@ -69,6 +119,8 @@ const Reservations = () => {
           activeTab={activeTab}
           onTabClick={handleTabClick}
           searchBarPlaceholder={"Restaurants, Name..."}
+          searchQuery={(query) => setSearchQuery(query)}
+          onSearchChange={handleSearchInputChange}
         />
 
         <br />
