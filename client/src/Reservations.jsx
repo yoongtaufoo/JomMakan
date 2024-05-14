@@ -63,30 +63,35 @@ const Reservations = () => {
       2: "D",
     };
     const status = statusFilter[activeTab];
+    // console.log(status)
     const query = searchQuery.toLowerCase();
-    if (status === undefined) return true; // Default case
+    // if (status === undefined) return true; // Default case
 
     const restaurant = restaurants.find(
       (rest) => rest._id === reservation.restaurant_id
     );
+    
     const restaurantName = restaurant ? restaurant.name.toLowerCase() : "";
     const restaurantLocation = restaurant ? restaurant.location.toLowerCase() : "";
     const restaurantAddress = restaurant ? restaurant.address.toLowerCase() : "";
-    const restaurantCuisine = restaurant? restaurant.cuisine.toLowerCase()  : "";
-    return (
-      (reservation.status === status &&
+    const restaurantCuisine = restaurant ? restaurant.cuisine.toLowerCase() : "";
+    if (reservation.status === status) {
+      return (
+        // (reservation.status === status &&
         (reservation.name.toLowerCase().includes(query) ||
           reservation.date.includes(query) ||
           reservation.phone.includes(query) ||
           restaurantName.includes(query) ||
           restaurantLocation.includes(query) ||
-          restaurantAddress.includes(query))) ||
-          restaurantCuisine.includes(query)
-    );
+          restaurantAddress.includes(query)) ||
+        restaurantCuisine.includes(query)
+      );
+    }
   });
 
 
   const handleTabClick = (index) => {
+    // console.log(index)
     setActiveTab(index); // Update the activeTab state
   };
 
