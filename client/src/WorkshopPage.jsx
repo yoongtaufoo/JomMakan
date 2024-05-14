@@ -1,44 +1,48 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Tabs from "./components/Tabs";
+//import Tabs from "./components/Tabs";
+import image from "./assets/image 3.png";
 import WorkshopCard from "./components/WorkshopCard";
+import axios from "axios";
 import "./WorkshopPage.css";
+import SearchBar from "./components/SearchBar";
 
-const WorkshopPage = () => {
+const Workshop = () => {
   const [workshops, setWorkshops] = useState([]);
-
-  useEffect(() => {
-    const fetchWorkshops = async () => {
-      try {
-        const response = await fetch("/api/workshop");
-        if (!response.ok) {
-          throw new Error(`Error fetching workshops: ${response.statusText}`);
-        }
-        const data = await response.json();
-        // Extract only Workshop Name and Description
-        const extractedWorkshops = data.data.map((workshop) => ({
-          id: workshop._id,
-          title: workshop.workshopName,
-          description: workshop.workshopDescription,
-        }));
-        setWorkshops(extractedWorkshops);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-
-    fetchWorkshops();
-  }, []);
-
+  const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState(0);
 
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
 
+  useEffect(() => {
+    const fetchWorkshops = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/api/workshop/workshops");
+        setWorkshops(response.data);
+        console.log(response.data)
+      } catch (error) {
+        console.error("Error fetching workshops:", error);
+      }
+    };
+    fetchWorkshops();
+  }, []);
+
+  const filteredWorkshops = workshops.filter((workshop) => {
+    const { workshopName, workshopDescription } = workshop;
+    const query = searchQuery.toLowerCase();
+    return (
+      workshopName.toLowerCase().includes(query) ||
+      workshopDescription.toLowerCase().includes(query)
+    );
+  });
+
   return (
     <div>
       <Navbar />
+      <img src={image} alt="" style={{ width: "100%" }} />
       <div className="container">
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="customized-h1 workshop-header">Discover Workshops</h1>
@@ -55,19 +59,18 @@ const WorkshopPage = () => {
             </a>
           </div>
         </div>
-
-        <Tabs
-          tabdata={{
-            one: "All",
-            two: "Fresh Additions",
-          }}
-          activeTab={activeTab}
-          onTabClick={handleTabClick}
-          searchBarPlaceholder={"Workshops, Events..."}
-        />
+        <div className="d-flex justify-content-end align-items-center mt-4">
+          <div>
+            <SearchBar 
+              place="Workshops, Events..." 
+              onSearch={(query) => setSearchQuery(query)}
+            />
+          </div>
+        </div>
+        <br />
         <div className="workshop-grid">
-          {workshops.map((workshop) => (
-            <WorkshopCard key={workshop.id} workshop={workshop} />
+          {filteredWorkshops.map((workshop, index) => (
+            <WorkshopCard key={index} workshop={workshop} />
           ))}
         </div>
       </div>
@@ -75,4 +78,4 @@ const WorkshopPage = () => {
   );
 };
 
-export default WorkshopPage;
+export default Workshop;
