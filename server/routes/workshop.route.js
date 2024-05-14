@@ -1,3 +1,20 @@
+//const authenticateToken = require("../authenticateToken")
+const express = require("express");
+const {
+    workshops,
+    workshopDetails,
+    addFavouriteWorkshops
+} = require("../controllers/workshop.controller");
+
+const router = express.Router();
+
+router.get("/workshops", workshops);
+router.get("/workshop/:_id", workshopDetails); // Corrected typo
+router.post("/:workshopId/addFavWorkshop", addFavouriteWorkshops);
+
+module.exports = router;
+
+/*
 // routes/workshop.route.js
 const express = require("express");
 const router = express.Router();
@@ -22,3 +39,4 @@ router.delete("/:id", workshopController.deleteWorkshop);
 router.post("/add", workshopController.addWorkshop);
 
 module.exports = router;
+*/
