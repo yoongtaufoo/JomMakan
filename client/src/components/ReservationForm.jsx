@@ -19,6 +19,12 @@ const ReservationForm = (props) => {
   const [numberOfPax, setNumberOfPax] = useState(0); // Handle change event for the number of pax input
   const [submit, setSubmit] = useState(false); // submit pop up
   const [confirm, setConfirm] = useState(false); // confirm pop up
+  const restaurantId = useParams()._id; // Get restaurantId from url
+  const popRef = useRef(null);
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowString = tomorrow.toISOString().split("T")[0];
+  // const closedDays = getClosedDays(props.openinghours);
 
   // Function to handle input changes and check form validity
   const handleInputChange = (e) => {
@@ -51,6 +57,64 @@ const ReservationForm = (props) => {
         break;
     }
   };
+  useEffect(() => {
+    // Check if all required fields are filled
+    const isValid =
+      dateinput !== "" &&
+      timestartinput !== "" &&
+      timeendinput !== "" &&
+      nameinput !== "" &&
+      phoneinput !== "" &&
+      paxinput !== "" &&
+      tableinput !== "";
+
+    console.log(
+      "dateinput: ",
+      dateinput,
+      "timestartinput: ",
+      timestartinput,
+      "timeendinput",
+      timeendinput,
+      "nameinput",
+      nameinput,
+      "phoneinput",
+      phoneinput,
+      "paxinput",
+      paxinput,
+      "tableinput",
+      tableinput,
+      "restaurantid",
+      restaurantId
+    );
+
+    // Update form validity state
+    setIsFormValid(isValid);
+  }, [
+    dateinput,
+    timestartinput,
+    timeendinput,
+    nameinput,
+    phoneinput,
+    paxinput,
+    tableinput, // Every time fields are changed, constantly check if all the inputs are inputted
+  ]);
+
+  const getClosedDays = (openingHours) => {
+    const daysMap = {
+      Sun: 0,
+      Mon: 1,
+      Tue: 2,
+      Wed: 3,
+      Thu: 4,
+      Fri: 5,
+      Sat: 6,
+    };
+    const openDays = openingHours.split(" ")[0].split("-");
+    const openStart = daysMap[openDays[0]];
+    const openEnd = daysMap[openDays[1]];
+    const allDays = [0, 1, 2, 3, 4, 5, 6];
+    return allDays.filter((day) => day < openStart || day > openEnd);
+  };
 
   // Get reservations with same restaurantId and date every time dateinput is changed
   useEffect(() => {
@@ -68,23 +132,8 @@ const ReservationForm = (props) => {
     }
   }, [dateinput]);
 
-  // Function to handle change in start time
-  const handleStartTimeChange = (event) => {
-    const selectedStartTime = event.target.value;
-    setTimeStartInput(selectedStartTime);
-    console.log(selectedStartTime);
-    // Calculate end time by adding one hour to the start time
-    const [startHour, startMinute] = selectedStartTime.split(":").map(Number);
-    const endHour = startHour + 1;
-    const endMinute = startMinute < 30 ? 0 : 30; // Round up to nearest half hour
-    const formattedEndHour = endHour.toString().padStart(2, "0");
-    const formattedEndMinute = endMinute.toString().padStart(2, "0");
-    const calculatedEndTime = `${formattedEndHour}:${formattedEndMinute}`;
-    console.log(calculatedEndTime);
-    setTimeEndInput(calculatedEndTime);
-  };
-
   const parseTime = (timeString) => {
+    // Parse time with correct format
     if (timeString) {
       // Split the time string by colon and space
       const [time, period] = timeString.split(" ");
@@ -105,231 +154,6 @@ const ReservationForm = (props) => {
     }
     return { hours: 0, minutes: 0 };
   };
-
-  // Function to check if a given time slot clashes with any existing reservation
-  // useEffect(() => {
-
-  const isTimeSlotClashing = (reservation, timestartinput, timeendinput) => {
-    console.log("reservation timestart", reservation.timestart);
-    console.log("reservation timeend", reservation.timeend);
-    console.log("selected timestart", timestartinput);
-    console.log("selected timeend", timeendinput);
-    const reservationStartTime = parseTime(reservation.timestart);
-    const reservationEndTime = parseTime(reservation.timeend);
-    const selectedStartTime = parseTime(timestartinput);
-    const selectedEndTime = parseTime(timeendinput);
-
-    // Check if the selected time slot overlaps with the reservation's time slot
-    if (
-      (selectedStartTime >= reservationStartTime &&
-        selectedStartTime < reservationEndTime) ||
-      (selectedEndTime > reservationStartTime &&
-        selectedEndTime <= reservationEndTime) ||
-      (selectedStartTime <= reservationStartTime &&
-        selectedEndTime >= reservationEndTime)
-    ) {
-      return true; // Clashing time slot found
-    }
-
-    return false; // No clashing time slot
-  };
-  // },[timestartinput])
-
-  // Function to disable tables with clashing reservations
-  const disableClashingTables = (
-    reservations,
-    timestartinput,
-    timeendinput
-  ) => {
-    const disabledTables = new Set(); // Using a Set to store unique table IDs
-
-    reservations.forEach((reservation) => {
-      if (isTimeSlotClashing(reservation, timestartinput, timeendinput)) {
-        disabledTables.add(reservation.table_id); // Add the table_id to the disabled set
-      }
-    });
-    console.log("timestartinput", timestartinput);
-    console.log("disabled tables", disabledTables);
-    return disabledTables;
-  };
-
-  const clashingTables =
-    dateinput && reservations.length > 0 && timestartinput && timeendinput
-      ? disableClashingTables(reservations, timestartinput, timeendinput)
-      : new Set();
-
-  // Handle change event for the number of pax input
-  // const handlePaxChange = (event) => {
-  //   setNumberOfPax(parseIntevent.target.value);
-  // };
-
-  // Generate select options for pax no
-  const nopaxOptions = props.tables
-    ? [
-        <option key="null" value="">
-          Select no of pax
-        </option>,
-        ...Array.from(
-          { length: Math.max(...props.tables.map((table) => table.pax)) },
-          (_, index) => (
-            <option key={index + 1} value={index + 1}>
-              {index + 1}
-            </option>
-          )
-        ),
-      ]
-    : [];
-
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
-
-  const isValidName = (nameinput) => {
-    const namePattern = /^[A-Za-z]+$/; // alphabets only
-    return namePattern.test(nameinput); // test if nameinput follow the pattern
-  };
-
-  const isValidPhoneNumber = (phoneinput) => {
-    const mobilePattern = /^01\d{8,9}$/; // Start with 01 and 10 or 11 in length only
-    console.log(mobilePattern.test(phoneinput));
-    return mobilePattern.test(phoneinput); //test if phoneinput follow the pattern
-  };
-
-  const handleConfirm = () => {
-    if (!isFormValid) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-    if (!isValidName(nameinput)) {
-      alert("Are you sure this is your name, Mr "+ nameinput +" ?");
-      return;
-    }
-    if (!isValidPhoneNumber(phoneinput)) {
-      alert("Please enter a valid phone number.");
-      return;
-    }
-    if (!isChecked) {
-      alert(
-        "Please check the box to indicate that you have read and understood the Registration Policy."
-      );
-      return; // Stop further execution if isChecked is false
-    }
-    const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
-    if (!token) {
-      alert("User is not authenticated."); // Handle case where user is not authenticated
-      return;
-    }
-    axios
-      .post(
-        "http://localhost:3001/api/reservation/reserve",
-        {
-          date: dateinput,
-          timestart: timestartinput,
-          timeend: timeendinput,
-          name: nameinput,
-          phone: phoneinput,
-          pax: paxinput,
-          table_id: tableinput,
-          status: "U",
-          restaurant_id: restaurantId,
-        },
-        {
-          headers: {
-            Authorization: token, // Include JWT in request headers
-          },
-        }
-      )
-      .then(() => {
-        // alert("Reserved Successfully");
-        setDateInput("");
-        setTimeStartInput("");
-        setTimeEndInput("");
-        setNameInput("");
-        setPhoneInput("");
-        setPaxInput("");
-        setTableInput("");
-        setConfirm(true);
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.log("Unable to reserve user");
-      });
-  };
-
-  let userid = "User123";
-
-  // get userid from local storage
-  const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
-  if (storedUser) {
-    userid = storedUser.user._id;
-  }
-
-  // Get restaurant id from url
-  const restaurantId = useParams()._id;
-
-  const popRef = useRef(null);
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowString = tomorrow.toISOString().split("T")[0];
-
-  const handleClickOutside = (event) => {
-    if (popRef.current && !popRef.current.contains(event.target)) {
-      setConfirm(false);
-      setSubmit(false);
-    }
-  };
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  // Effect to check form validity and log state values
-  useEffect(() => {
-    // Check if all required fields are filled
-    const isValid =
-      dateinput !== "" &&
-      timestartinput !== "" &&
-      timeendinput !== "" &&
-      nameinput !== "" &&
-      phoneinput !== "" &&
-      paxinput !== "" &&
-      tableinput !== "";
-
-    // Log current input values
-    console.log(
-      "dateinput: ",
-      dateinput,
-      "timestartinput: ",
-      timestartinput,
-      "timeendinput",
-      timeendinput,
-      "nameinput",
-      nameinput,
-      "phoneinput",
-      phoneinput,
-      "paxinput",
-      paxinput,
-      "tableinput",
-      tableinput,
-      // "userid",
-      // userid,
-      "restaurantid",
-      restaurantId
-    );
-
-    // Update form validity state
-    setIsFormValid(isValid);
-  }, [
-    dateinput,
-    timestartinput,
-    timeendinput,
-    nameinput,
-    phoneinput,
-    paxinput,
-    tableinput,
-  ]);
 
   // Parse the opening hours string and extract opening and closing times
   const parseOpeningHours = (openingHours) => {
@@ -383,31 +207,112 @@ const ReservationForm = (props) => {
     return [];
   };
 
-  // Function to check if a table has enough capacity for the selected number of pax
-const checkTableCapacity = (table) => {
-  return paxinput > table.pax;
+  // Function to handle change in start time
+  const handleStartTimeChange = (event) => {
+    const selectedStartTime = event.target.value;
+    setTimeStartInput(selectedStartTime);
+    console.log(selectedStartTime);
+    // Calculate end time by adding one hour to the start time
+    const [startHour, startMinute] = selectedStartTime.split(":").map(Number);
+    const endHour = startHour + 1;
+    const endMinute = startMinute < 30 ? 0 : 30; // Round up to nearest half hour
+    const formattedEndHour = endHour.toString().padStart(2, "0");
+    const formattedEndMinute = endMinute.toString().padStart(2, "0");
+    const calculatedEndTime = `${formattedEndHour}:${formattedEndMinute}`;
+    console.log(calculatedEndTime);
+    setTimeEndInput(calculatedEndTime);
   };
-  
+
+  // Generate select options for pax no based on the max table pax of the restaurant
+  const nopaxOptions = props.tables
+    ? [
+        <option key="null" value="">
+          Select no of pax
+        </option>,
+        ...Array.from(
+          { length: Math.max(...props.tables.map((table) => table.pax)) },
+          (_, index) => (
+            <option key={index + 1} value={index + 1}>
+              {index + 1}
+            </option>
+          )
+        ),
+      ]
+    : [];
+
+  // Function to check if a table has enough capacity for the selected number of pax
+  const checkTableCapacity = (table) => {
+    return paxinput > table.pax;
+  };
+
   // generate table options based on no of pax and availability
-const generateTableOptions = () => {
-  if (!props.tables) return [];
+  const generateTableOptions = () => {
+    if (!props.tables) return [];
+    return [
+      <option key="null" value="">
+        Select a table
+      </option>,
+      ...props.tables.map((table, index) => (
+        <option
+          key={table._id}
+          value={table._id}
+          disabled={checkTableCapacity(table) || clashingTables.has(table._id)} // Disable table options that have less pax capacity or are unavailable due to clashing reservations
+        >
+          Table {table.name} - ({table.pax} pax capacity)
+        </option>
+      )),
+    ];
+  };
 
-  return [
-    <option key="null" value="">
-      Select a table
-    </option>,
-    ...props.tables.map((table, index) => (
-      <option
-        key={table._id}
-        value={table._id}
-        disabled={checkTableCapacity(table) || clashingTables.has(table._id)} // Disable table options that have less pax capacity or are unavailable due to clashing reservations
-      >
-        Table {table.name} - ({table.pax} pax capacity)
-      </option>
-    )),
-  ];
-};
+  // Function to check if a given time slot clashes with any existing reservation
+  const isTimeSlotClashing = (reservation, timestartinput, timeendinput) => {
+    // console.log("reservation timestart", reservation.timestart);
+    // console.log("reservation timeend", reservation.timeend);
+    // console.log("selected timestart", timestartinput);
+    // console.log("selected timeend", timeendinput);
+    const reservationStartTime = parseTime(reservation.timestart);
+    const reservationEndTime = parseTime(reservation.timeend);
+    const selectedStartTime = parseTime(timestartinput);
+    const selectedEndTime = parseTime(timeendinput);
 
+    // Check if the selected time slot overlaps with the reservation's time slot
+    if (
+      (selectedStartTime >= reservationStartTime &&
+        selectedStartTime < reservationEndTime) ||
+      (selectedEndTime > reservationStartTime &&
+        selectedEndTime <= reservationEndTime) ||
+      (selectedStartTime <= reservationStartTime &&
+        selectedEndTime >= reservationEndTime)
+    ) {
+      return true; // Clashing time slot found
+    }
+
+    return false; // No clashing time slot
+  };
+
+  // Function to disable tables with clashing reservations
+  const disableClashingTables = (
+    reservations,
+    timestartinput,
+    timeendinput
+  ) => {
+    const disabledTables = new Set(); // Using a Set to store unique table IDs
+
+    reservations.forEach((reservation) => {
+      if (isTimeSlotClashing(reservation, timestartinput, timeendinput)) {
+        disabledTables.add(reservation.table_id); // Add the table_id to the disabled set
+      }
+    });
+    // console.log("timestartinput", timestartinput);
+    // console.log("disabled tables", disabledTables);
+    return disabledTables;
+  };
+
+  // Create set that contains clashing tables
+  const clashingTables =
+    dateinput && reservations.length > 0 && timestartinput && timeendinput
+      ? disableClashingTables(reservations, timestartinput, timeendinput)
+      : new Set();
 
   // Generate table options whenever the number of pax input changes
   useEffect(() => {
@@ -416,6 +321,97 @@ const generateTableOptions = () => {
 
   // Use the generated table options in the select element
   const tableOptions = generateTableOptions();
+
+  // ---- Checkings ----
+
+  const handleCheckboxChange = () => {
+    // Check if checkbox for reservation policy is checked
+    setIsChecked(!isChecked);
+  };
+
+  const isValidName = (nameinput) => {
+    const namePattern = /^[A-Za-z]+$/; // alphabets only
+    return namePattern.test(nameinput); // test if nameinput follow the pattern
+  };
+
+  const isValidPhoneNumber = (phoneinput) => {
+    const mobilePattern = /^01\d{8,9}$/; // Start with 01 and 10 or 11 in length only
+    return mobilePattern.test(phoneinput); //test if phoneinput follow the pattern
+  };
+
+  const handleConfirm = () => {
+    if (!isFormValid) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+    if (!isValidName(nameinput)) {
+      alert("Are you sure this is your name, Mr " + nameinput + " ?");
+      return;
+    }
+    if (!isValidPhoneNumber(phoneinput)) {
+      alert("Please enter a valid phone number.");
+      return;
+    }
+    if (!isChecked) {
+      alert(
+        "Please check the box to indicate that you have read and understood the Registration Policy."
+      );
+      return; // Stop further execution if isChecked is false
+    }
+    const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
+    if (!token) {
+      alert("User is not authenticated."); // Handle case where user is not authenticated
+      return;
+    }
+    axios
+      .post(
+        "http://localhost:3001/api/reservation/reserve",
+        {
+          date: dateinput,
+          timestart: timestartinput,
+          timeend: timeendinput,
+          name: nameinput,
+          phone: phoneinput,
+          pax: paxinput,
+          table_id: tableinput,
+          status: "U",
+          restaurant_id: restaurantId,
+        },
+        {
+          headers: {
+            Authorization: token, // Include JWT in request headers
+          },
+        }
+      )
+      .then(() => {
+        // alert("Reserved Successfully");
+        setDateInput("");
+        setTimeStartInput("");
+        setTimeEndInput("");
+        setNameInput("");
+        setPhoneInput("");
+        setPaxInput("");
+        setTableInput("");
+        setConfirm(true);
+        window.location.reload(); // reload window after reserve successfully
+      })
+      .catch((error) => {
+        alert("Unable to reserve user");
+      });
+  };
+
+  const handleClickOutside = (event) => {
+    if (popRef.current && !popRef.current.contains(event.target)) {
+      setConfirm(false);
+      setSubmit(false);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div id="Rform">

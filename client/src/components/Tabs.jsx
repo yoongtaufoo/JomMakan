@@ -10,21 +10,34 @@ const Tabs = (props) => {
     props.onTabClick(index);
   };
 
+  console.log(props.searchQuery)
   return (
     <div className="tab-container">
       <div>
-        <button className={activeTab === 0 ? 'tab-btn active' : 'tab-btn'} onClick={() => handleTabClick(0)}>
+        <button
+          className={activeTab === 0 ? "tab-btn active" : "tab-btn"}
+          onClick={() => handleTabClick(0)}
+        >
           {props.tabdata.one}
         </button>
-        <button className={activeTab === 1 ? 'tab-btn active' : 'tab-btn'} onClick={() => handleTabClick(1)}>
+        <button
+          className={activeTab === 1 ? "tab-btn active" : "tab-btn"}
+          onClick={() => handleTabClick(1)}
+        >
           {props.tabdata.two}
         </button>
-        <button className={activeTab === 2 ? 'tab-btn active' : 'tab-btn'} onClick={() => handleTabClick(2)}>
+        <button
+          className={activeTab === 2 ? "tab-btn active" : "tab-btn"}
+          onClick={() => handleTabClick(2)}
+        >
           {props.tabdata.three}
         </button>
       </div>
       <div className="ml-auto">
-        <SearchBar place={props.searchBarPlaceholder} />
+        <SearchBar
+          place={props.searchBarPlaceholder}
+          onSearch={props.onSearchChange}
+        />
       </div>
     </div>
   );
