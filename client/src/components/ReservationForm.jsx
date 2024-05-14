@@ -211,7 +211,6 @@ const ReservationForm = (props) => {
   const handleStartTimeChange = (event) => {
     const selectedStartTime = event.target.value;
     setTimeStartInput(selectedStartTime);
-    console.log(selectedStartTime);
     // Calculate end time by adding one hour to the start time
     const [startHour, startMinute] = selectedStartTime.split(":").map(Number);
     const endHour = startHour + 1;
@@ -219,7 +218,6 @@ const ReservationForm = (props) => {
     const formattedEndHour = endHour.toString().padStart(2, "0");
     const formattedEndMinute = endMinute.toString().padStart(2, "0");
     const calculatedEndTime = `${formattedEndHour}:${formattedEndMinute}`;
-    console.log(calculatedEndTime);
     setTimeEndInput(calculatedEndTime);
   };
 

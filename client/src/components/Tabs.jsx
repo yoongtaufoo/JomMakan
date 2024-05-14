@@ -10,7 +10,6 @@ const Tabs = (props) => {
     props.onTabClick(index);
   };
 
-  console.log(props.searchQuery)
   return (
     <div className="tab-container">
       <div>

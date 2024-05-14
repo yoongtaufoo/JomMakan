@@ -10,7 +10,6 @@ const SearchBar = (props) => {
     // Pass the search query to the parent component
     props.onSearch(query);
   };
-  console.log(query)
 
   return (
     <form onSubmit={handleSubmit} className="search-bar">

@@ -47,7 +47,6 @@ const Reservations = () => {
         );
         // const data = await response.json();
         setRestaurants(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching restaurants:", error);
       }
