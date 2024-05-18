@@ -59,7 +59,7 @@ const myreservations = async (req, res) => {
     // Update status based on current date
     const currentDate = new Date();
     reservations.forEach(async (reservation) => {
-      if (new Date(reservation.date) < currentDate) {
+      if (new Date(reservation.date) < currentDate && reservation.status!=="D") {
         reservation.status = "C"; // Past reservations will have status "C" meaning "Completed"
         await reservation.save(); // Save the changes
       }
