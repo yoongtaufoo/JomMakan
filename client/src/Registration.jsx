@@ -5,12 +5,28 @@ import Form from "./components/Form";
 import { Link, useParams } from "react-router-dom";
 import workshopdatas from "./WorkshopData";
 import DetailCard from "./components/DetailCard";
+import axios from "axios";
 
 const Registration = () => {
-  const { id } = useParams();
-  const workshop = workshopdatas.find(
-    (workshop) => workshop.id === parseInt(id)
-  );
+  const [workshop, setWorkshop] = useState(null);
+  const {_id } = useParams();
+
+  // const workshop = workshopdatas.find(
+  //   (workshop) => workshop.id === parseInt(id)
+  // );
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3001/api/workshop/${_id}`)
+      .then(({ data }) => {
+        console.log("Received workshop data:", data);
+        setWorkshop(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching workshop:", error);
+      });
+  }, [_id]);
+
   return (
     <div>
       <Navbar />
@@ -30,7 +46,7 @@ const Registration = () => {
         </div>
         <div id="Rdown">
           <div id="Fleft">
-            <DetailCard workshop={workshop} />
+          {workshop &&(<DetailCard workshop={workshop} />)}
             <div id="disclaimer">
               <h3>Registration Policy</h3>
               <p>
@@ -55,7 +71,7 @@ const Registration = () => {
           </div>
           <div id="Rform-container">
             <h2 id="form-header">Registration Form</h2>
-            <Form date={workshop.dateAndTime}/>
+            {workshop&&(<Form date={workshop.date} time={workshop.time} available={workshop.availableSlot}/>)}
           </div>
         </div>
       </div>
