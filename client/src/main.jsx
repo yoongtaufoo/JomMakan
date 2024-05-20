@@ -35,8 +35,16 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route exact path="/workshop/:_id" element={<WRegistration />} />
           <Route exact path="/fav-restaurant" element={<FavRestaurant />} />
           <Route exact path="/restaurant/:_id" element={<Restaurant />} />
-          <Route exact path="/restaurant/:restaurantId/addFavRestaurant" element={<Restaurant />} />
-          <Route exact path="/addreview" element={<AddReview />} />
+          <Route
+            exact
+            path="/restaurant/:restaurantId/addFavRestaurant"
+            element={<Restaurant />}
+          />
+          <Route
+            exact
+            path="/restaurant/:_id/addReview"
+            element={<AddReview />}
+          />
           <Route exact path="/schedule" element={<Scehdule />} />
           <Route exact path="/restaurant/:_id/reserve" element={<Reserve />} />
           <Route exact path="/reservations" element={<Reservations />} />

@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 const reviewSchema = new mongoose.Schema({
     user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
     restaurant_id: { type: mongoose.Schema.Types.ObjectId, required: true },
-    userName: { type: String, required: true },
+    // userName: { type: String, required: true },
     rating: { type: Number, required: true },
-    timePosted: { type: String, required: true },
+    timePosted: { type: Date, required: true },
     reviewDescription: { type: String, required: true },
     mediaUrl: { type: String },
     agreeToTerms: { type: Boolean, required: true },
@@ -14,6 +14,6 @@ const reviewSchema = new mongoose.Schema({
     
 });
 
-const Review = mongoose.model("Review", reviewSchema);
+const Review = mongoose.model("reviews", reviewSchema);
 
 module.exports = Review;
