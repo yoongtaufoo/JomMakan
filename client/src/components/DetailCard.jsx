@@ -26,40 +26,48 @@ const DetailCard = ({ workshop, restaurant }) => {
 
     return { minCapacity, maxCapacity };
   };
-
+  const getDateTime = (workshop) => {
+    if (!workshop || !workshop.date) return "";
+    const dateOnly = workshop.date.split('T')[0];
+    const date = new Date(dateOnly);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}` + " @ " + workshop.time;
+  };
   const { minCapacity, maxCapacity } = getMinMaxTableCapacity(restaurant);
-  
+
   return (
     <div style={{ padding: "10px", display: "block", margin: "5% auto" }}>
     {/* // <div className="card customized-workshop-card"> */}
       <img
-        src={workshop ? workshop.photo : restaurant.image}
-        alt={workshop ? workshop.title : restaurant.name}
-        style={{ width: "600px", height: "120%" }}
+        src={workshop ? workshop.photoLink : restaurant.image}
+        alt={workshop ? workshop.workshopName : restaurant.name}
+        style={{ width: "600px", height: "100%" }}
       />
       <div>
         <h1 className="custom-h1">
-          {workshop ? workshop.title : restaurant.name}
+          {workshop ? workshop.workshopName : restaurant.name}
         </h1>
       </div>
       <p className="card-text">
-        {workshop ? workshop.description : restaurant.description}
-      </p>
-      <p className="card-text">
-        <i className="bi-geo-alt-fill custom-icon"></i>
-        {workshop ? workshop.phone : restaurant.phone}
+        {workshop ? workshop.workshopDescription : restaurant.description}
       </p>
       <p className="card-text">
         <i className="bi bi-telephone-fill custom-icon"></i>
+        {workshop ? workshop.phoneNumber : restaurant.phone}
+      </p>
+      <p className="card-text">
+        <i className="bi-geo-alt-fill custom-icon"></i>
         {workshop ? workshop.address : restaurant.address}
       </p>
       <p className="card-text">
         <i className="bi bi-clock-fill custom-icon"></i>
-        {workshop ? workshop.dateAndTime : restaurant.openinghours}
+        {workshop ? getDateTime(workshop) : restaurant.openinghours}
       </p>
       <p className="card-text">
         <i className="bi bi-egg-fried custom-icon"></i>
-        {workshop ? `${workshop.current} / ${workshop.total}` : `Table capacity: ${minCapacity} to ${maxCapacity}`}
+        {workshop ? `Available slots: ${workshop.availableSlot}` : `Table capacity: ${minCapacity} to ${maxCapacity}`}
       </p>
     </div>
   );
