@@ -1,12 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import "./WorkshopCard.css";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as farStar } from "@fortawesome/free-regular-svg-icons";
+import {jwtDecode} from "jwt-decode";
+
 
 const WorkshopCard = ({ workshop }) => {
   const [starred, setStarred] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  // Extract user ID from JWT token
+  const token = localStorage.getItem("JomMakanUser");
+  let userId = null;
+
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      userId = decoded.userId;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (userId && workshop.registered) {
+      setIsRegistered(workshop.registered.includes(userId));
+    }
+  }, [userId, workshop.registered]);
 
   const handleStarClick = () => {
     setStarred(!starred);
@@ -31,17 +53,28 @@ const WorkshopCard = ({ workshop }) => {
         </div>
 
         <div>
-          <Link
-            to={`/workshop/${workshop._id}`}
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
+          {isRegistered ? (
             <button
               type="button"
               className="btn btn-secondary btn-lg custom-add-schedule"
+              style={{ backgroundColor: "gray", cursor: "not-allowed" }}
+              disabled
             >
-              Add to Schedule
+              Scheduled
             </button>
-          </Link>
+          ) : (
+            <Link
+              to={`/workshop/${workshop._id}`}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <button
+                type="button"
+                className="btn btn-secondary btn-lg custom-add-schedule"
+              >
+                Add to Schedule
+              </button>
+            </Link>
+          )}
           <FontAwesomeIcon
             icon={starred ? faStar : farStar}
             className="star-icon"

@@ -8,7 +8,7 @@ const today = new Date(); // Get today's date
 const CollectionCard = ({ workshops, reservations }) => {
   // let workshops=props.workshop;
     const [restaurantData, setRestaurantData] = useState(null);
-  
+    const [workshopData, setWorkshopData] = useState(null);
     const [submit, setSubmit] = useState(false);
     const [confirm, setConfirm] = useState(false);
     const popRef = useRef(null);

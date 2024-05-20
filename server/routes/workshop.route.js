@@ -9,7 +9,8 @@ const {
 const router = express.Router();
 
 router.get("/workshops", workshops);
-router.get("/workshop/:_id", workshopDetails); // Corrected typo
+//router.get("/workshop/:_id", workshopDetails); 
+router.get("/:_id", workshopDetails); // Corrected typo
 router.post("/:workshopId/addFavWorkshop", addFavouriteWorkshops);
 
 module.exports = router;

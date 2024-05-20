@@ -32,7 +32,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route exact path="/home" element={<Home />} />
           <Route exact path="/workshop" element={<Workshop />} />
           <Route exact path="/fav-workshop" element={<FavWorkshop />} />
-          <Route exact path="/workshop/:id" element={<WRegistration />} />
+          <Route exact path="/workshop/:_id" element={<WRegistration />} />
           <Route exact path="/fav-restaurant" element={<FavRestaurant />} />
           <Route exact path="/restaurant/:_id" element={<Restaurant />} />
           <Route

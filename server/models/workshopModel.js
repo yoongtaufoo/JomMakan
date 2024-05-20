@@ -6,9 +6,10 @@ const workshopSchema = new mongoose.Schema({
   phoneNumber: { type: String, required: true },
   address: { type: String, required: true },
   time: { type: String, required: true },
-  date: { type: String, required: true },
+  date: { type: Date, required: true },
   availableSlot: { type: Number, required: true },
-  photo: { type: String } // Assuming the photo will be stored as a URL
+  photoLink: { type: String } ,// Assuming the photo will be stored as a URL
+  registered:{type: Array} // List of users that registered
 });
 
 const Workshop = mongoose.model("Workshop", workshopSchema);
