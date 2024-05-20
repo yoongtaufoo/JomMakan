@@ -40,12 +40,46 @@ const Restaurant = () => {
   const [selectedShareOption, setSelectedShareOption] = useState(null);
   const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
   const [isDropdownIndex, setIsDropdownIndex] = useState(null);
+
+  // Go to the top of page when navigate to this page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { _id } = useParams();
+
+  const handleFacebook = (index) => {
+    console.log("Share on Facebook clicked for review at index:", index);
+    setIsDropdownIndex(null);
+  };
+  const handleEmail = (index) => {
+    console.log("Share via email clicked for review at index:", index);
+    setIsDropdownIndex(null);
+  };
+
   const [restaurant, setRestaurant] = useState({});
   const [reviews, setReviews] = useState([]);
 
+  const toggleDropdown = (index) => {
+    setOpenDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
+  const toggleShareDropdown = (index) => {
+    setIsDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
+  // const handleSaveToggle = () => {
+  //   setIsSaved((prevState) => !prevState);
+  // };
+
+  const restaurantId = useParams()._id;
+  console.log(useParams());
+  // const restaurantid = parseInt(id);
+  console.log("restaurantId:", restaurantId);
+
+  const id = typeof restaurantId === "object" ? restaurantId._id : restaurantId;
+  console.log("id:", id);
+
   let userid = "User123";
-  
+
   // const handleFacebook = (index) => {
   //   console.log("Share on Facebook clicked for review at index:", index);
   //   setIsDropdownIndex(null);
@@ -71,8 +105,6 @@ const Restaurant = () => {
 
   // const id = typeof restaurantId === "object" ? restaurantId._id : restaurantId;
   // console.log("id:", id);
-
- 
 
   // get userid from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
@@ -165,8 +197,7 @@ const Restaurant = () => {
     return () => {
       document.removeEventListener("mousedown", handler);
     };
-  },[]);
-
+  }, []);
 
   useEffect(() => {
     axios
@@ -220,7 +251,6 @@ const Restaurant = () => {
           </div>
         </div>
 
-        <br />
         <p className="card-text">{restaurant.description}</p>
         <p className="card-text">
           <i className="bi-geo-alt-fill custom-icon"></i>
@@ -294,7 +324,9 @@ const Restaurant = () => {
             <strong>Reviews</strong>
           </h5>
           <div className="ml-auto">
-            <Link to={`/restaurant/${_id}/addReview?restaurantName=${restaurant.name}`}>
+            <Link
+              to={`/restaurant/${_id}/addReview?restaurantName=${restaurant.name}`}
+            >
               <button type="button" className="button-add-reviews">
                 <i className="bi-plus"></i>Add a review
               </button>

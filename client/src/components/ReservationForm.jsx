@@ -13,10 +13,7 @@ const ReservationForm = (props) => {
   const [paxinput, setPaxInput] = useState("");
   const [tableinput, setTableInput] = useState("");
   const [isFormValid, setIsFormValid] = useState(false); // State to track overall form validity
-  const [tables, setTables] = useState(""); // Handle table option change
   const [isChecked, setIsChecked] = useState(false); // Check if Reservation Policy is ticked
-  // const [date, setDate] = useState(0); // Handle change event for date input
-  const [numberOfPax, setNumberOfPax] = useState(0); // Handle change event for the number of pax input
   const [submit, setSubmit] = useState(false); // submit pop up
   const [confirm, setConfirm] = useState(false); // confirm pop up
   const restaurantId = useParams()._id; // Get restaurantId from url
@@ -24,7 +21,6 @@ const ReservationForm = (props) => {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const tomorrowString = tomorrow.toISOString().split("T")[0];
-  // const closedDays = getClosedDays(props.openinghours);
 
   // Function to handle input changes and check form validity
   const handleInputChange = (e) => {
@@ -33,25 +29,25 @@ const ReservationForm = (props) => {
     // Update state based on input name
     switch (name) {
       case "dateinput":
-        setDateInput(value); // Pass checkFormValidity as callback
+        setDateInput(value);
         break;
       case "timestartinput":
-        setTimeStartInput(value); // Pass checkFormValidity as callback
+        setTimeStartInput(value);
         break;
       case "timeendinput":
-        setTimeEndInput(value); // Pass checkFormValidity as callback
+        setTimeEndInput(value);
         break;
       case "nameinput":
-        setNameInput(value); // Pass checkFormValidity as callback
+        setNameInput(value);
         break;
       case "phoneinput":
-        setPhoneInput(value); // Pass checkFormValidity as callback
+        setPhoneInput(value);
         break;
       case "paxinput":
-        setPaxInput(value); // Pass checkFormValidity as callback
+        setPaxInput(value);
         break;
       case "tableinput":
-        setTableInput(value); // Pass checkFormValidity as callback
+        setTableInput(value);
         break;
       default:
         break;

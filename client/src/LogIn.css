@@ -45,3 +45,35 @@
 .login-wrapper{
     height:calc(100vh - 100px);
 }
+
+@keyframes panInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes panInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.log-in-pic-left {
+    animation: panInLeft 1s ease-in-out forwards;
+}
+
+.log-in-pic-right {
+    animation: panInRight 1s ease-in-out forwards;
+}

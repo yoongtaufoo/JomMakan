@@ -59,7 +59,7 @@ const Workshop = () => {
             </a>
           </div>
         </div>
-        <div className="d-flex justify-content-end align-items-center mt-4">
+        <div className="d-flex justify-content-end align-items-center">
           <div>
             <SearchBar 
               place="Workshops, Events..." 

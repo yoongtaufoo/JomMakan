@@ -15,6 +15,11 @@ const Registration = () => {
   //   (workshop) => workshop.id === parseInt(id)
   // );
 
+  // Go to the top of page when navigate to this page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     axios
       .get(`http://localhost:3001/api/workshop/${_id}`)
