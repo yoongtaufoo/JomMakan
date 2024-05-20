@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import Dropzone from "react-dropzone";
 import "./MyDropzone.css";
 
-// npm install --save react-dropzone
-
 export default function MyDropzone({
   onUploadFile,
   uploadStatus,
@@ -45,7 +43,7 @@ export default function MyDropzone({
   }, []);
 
   async function handleUploadClick() {
-    onUploadFile(selectedFile);
+    await onUploadFile(selectedFile);
   }
 
   const isUploading = uploadStatus === "loading";
@@ -104,7 +102,7 @@ export default function MyDropzone({
                     />
                   )}
                   <div className="p-2 ps-4 d-flex flex-column justify-content-start">
-                    <span className="fs-4" >{selectedFile.name}</span>
+                    <span className="fs-4">{selectedFile.name}</span>
                     {isUploading && (
                       <span className="text-body-tertiary">⌛Uploading...</span>
                     )}

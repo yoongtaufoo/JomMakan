@@ -6,23 +6,30 @@ import { Rating } from "react-simple-star-rating";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import MyDropzone from "./components/MyDropzone";
+import axios from "axios";
 
 const AddReview = () => {
-  const { id } = useParams();
+  const { _id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const restaurantName = params.get("restaurantName");
-
+  const restaurant_id = _id; 
   const [submit, setSubmit] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const popRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("idle");
+  const [ratingInput, setratingInput] = useState("");
+  const [descriptionInput, setDescriptionInput] = useState("");
+  const [mediaInput, setMediaInput] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
+  const token = localStorage.getItem("JomMakanUser"); 
 
   const handleUploadFile = async (selectedFile) => {
     console.log("Uploading file:", selectedFile);
     setUploadStatus("loading");
+    setMediaInput(selectedFile);
     setTimeout(() => {
       setUploadStatus("success");
     }, 3000);
@@ -41,29 +48,59 @@ const AddReview = () => {
 
   const handleRating = (rate) => {
     console.log("Rating:", rate);
+    setratingInput(rate);
+  };
+  const submitReview = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3001/api/review/${restaurant_id}/addReview`,
+        {
+          rating: ratingInput,
+          timePosted: new Date(),
+          reviewDescription: descriptionInput,
+          media: mediaInput,
+          restaurant_id: restaurant_id,
+          agreeToTerms: isChecked,
+        },
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Review submitted successfully:", response.data);
+    } catch (error) {
+      if (error.response) {
+        // that falls out of the range of 2xx
+        console.error("Error response data:", error.response.data);
+        console.error("Error response status:", error.response.status);
+        console.error("Error response headers:", error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("Error request data:", error.request);
+      } else {
+        console.error("Error message:", error.message);
+      }
+      console.error("Error config:", error.config);
+    }
   };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+const handleDescriptionChange = (event) => {
+  setDescriptionInput(event.target.value);
+};
+   const handleCheckboxChange = () => {
+     setIsChecked(!isChecked);
+   };
 
-  // useEffect(() => {
-  //   let handler = (e) => {
-  //     if (!popRef.current.contains(e.target)) {
-  //       setConfirm(false);
-  //     }
-  //   };
+   useEffect(() => {
+     document.addEventListener("mousedown", handleClickOutside);
+     return () => {
+       document.removeEventListener("mousedown", handleClickOutside);
+     };
+   }, []);
 
-  //   document.addEventListener("mousedown", handler);
-
-  //   return () => {
-  //     document.removeEventListener("mousedown", handler);
-  //   };
-  // });
-
+  
   return (
     <div>
       <div>
@@ -95,13 +132,13 @@ const AddReview = () => {
               <div id="ratings">
                 Overall Ratings:
                 <br />
-                <Rating onClick={handleRating} />
+                <Rating onClick={handleRating} ratingValue={ratingInput} />
               </div>
               <br></br>
               <div>
                 Review:
                 <br />
-                <textarea className="textArea" rows="4" cols="50" />
+                <textarea className="textArea" rows="4" cols="50" onChange={handleDescriptionChange} />
               </div>
               <br></br>
               <div>
@@ -115,7 +152,12 @@ const AddReview = () => {
 
               <br></br>
               <div id="checkbox">
-                <input type="checkbox" />
+                <input type="checkbox"
+                  checked={isChecked}
+                  onChange={(e) => {
+                handleCheckboxChange(e);
+              }}
+              required/>
                 &nbsp;I agree to the JomMakan Terms of Use and that this review
                 is an honest and accurate account of my experience at the
                 restaurant.
@@ -140,6 +182,7 @@ const AddReview = () => {
                       onClick={() => {
                         setConfirm(true);
                         setSubmit(false);
+                        submitReview();
                       }}
                     >
                       Confirm

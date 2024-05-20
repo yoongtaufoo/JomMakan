@@ -6,14 +6,14 @@ require("dotenv").config();
 const authRoute = require("./routes/auth.route.js");
 const reserveRoute = require("./routes/reservation.route.js");
 const restaurantRoute = require("./routes/restaurant.route.js");
-
+const reviewRoute = require("./routes/review.route.js");
 // connect to express app
 const app = express();
 
 const dbURI = process.env.MONGO_URI;
 const port = process.env.PORT;
 
-
+app.use(express.json()); 
 
 mongoose
   .connect(dbURI)
@@ -35,12 +35,9 @@ app.use(cors());
 app.use("/api/auth", authRoute);
 app.use("/api/reservation", reserveRoute);
 app.use("/api/restaurant", restaurantRoute);
-
+app.use("/api/review", reviewRoute);
 // app.use("/api/users", userRoute);
 // app.use("/api/community", communityRoute);
 
-
-// Import workshop route
 const workshopRoute = require("./routes/workshop.route");
-// Use workshop routes
 app.use("/api/workshop", workshopRoute);

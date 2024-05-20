@@ -1,29 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
-
-// import res1 from "./assets/Restaurant1.jpg";
-// import res2 from "./assets/Restaurant2.jpg";
-// import res3 from "./assets/Restaurant3.jpg";
-// import res4 from "./assets/Restaurant4.jpg";
-// import res5 from "./assets/Restaurant5.jpg";
-// import res6 from "./assets/Restaurant6.jpg";
-// import p1 from "./assets/details1.jpg";
-// import p2 from "./assets/details2.jpg";
-// import p3 from "./assets/details3.jpg";
-// import p4 from "./assets/details4.jpg";
-// import p5 from "./assets/details5.jpg";
-// import p6 from "./assets/details6.jpg";
-// import p7 from "./assets/details7.jpg";
-// import review1 from "./assets/Review1.jpg";
-// import review2 from "./assets/Review2.jpeg";
-// import review3 from "./assets/Review3.webp";
-// import review4 from "./assets/Review4.jpeg";
-// import review5 from "./assets/Review5.jpeg";
-// import review6 from "./assets/Review6.jpeg";
 import "./Restaurant.css";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { BsStarFill, BsStar } from "react-icons/bs";
-import { restaurants, reviews } from "./RestaurantData";
 import axios from "axios";
 
 const renderRatingStars = (rating) => {
@@ -48,53 +27,52 @@ const renderRatingStars = (rating) => {
   );
 };
 
-
 const Restaurant = () => {
-
   const navigate = useNavigate();
   const popRef = useRef(null);
   const [deleted, setDelete] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const [hasLiked, setHasLiked] = useState(
-    new Array(reviews.length).fill(false)
-  );
-  const [likes, setLikes] = useState(new Array(reviews.length).fill(0));
-  const [showDetailsPopups, setShowDetailsPopups] = useState(
-    new Array(reviews.length).fill(false)
-  );
+  const [hasLiked, setHasLiked] = useState([]);
+  const [likes, setLikes] = useState([]);
+  const [showDetailsPopups, setShowDetailsPopups] = useState(null);
   const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
   const [selectedShareOption, setSelectedShareOption] = useState(null);
   const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
   const [isDropdownIndex, setIsDropdownIndex] = useState(null);
-
-  const handleFacebook = (index) => {
-    console.log("Share on Facebook clicked for review at index:", index);
-    setIsDropdownIndex(null);
-  };
-  const handleEmail = (index) => {
-    console.log("Share via email clicked for review at index:", index);
-    setIsDropdownIndex(null);
-  };
-  const toggleDropdown = (index) => {
-    setOpenDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
-  };
-  const toggleShareDropdown = (index) => {
-    setIsDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
-  };
-  // const handleSaveToggle = () => {
-  //   setIsSaved((prevState) => !prevState);
-  // };
-
-  const  restaurantId  = useParams()._id;
-  console.log(useParams())
-  // const restaurantid = parseInt(id);
-  console.log("restaurantId:", restaurantId);
-
-  const id = typeof restaurantId === 'object' ? restaurantId._id : restaurantId;
-  console.log("id:", id);
+  const { _id } = useParams();
+  const [restaurant, setRestaurant] = useState({});
+  const [reviews, setReviews] = useState([]);
 
   let userid = "User123";
+  
+  // const handleFacebook = (index) => {
+  //   console.log("Share on Facebook clicked for review at index:", index);
+  //   setIsDropdownIndex(null);
+  // };
+  // const handleEmail = (index) => {
+  //   console.log("Share via email clicked for review at index:", index);
+  //   setIsDropdownIndex(null);
+  // };
+  // const toggleDropdown = (index) => {
+  //   setOpenDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
+  // };
+  // const toggleShareDropdown = (index) => {
+  //   setIsDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
+  // };
+  // // const handleSaveToggle = () => {
+  // //   setIsSaved((prevState) => !prevState);
+  // // };
+
+  // const restaurantId = useParams()._id;
+  // console.log(useParams());
+  // // const restaurantid = parseInt(id);
+  // console.log("restaurantId:", restaurantId);
+
+  // const id = typeof restaurantId === "object" ? restaurantId._id : restaurantId;
+  // console.log("id:", id);
+
+ 
 
   // get userid from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
@@ -103,50 +81,50 @@ const Restaurant = () => {
   }
 
   const handleSaveToggle = async () => {
-
     const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
     if (!token) {
       alert("User is not authenticated."); // Handle case where user is not authenticated
       return;
     }
 
-    if (!id|| !_id) {
+    if (!_id) {
       console.log("favRestaurantId is undefined.");
       return;
-  }
+    }
 
-    try{
-    const response = await axios.post(`http://localhost:3001/api/restaurant/${_id}/addFavRestaurant`, {
-        
-        favRestaurantId: id
-      }
-        , {
-        headers: {
-          Authorization: token, // Include JWT in request headers
+    try {
+      const response = await axios.post(
+        `http://localhost:3001/api/restaurant/${_id}/addFavRestaurant`,
+        {
+          favRestaurantId: _id,
         },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include JWT in request headers
+          },
         }
       );
+      setIsSaved(!isSaved);
       console.log("restaurant saved successfully" + response.data.message);
-      
-    }catch(error) {
-        console.log("Unable to save restaurant:"+error);
-      }
+      navigate(`/restaurant/${_id}`);
+    } catch (error) {
+      console.log("Unable to save restaurant:" + error.message);
+    }
   };
 
-    // const id = typeof restaurantId === 'object' ? restaurantId._id : restaurantId;
+  // const id = typeof restaurantId === 'object' ? restaurantId._id : restaurantId;
 
-    // try {
-    //   const response = await axios.post(
-    //     "http://localhost:3001/api/restaurant/addFavRestaurant",
-    //     { restaurantId: id, isSaved: !isSaved } // Toggle the save state
-    //   );
-    //   console.log(response.data.message); // Log success message or handle as needed
-    //   setIsSaved(!isSaved); // Update the UI state
-    // } catch (error) {
-    //   console.error('Error toggling favorite:', error);
-    //   // Handle error
-    // }
-
+  // try {
+  //   const response = await axios.post(
+  //     "http://localhost:3001/api/restaurant/addFavRestaurant",
+  //     { restaurantId: id, isSaved: !isSaved } // Toggle the save state
+  //   );
+  //   console.log(response.data.message); // Log success message or handle as needed
+  //   setIsSaved(!isSaved); // Update the UI state
+  // } catch (error) {
+  //   console.error('Error toggling favorite:', error);
+  //   // Handle error
+  // }
 
   const handleLike = (index) => {
     setLikes((prevLikes) => {
@@ -177,9 +155,9 @@ const Restaurant = () => {
 
   useEffect(() => {
     let handler = (e) => {
-      // if (!popRef.current.contains(e.target)) {
-      //   setDelete(false);
-      // }
+      if (popRef.current && !popRef.current.contains(e.target)) {
+        setDelete(false);
+      }
     };
 
     document.addEventListener("mousedown", handler);
@@ -187,28 +165,22 @@ const Restaurant = () => {
     return () => {
       document.removeEventListener("mousedown", handler);
     };
-  });
+  },[]);
 
-
-
-  const { _id } = useParams();
-  console.log(_id);
-  const [restaurant, setRestaurant] = useState([]);
 
   useEffect(() => {
     axios
       .get(`http://localhost:3001/api/restaurant/${_id}`)
       .then(({ data }) => {
         setRestaurant(data);
+        setReviews(data.reviews || []);
+        setHasLiked(new Array(data.reviews.length).fill(false));
+        setLikes(new Array(data.reviews.length).fill(0));
       })
       .catch((error) => {
         console.error("Error fetching restaurant:", error);
       });
-  }, []); 
-
-  
-
-  
+  }, [_id]);
 
   return (
     <div>
@@ -276,19 +248,20 @@ const Restaurant = () => {
           data-bs-ride="carousel"
         >
           <div className="carousel-inner">
-            {restaurant.foodImage && restaurant.foodImage.map((photo, index) => (
-              <div
-                className={`carousel-item ${index === 0 ? "active" : ""}`}
-                key={index}
-              >
-                <img
-                  src={photo}
-                  className="d-block w-100"
-                  alt={`Slide ${index + 1}`}
-                  style={{ height: "500px", objectFit: "contain" }}
-                />
-              </div>
-            ))}
+            {restaurant.foodImage &&
+              restaurant.foodImage.map((photo, index) => (
+                <div
+                  className={`carousel-item ${index === 0 ? "active" : ""}`}
+                  key={index}
+                >
+                  <img
+                    src={photo}
+                    className="d-block w-100"
+                    alt={`Slide ${index + 1}`}
+                    style={{ height: "500px", objectFit: "contain" }}
+                  />
+                </div>
+              ))}
           </div>
           <button
             className="carousel-control-prev"
@@ -296,7 +269,10 @@ const Restaurant = () => {
             data-bs-target="#carouselExampleControls"
             data-bs-slide="prev"
           >
-            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span
+              className="carousel-control-prev-icon"
+              aria-hidden="true"
+            ></span>
             <span className="visually-hidden">Previous</span>
           </button>
           <button
@@ -305,7 +281,10 @@ const Restaurant = () => {
             data-bs-target="#carouselExampleControls"
             data-bs-slide="next"
           >
-            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span
+              className="carousel-control-next-icon"
+              aria-hidden="true"
+            ></span>
             <span className="visually-hidden">Next</span>
           </button>
         </div>
@@ -315,7 +294,7 @@ const Restaurant = () => {
             <strong>Reviews</strong>
           </h5>
           <div className="ml-auto">
-            <Link to={`/AddReview?restaurantName=${restaurant.name}`}>
+            <Link to={`/restaurant/${_id}/addReview?restaurantName=${restaurant.name}`}>
               <button type="button" className="button-add-reviews">
                 <i className="bi-plus"></i>Add a review
               </button>
@@ -402,7 +381,7 @@ const Restaurant = () => {
 
         {reviews.map((review, index) => (
           <div key={index} className="review-card">
-             <div className="name-and-view-more">
+            <div className="name-and-view-more">
               <p>
                 <strong>{review.userName}</strong>
 
@@ -437,7 +416,7 @@ const Restaurant = () => {
                   </li>
                 </ul>
               </p>
-            </div> 
+            </div>
             {deleted && (
               <div className="popup-overlay">
                 <div className="popup" ref={popRef}>
@@ -470,21 +449,21 @@ const Restaurant = () => {
               </div>
             )}
             <span
-                className="review-options"
-                onClick={() => togglePopup(index)}
-              ></span>
-              {showDetailsPopups[index] && (
-                <div className="review-options-popup">
-                  <button onClick={() => handleEdit(index)}>
-                    {" "}
-                    <i className="bi bi-pencil"></i> Edit
-                  </button>
-                  <button onClick={() => handleDelete(index)}>
-                    {" "}
-                    <i className="bi bi-trash"></i> Delete
-                  </button>
-                </div>
-              )}
+              className="review-options"
+              onClick={() => togglePopup(index)}
+            ></span>
+            {showDetailsPopups[index] && (
+              <div className="review-options-popup">
+                <button onClick={() => handleEdit(index)}>
+                  {" "}
+                  <i className="bi bi-pencil"></i> Edit
+                </button>
+                <button onClick={() => handleDelete(index)}>
+                  {" "}
+                  <i className="bi bi-trash"></i> Delete
+                </button>
+              </div>
+            )}
 
             <div className="d-flex justify-content-start">
               <div>{renderRatingStars(review.rating)}</div>
