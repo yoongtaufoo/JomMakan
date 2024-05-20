@@ -3,12 +3,12 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 require("dotenv").config();
-const authRoute = require("./routes/auth.route.js");
-const reserveRoute = require("./routes/reservation.route.js");
-const restaurantRoute = require("./routes/restaurant.route.js");
+const authRoute = require("./routes/auth.route");
+const reserveRoute = require("./routes/reservation.route");
+const restaurantRoute = require("./routes/restaurant.route");
 const workshopRoute = require("./routes/workshop.route");
-const registerRoute = require("./route/register.route.js");
-const reviewRoute = require("./routes/review.route.js");
+const registerRoute = require("./routes/register.route");
+const reviewRoute = require("./routes/review.route");
 // connect to express app
 const app = express();
 
@@ -43,8 +43,3 @@ app.use("/api/registration", registerRoute);
 // app.use("/api/users", userRoute);
 // app.use("/api/community", communityRoute);
 
-
-// Import workshop route
-const workshopRoute = require("./routes/workshop.route");
-// Use workshop routes
-app.use("/api/workshop", workshopRoute);
