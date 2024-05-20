@@ -26,27 +26,27 @@ import { BsStarFill, BsStar } from "react-icons/bs";
 import { restaurants, reviews } from "./RestaurantData";
 import axios from "axios";
 
-// const renderRatingStars = (rating) => {
-//   const filledStars = Math.floor(rating);
-//   const hasHalfStar = rating - filledStars === 0.5;
+const renderRatingStars = (rating) => {
+  const filledStars = Math.floor(rating);
+  const hasHalfStar = rating - filledStars === 0.5;
 
-//   return (
-//     <div className="star-container">
-//       {[...Array(filledStars)].map((_, index) => (
-//         <BsStarFill key={index} className="star-icon filled-star" />
-//       ))}
-//       {hasHalfStar && (
-//         <i
-//           key="halfStar"
-//           className="bi bi-star-half star-icon filled-star half-star"
-//         ></i>
-//       )}
-//       {[...Array(5 - filledStars - (hasHalfStar ? 1 : 0))].map((_, index) => (
-//         <BsStar key={filledStars + index} className="star-icon empty-star" />
-//       ))}
-//     </div>
-//   );
-// };
+  return (
+    <div className="star-container">
+      {[...Array(filledStars)].map((_, index) => (
+        <BsStarFill key={index} className="star-icon filled-star" />
+      ))}
+      {hasHalfStar && (
+        <i
+          key="halfStar"
+          className="bi bi-star-half star-icon filled-star half-star"
+        ></i>
+      )}
+      {[...Array(5 - filledStars - (hasHalfStar ? 1 : 0))].map((_, index) => (
+        <BsStar key={filledStars + index} className="star-icon empty-star" />
+      ))}
+    </div>
+  );
+};
 
 
 const Restaurant = () => {
@@ -402,7 +402,7 @@ const Restaurant = () => {
 
         {reviews.map((review, index) => (
           <div key={index} className="review-card">
-            {/* <div className="name-and-view-more">
+             <div className="name-and-view-more">
               <p>
                 <strong>{review.userName}</strong>
 
@@ -437,7 +437,7 @@ const Restaurant = () => {
                   </li>
                 </ul>
               </p>
-            </div> */}
+            </div> 
             {deleted && (
               <div className="popup-overlay">
                 <div className="popup" ref={popRef}>
@@ -487,7 +487,7 @@ const Restaurant = () => {
               )}
 
             <div className="d-flex justify-content-start">
-              {/* <div>{renderRatingStars(review.rating)}</div> */}
+              <div>{renderRatingStars(review.rating)}</div>
               <p className="time-post">{review.timePosted}</p>
             </div>
 
