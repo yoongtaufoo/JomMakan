@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import profilePic from "../assets/default-pfp.png";
 import Popup from "reactjs-popup";
@@ -7,17 +7,41 @@ import { AuthContext } from ".././context/AuthContext";
 import "./ProfileSection.css";
 
 const ProfileSection = () => {
-  //Get username from local storage
-  const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
-  let username = "";
-  if (storedUser) {
-    username = storedUser.user.username;
-  }
-
-  // Profile Pic
-
+  const [username, setUsername] = useState("");
   const [previewImage, setPreviewImage] = useState(profilePic);
   const [uploadedImage, setUploadedImage] = useState(null);
+
+  //Get userId from local storage
+  const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
+  let storedUserId = "";
+  if (storedUser) {
+    storedUserId = storedUser.user._id;
+  }
+
+  useEffect(() => {
+    //get token from local storage
+    const token = localStorage.getItem("JomMakanUser");
+
+    if (!token) {
+      alert("User is not authenticated.");
+      return;
+    }
+
+    axios
+      .get(`http://localhost:3001/api/profile/${storedUserId}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then(({ data }) => {
+        setUsername(data.username);
+      })
+      .catch((error) => {
+        console.error("Error fetching username:", error);
+      });
+  }, []); // Empty dependency array to fetch data only once when component mounts
+
+  // Profile Pic
 
   const handleSelectImage = (event) => {
     const file = event.target.files[0];

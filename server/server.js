@@ -9,13 +9,15 @@ const restaurantRoute = require("./routes/restaurant.route");
 const workshopRoute = require("./routes/workshop.route");
 const registerRoute = require("./routes/register.route");
 const reviewRoute = require("./routes/review.route");
+const profileRoute = require("./routes/profile.route");
+
 // connect to express app
 const app = express();
 
 const dbURI = process.env.MONGO_URI;
 const port = process.env.PORT;
 
-app.use(express.json()); 
+app.use(express.json());
 
 mongoose
   .connect(dbURI)
@@ -32,9 +34,9 @@ mongoose
 app.use(bodyParser.json());
 app.use(cors());
 
-
 //Routes
 app.use("/api/auth", authRoute);
+app.use("/api/profile", profileRoute);
 app.use("/api/reservation", reserveRoute);
 app.use("/api/restaurant", restaurantRoute);
 app.use("/api/review", reviewRoute);
@@ -42,4 +44,3 @@ app.use("/api/workshop", workshopRoute);
 app.use("/api/registration", registerRoute);
 // app.use("/api/users", userRoute);
 // app.use("/api/community", communityRoute);
-

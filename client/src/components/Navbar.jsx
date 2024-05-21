@@ -1,18 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Navbar.css";
 import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
 import profilePic from "../assets/default-pfp.png";
+import axios from "axios";
 
 const Navbar = () => {
-  // default name
-  let name = "User123";
+  const [username, setUsername] = useState("");
 
-  //get username from local storage
+  //Get userId from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
+  let storedUserId = "";
   if (storedUser) {
-    name = storedUser.user.username;
+    storedUserId = storedUser.user._id;
   }
+
+  useEffect(() => {
+    //get token from local storage
+    const token = localStorage.getItem("JomMakanUser");
+
+    if (!token) {
+      alert("User is not authenticated.");
+      return;
+    }
+
+    axios
+      .get(`http://localhost:3001/api/profile/${storedUserId}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then(({ data }) => {
+        setUsername(data.username);
+      })
+      .catch((error) => {
+        console.error("Error fetching username:", error);
+      });
+  }, []); // Empty dependency array to fetch data only once when component mounts
 
   return (
     <div>
@@ -35,7 +59,7 @@ const Navbar = () => {
                 id="invisible"
                 className="d-flex align-items-center align-self-center"
               >
-                <strong>{name}</strong>
+                <strong>{username}</strong>
                 <img id="nav-pfp" src={profilePic} alt="nav profile pic"></img>
               </div>
             </Link>

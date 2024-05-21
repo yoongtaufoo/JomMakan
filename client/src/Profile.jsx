@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import Navbar from "./components/Navbar";
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import PasswordStrengthMeter from "./components/PasswordStrengthMeter";
 import report from "./assets/report.png";
 import savedWorkshop from "./assets/saved-workshops.png";
 import savedRestaurant from "./assets/saved-restaurant.png";
+import axios from "axios";
 
 const userInfo = {
   id: 1,
@@ -18,21 +19,17 @@ const userInfo = {
 };
 
 const Profile = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  };
-
-  //Get username from local storage
+  // Get userid from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
-  let storedUsername = "";
+  let storedUserId = "";
   if (storedUser) {
-    storedUsername = storedUser.user.username;
+    storedUserId = storedUser.user._id;
   }
 
-  const [username, setUsername] = useState(storedUsername);
-  const [location, setLocation] = useState(userInfo.location);
+  const [username, setUsername] = useState("");
+  const [location, setLocation] = useState("");
   const [birthday, setBirthday] = useState(userInfo.birthday);
-  const [email, setEmail] = useState(userInfo.email);
+  const [email, setEmail] = useState("");
   const [pass, setPass] = useState(userInfo.password);
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
@@ -43,6 +40,62 @@ const Profile = () => {
   const handleClickShowPassword2 = () => {
     setShowPassword2(!showPassword2);
   };
+
+  useEffect(() => {
+    //get token from local storage
+    const token = localStorage.getItem("JomMakanUser");
+
+    if (!token) {
+      alert("User is not authenticated.");
+      return;
+    }
+
+    axios
+      .get(`http://localhost:3001/api/profile/${storedUserId}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then(({ data }) => {
+        setUsername(data.username);
+        setLocation(data.location);
+        setEmail(data.email);
+      })
+      .catch((error) => {
+        console.error("Error fetching profile:", error);
+      });
+  }, []); // Empty dependency array to fetch data only once when component mounts
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const token = localStorage.getItem("JomMakanUser");
+
+    const userProfile = {
+      username,
+      location,
+      // birthday,
+      email,
+      // password: pass,
+    };
+
+    axios
+      .put(`http://localhost:3001/api/profile/${storedUserId}`, userProfile, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((response) => {
+        // console.log("Profile updated successfully", response.data);
+        alert("Update successfully");
+        window.location.reload(); // reload window after update successfully
+      })
+      .catch((error) => {
+        alert(error.response.data.message);
+        console.error("Error updating profile:", error);
+      });
+  };
+
   return (
     <div>
       <Navbar />
