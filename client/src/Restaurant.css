@@ -145,9 +145,13 @@
 .bi-arrow-left-circle {
   color: #fca311;
 }
-#star-container {
+/* #star-container {
   display: inline-flex;
   align-items: center;
+} */
+.rating-value{
+  font-size: 35px;
+  margin-left: 40px;
 }
 .photo-buttons {
   display: flex;
