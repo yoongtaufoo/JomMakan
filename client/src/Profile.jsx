@@ -28,7 +28,7 @@ const Profile = () => {
 
   const [username, setUsername] = useState("");
   const [location, setLocation] = useState("");
-  const [birthday, setBirthday] = useState(userInfo.birthday);
+  // const [birthday, setBirthday] = useState("");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState(userInfo.password);
   const [showPassword, setShowPassword] = useState(false);
@@ -86,7 +86,6 @@ const Profile = () => {
         },
       })
       .then((response) => {
-        // console.log("Profile updated successfully", response.data);
         alert("Update successfully");
         window.location.reload(); // reload window after update successfully
       })

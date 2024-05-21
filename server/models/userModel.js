@@ -1,10 +1,13 @@
 // const reservationSchema = require("./reservationModel");
 const mongoose = require("mongoose");
-const restaurantSchema = require("./restaurantModel")
-
+const restaurantSchema = require("./restaurantModel");
 
 const favRestaurantSchema = new mongoose.Schema({
-  favRestaurantId: { type: mongoose.Schema.Types.ObjectId, ref: "restaurants",required: true }
+  favRestaurantId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "restaurants",
+    required: true,
+  },
 });
 
 const userSchema = new mongoose.Schema({
@@ -13,9 +16,17 @@ const userSchema = new mongoose.Schema({
   // birthday: { type: Date, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  // reservations: [reservationSchema],
-  favRestaurants: [favRestaurantSchema]
-  
+  profilePic: {
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
+  },
+  favRestaurants: [favRestaurantSchema],
 });
 
 const User = mongoose.model("Users", userSchema);

@@ -1,6 +1,9 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const cloudinary = require("../utils/cloudinary");
+const handleUpload = require("../utils/cloudinary");
+const upload = require("../middleware/profile");
 
 const getProfile = async (req, res) => {
   try {
@@ -69,12 +72,62 @@ const updateProfile = async (req, res) => {
 
     res.json({ message: "Profile updated successfully" });
   } catch (err) {
-    console.error("Error updating user profile:", err);
-    res.status(500).json({ message: "Failed to update user profile" });
+    console.error("Error updating profile:", err);
+    res.status(500).json({ message: "Failed to update profile" });
+  }
+};
+
+const updateProfilePic = async (req, res, next) => {
+  try {
+    //current user id
+    const { userId } = req.params;
+
+    // Find the user by ID
+    const currentUser = await User.findOne({ _id: userId });
+
+    console.log(currentUser);
+
+    //build the data object
+    let data = { public_id: "", url: "" };
+
+    //modify image conditionnally
+    if (req.body.image !== "") {
+      //   const ImgId = currentUser.image.public_id;
+      const ImgId = currentUser?.image?.public_id;
+
+      if (ImgId) {
+        await cloudinary.uploader.destroy(ImgId);
+      }
+
+      const newImage = await cloudinary.uploader.upload(req.body.image, {
+        folder: "profilePics",
+        // width: 1000,
+        // crop: "scale",
+      });
+
+      data = {
+        public_id: newImage.public_id,
+        url: newImage.secure_url,
+      };
+    }
+
+    // Update user fields
+    currentUser.profilePic = data || currentUser.profilePic;
+
+    // Save the updated user
+    await currentUser.save();
+
+    res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
   }
 };
 
 module.exports = {
   getProfile,
   updateProfile,
+  updateProfilePic,
 };

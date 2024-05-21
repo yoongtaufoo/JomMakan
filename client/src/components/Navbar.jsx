@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./Navbar.css";
 import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
-import profilePic from "../assets/default-pfp.png";
+import defaultProfilePic from "../assets/default-pfp.png";
 import axios from "axios";
 
 const Navbar = () => {
   const [username, setUsername] = useState("");
+  const [profilePic, setProfilePic] = useState(defaultProfilePic);
 
   //Get userId from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
@@ -32,6 +33,8 @@ const Navbar = () => {
       })
       .then(({ data }) => {
         setUsername(data.username);
+        const profilePicURL = data.profilePic.url;
+        if (profilePicURL !== "") setProfilePic(profilePicURL);
       })
       .catch((error) => {
         console.error("Error fetching username:", error);
