@@ -2,8 +2,6 @@ const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const cloudinary = require("../utils/cloudinary");
-const handleUpload = require("../utils/cloudinary");
-const upload = require("../middleware/profile");
 
 const getProfile = async (req, res) => {
   try {
