@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import image from "./assets/image 3.png";
 import Tabs from "./components/Tabs.jsx";
@@ -53,7 +53,6 @@ const MyRegistration = () => {
 
     fetchWorkshops();
   }, []);
-  
 
   //For filtering
   const filteredWorkshops = registrations.filter((registration) => {
@@ -70,7 +69,6 @@ const MyRegistration = () => {
     const workshop = workshops.find(
       (rest) => rest._id === registration.workshop_id
     );
-    
 
     const workshopName = workshop ? workshop.workshopName.toLowerCase() : "";
     const workshopDate = workshop ? workshop.date.toLowerCase() : "";
@@ -79,11 +77,11 @@ const MyRegistration = () => {
     if (workshop.status === status) {
       return (
         // (reservation.status === status &&
-        (registration.name.toLowerCase().includes(query) ||
+        registration.name.toLowerCase().includes(query) ||
         workshopDate.includes(query) ||
         registration.phone.includes(query) ||
         workshopName.includes(query) ||
-        workshopAddress.includes(query)) 
+        workshopAddress.includes(query)
       );
     }
   });
@@ -107,7 +105,7 @@ const MyRegistration = () => {
           style={{ cursor: "pointer" }}
           onClick={() => navigate(-1)}
         >
-          <i class="bi bi-arrow-left-circle"></i> Back
+          <i className="bi bi-arrow-left-circle"></i> Back
         </div>
 
         <h1 className="custom-h1">My Workshops</h1>

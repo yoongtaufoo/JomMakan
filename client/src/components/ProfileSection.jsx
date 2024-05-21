@@ -117,11 +117,11 @@ const ProfileSection = () => {
             <img className="profile-pic" src={previewImage} alt="profilePic" />
             <div className="edit">
               <label
-                for="file-upload"
+                htmlFor="file-upload"
                 className="custom-file-upload-button"
                 id="custom-file-upload-btn"
               >
-                <i class="bi bi-pencil-fill edit-icon"></i>
+                <i className="bi bi-pencil-fill edit-icon"></i>
               </label>
               <input
                 id="file-upload"

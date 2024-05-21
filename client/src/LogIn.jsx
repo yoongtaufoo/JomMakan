@@ -50,7 +50,7 @@ const LogIn = () => {
       <nav className="navbar">
         <img className="ms-4" src={logo} id="logo"></img>
       </nav>
-      <div class="login-wrapper w-100 d-flex flex-row justify-content-between align-items-center">
+      <div className="login-wrapper w-100 d-flex flex-row justify-content-between align-items-center">
         <img
           className="log-in-pic pic-left"
           src={loginLeft}
@@ -63,13 +63,13 @@ const LogIn = () => {
             className="needs-validation"
             id="auth-form"
           >
-            <div class="form-group was-validated">
+            <div className="form-group was-validated">
               <label htmlFor="emailLogIn">
                 <strong>Email</strong>
               </label>
               <input
                 type="email"
-                class="form-control auth"
+                className="form-control auth"
                 name="emailLogIn"
                 id="emailLogIn"
                 // aria-describedby="emailHelp"
@@ -80,7 +80,7 @@ const LogIn = () => {
               />
             </div>
 
-            <div class="form-group position-relative">
+            <div className="form-group position-relative">
               <label htmlFor="passwordLogin">
                 <strong>Password</strong>
               </label>
@@ -88,7 +88,7 @@ const LogIn = () => {
                 <input
                   name="passwordLogin"
                   id="passwordLogin"
-                  class="form-control auth"
+                  className="form-control auth"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
                   required
@@ -99,13 +99,13 @@ const LogIn = () => {
                 />
                 {showPassword ? (
                   <i
-                    class="bi bi-eye fs-4 position-absolute me-4 pe-1 mt-2 end-0 top-0"
+                    className="bi bi-eye fs-4 position-absolute me-4 pe-1 mt-2 end-0 top-0"
                     onClick={handleClickShowPassword}
                     style={{ cursor: "pointer" }}
                   ></i>
                 ) : (
                   <i
-                    class="bi bi-eye-slash fs-4 position-absolute me-4 pe-1 mt-2 end-0 top-0"
+                    className="bi bi-eye-slash fs-4 position-absolute me-4 pe-1 mt-2 end-0 top-0"
                     onClick={handleClickShowPassword}
                     style={{ cursor: "pointer" }}
                   ></i>
@@ -124,7 +124,7 @@ const LogIn = () => {
             <strong>Don't have an account ?</strong>
           </div>
           <a
-            class="link-danger link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+            className="link-danger link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
             href="/signup"
           >
             Click here to sign up !

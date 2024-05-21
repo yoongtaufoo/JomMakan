@@ -269,24 +269,24 @@ const Restaurant = () => {
     );
     return total > 0 ? totalRatings / total : 0;
   };
-const getTimeDifferenceString = (timePosted) => {
-  const currentTime = new Date();
-  const postedTime = new Date(timePosted);
-  const timeDifference = Math.floor((currentTime - postedTime) / 1000); // Time difference in seconds
+  const getTimeDifferenceString = (timePosted) => {
+    const currentTime = new Date();
+    const postedTime = new Date(timePosted);
+    const timeDifference = Math.floor((currentTime - postedTime) / 1000); // Time difference in seconds
 
-  if (timeDifference < 60) {
-    return "now"; // If less than a minute ago
-  } else if (timeDifference < 3600) {
-    const minutes = Math.floor(timeDifference / 60);
-    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`; // If less than an hour ago
-  } else if (timeDifference < 86400) {
-    const hours = Math.floor(timeDifference / 3600);
-    return `${hours} hour${hours > 1 ? "s" : ""} ago`; // If less than a day ago
-  } else {
-    const days = Math.floor(timeDifference / 86400);
-    return `${days} day${days > 1 ? "s" : ""} ago`; // If more than a day ago
-  }
-};
+    if (timeDifference < 60) {
+      return "now"; // If less than a minute ago
+    } else if (timeDifference < 3600) {
+      const minutes = Math.floor(timeDifference / 60);
+      return `${minutes} minute${minutes > 1 ? "s" : ""} ago`; // If less than an hour ago
+    } else if (timeDifference < 86400) {
+      const hours = Math.floor(timeDifference / 3600);
+      return `${hours} hour${hours > 1 ? "s" : ""} ago`; // If less than a day ago
+    } else {
+      const days = Math.floor(timeDifference / 86400);
+      return `${days} day${days > 1 ? "s" : ""} ago`; // If more than a day ago
+    }
+  };
 
   return (
     <div>
@@ -341,7 +341,7 @@ const getTimeDifferenceString = (timePosted) => {
           {restaurant.openinghours}
         </p>
         <p className="card-text">
-          <i class="bi bi-egg-fried custom-icon"></i>
+          <i className="bi bi-egg-fried custom-icon"></i>
           {restaurant.cuisine}
         </p>
         <br />
@@ -436,13 +436,13 @@ const getTimeDifferenceString = (timePosted) => {
                   <div
                     className="fillable-box"
                     style={{
-                      width: `${Math.round(ratingPercentages[5-index-1])}%`,
+                      width: `${Math.round(ratingPercentages[5 - index - 1])}%`,
                       height: "100%",
                     }}
                   />
                 </div>
                 <div className="percentage">
-                  {ratingPercentages[5-index-1].toFixed(0)}%
+                  {ratingPercentages[5 - index - 1].toFixed(0)}%
                 </div>
               </div>
             ))}{" "}
@@ -517,7 +517,7 @@ const getTimeDifferenceString = (timePosted) => {
             {confirm && (
               <div classNamec="popup-overlay">
                 <div className="popup" ref={popRef}>
-                  <i class="bi bi-calendar2-check-fill"></i>
+                  <i className="bi bi-calendar2-check-fill"></i>
                   <div>Deleted</div>
                 </div>
               </div>
@@ -539,8 +539,9 @@ const getTimeDifferenceString = (timePosted) => {
 
             <div className="d-flex justify-content-start">
               <div>{renderRatingStars(review.rating)}</div>&nbsp;&nbsp;
-            
-<p className="time-post">{getTimeDifferenceString(review.timePosted)}</p>
+              <p className="time-post">
+                {getTimeDifferenceString(review.timePosted)}
+              </p>
             </div>
 
             <p>{review.reviewDescription}</p>

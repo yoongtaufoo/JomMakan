@@ -26,9 +26,7 @@ const ReviewCard = ({ reviews }) => {
   useEffect(() => {
     if (reviews) {
       axios
-        .get(
-          `http://localhost:3001/api/restaurant/${reviews.reservationId}`
-        )
+        .get(`http://localhost:3001/api/restaurant/${reviews.reservationId}`)
         .then(({ data }) => {
           setRestaurantData(data);
         })
@@ -153,7 +151,7 @@ const ReviewCard = ({ reviews }) => {
         {confirm && (
           <div className="popup-overlay">
             <div className="popup" ref={popRef}>
-              <i class="bi bi-calendar-x-fill"></i>
+              <i className="bi bi-calendar-x-fill"></i>
               <div>Cancelled</div>
             </div>
           </div>
@@ -241,7 +239,7 @@ const ReviewCard = ({ reviews }) => {
         {confirm && (
           <div className="popup-overlay">
             <div className="popup" ref={popRef}>
-              <i class="bi bi-calendar-x-fill"></i>
+              <i className="bi bi-calendar-x-fill"></i>
               <div>Cancelled</div>
             </div>
           </div>
@@ -259,4 +257,3 @@ const ReviewCard = ({ reviews }) => {
 };
 
 export default CollectionCard;
-

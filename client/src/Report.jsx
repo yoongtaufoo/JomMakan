@@ -31,55 +31,55 @@ const Report = () => {
               style={{ cursor: "pointer" }}
               onClick={() => navigate(-1)}
             >
-              <i class="bi bi-arrow-left-circle"></i> Back
+              <i className="bi bi-arrow-left-circle"></i> Back
             </div>
           </div>
           <h1 className="mb-4">Report & Feedback</h1>
         </div>
         <form
           onSubmit={handleSubmit}
-          class="report-form d-flex flex-column justify-content-center align-items-center"
+          className="report-form d-flex flex-column justify-content-center align-items-center"
         >
           <div className="d-flex flex-row">
-            <div class="form-check me-4">
+            <div className="form-check me-4">
               <input
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault1"
                 onSelect={() => setSelectedValue("flexRadioDefault1")}
                 // checked
               />
-              <label class="form-check-label" for="flexRadioDefault1">
+              <label className="form-check-label" htmlFor="flexRadioDefault1">
                 Report
               </label>
             </div>
-            <div class="form-check me-4">
+            <div className="form-check me-4">
               <input
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
                 onSelect={() => setSelectedValue("flexRadioDefault2")}
               />
-              <label class="form-check-label" for="flexRadioDefault2">
+              <label className="form-check-label" htmlFor="flexRadioDefault2">
                 Feedback
               </label>
             </div>
-            <div class="form-check">
+            <div className="form-check">
               <input
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault3"
                 onSelect={() => setSelectedValue("flexRadioDefault3")}
               />
-              <label class="form-check-label" for="flexRadioDefault3">
+              <label className="form-check-label" htmlFor="flexRadioDefault3">
                 Others
               </label>
             </div>
           </div>
-          <label for="report-message">
+          <label htmlFor="report-message">
             <h6 className="report-label">Message</h6>
           </label>
           <textarea
@@ -90,7 +90,7 @@ const Report = () => {
             placeholder="Messages"
           ></textarea>
 
-          <label for="report-suggestion">
+          <label htmlFor="report-suggestion">
             <h6 className="report-label">Suggestions</h6>
           </label>
           <textarea

@@ -114,7 +114,7 @@ const Reservations = () => {
           style={{ cursor: "pointer" }}
           onClick={() => navigate(-1)}
         >
-          <i class="bi bi-arrow-left-circle"></i> Back
+          <i className="bi bi-arrow-left-circle"></i> Back
         </div>
         {/* <SearchBar/> */}
 
