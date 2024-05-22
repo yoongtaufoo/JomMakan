@@ -329,7 +329,7 @@ const ReservationForm = (props) => {
   };
 
   const isValidName = (nameinput) => {
-    const namePattern = /^[A-Za-z\s]+$/; // alphabets only
+    const namePattern = /^[A-Za-z\s]+$/; // alphabets and spaces only
     return namePattern.test(nameinput); // test if nameinput follow the pattern
   };
 
@@ -392,7 +392,7 @@ const ReservationForm = (props) => {
         setPaxInput("");
         setTableInput("");
         setConfirm(true);
-        // window.location.reload(); // reload window after reserve successfully
+        //window.location.reload(); // reload window after reserve successfully
       })
       .catch((error) => {
         alert("Unable to reserve user");
@@ -568,7 +568,7 @@ const ReservationForm = (props) => {
       {confirm && (
         <div className="popup-overlay">
           <div className="popup" ref={popRef}>
-            <i class="bi bi-calendar2-check-fill"></i>
+            <i className="bi bi-calendar2-check-fill"></i>
             <div>Confirmed</div>
           </div>
         </div>

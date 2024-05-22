@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import image from "./assets/image 3.png";
 import Tabs from "./components/Tabs.jsx";
@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import workshopPic from "./assets/workshop.png";
 import CollectionCard from "./components/CollectionCard.jsx";
 import axios from "axios";
-
 const MyRegistration = () => {
   // Function body
   const navigate = useNavigate();
@@ -16,9 +15,8 @@ const MyRegistration = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    //get username from local storage
+    //get userid from local storage
     const token = localStorage.getItem("JomMakanUser");
-
     if (!token) {
       alert("User is not authenticated.");
       return;
@@ -26,6 +24,7 @@ const MyRegistration = () => {
 
     axios
       .get("http://localhost:3001/api/registration/my_registrations", {
+        //withCredentials: true // This ensures cookies are sent with the request
         headers: {
           Authorization: token,
         },
@@ -53,7 +52,6 @@ const MyRegistration = () => {
 
     fetchWorkshops();
   }, []);
-  
 
   //For filtering
   const filteredWorkshops = registrations.filter((registration) => {
@@ -68,22 +66,21 @@ const MyRegistration = () => {
     // if (status === undefined) return true; // Default case
 
     const workshop = workshops.find(
-      (rest) => rest._id === registration.workshop_id
+      (workshop) => workshop._id === registration.workshop_id
     );
-    
 
     const workshopName = workshop ? workshop.workshopName.toLowerCase() : "";
     const workshopDate = workshop ? workshop.date.toLowerCase() : "";
     const workshopAddress = workshop ? workshop.address.toLowerCase() : "";
 
-    if (workshop.status === status) {
+    if (registration.status === status) {
       return (
         // (reservation.status === status &&
-        (registration.name.toLowerCase().includes(query) ||
+        registration.name.toLowerCase().includes(query) ||
         workshopDate.includes(query) ||
         registration.phone.includes(query) ||
         workshopName.includes(query) ||
-        workshopAddress.includes(query)) 
+        workshopAddress.includes(query)
       );
     }
   });
@@ -107,7 +104,7 @@ const MyRegistration = () => {
           style={{ cursor: "pointer" }}
           onClick={() => navigate(-1)}
         >
-          <i class="bi bi-arrow-left-circle"></i> Back
+          <i className="bi bi-arrow-left-circle"></i> Back
         </div>
 
         <h1 className="custom-h1">My Workshops</h1>
@@ -122,11 +119,14 @@ const MyRegistration = () => {
         />
         <br />
         <div className="card mb-3">
-          {filteredWorkshops.map((registration) => (
-            <CollectionCard key={registration.id} workshops={registration} />
-            // <CollectionCard key={registration.id} workshop={registration} />
-          ))}
-        </div>
+          {filteredWorkshops.map((registration) => {
+          console.log(registration._id);
+        return (
+          <CollectionCard key={registration._id} registrations={registration} />
+         );
+        })}
+      </div>
+        
       </div>
     </div>
   );

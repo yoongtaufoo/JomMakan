@@ -57,15 +57,26 @@ const WorkshopCard = ({ workshop }) => {
             <button
               type="button"
               className="btn btn-secondary btn-lg custom-add-schedule"
-              style={{ backgroundColor: "gray", cursor: "not-allowed" }}
+              style={{ backgroundColor: "gray", cursor: "not-allowed" ,width:"70%",marginBottom:"15px"}}
               disabled
             >
               Scheduled
             </button>
-          ) : (
+          )
+          : workshop.availableSlot === 0 ? (
+            <button
+              type="button"
+              className="btn btn-secondary btn-lg custom-add-schedule"
+              style={{ backgroundColor: "gray", cursor: "not-allowed",width:"70%" ,marginBottom:"15px"}}
+              disabled
+            >
+              FULL XD
+            </button>
+          ) 
+          : (
             <Link
               to={`/workshop/${workshop._id}`}
-              style={{ textDecoration: "none", color: "inherit" }}
+              style={{ textDecoration: "none", color: "inherit",width:"70%",marginBottom:"15px" }}
             >
               <button
                 type="button"

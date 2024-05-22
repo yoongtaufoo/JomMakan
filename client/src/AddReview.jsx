@@ -7,6 +7,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import MyDropzone from "./components/MyDropzone";
 import axios from "axios";
+import Popup from "reactjs-popup";
 
 const AddReview = () => {
   const { _id } = useParams();
@@ -14,9 +15,7 @@ const AddReview = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const restaurantName = params.get("restaurantName");
-  const restaurant_id = _id; 
-  const [submit, setSubmit] = useState(false);
-  const [confirm, setConfirm] = useState(false);
+  const restaurant_id = _id;
   const popRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("idle");
@@ -24,7 +23,10 @@ const AddReview = () => {
   const [descriptionInput, setDescriptionInput] = useState("");
   const [mediaInput, setMediaInput] = useState("");
   const [isChecked, setIsChecked] = useState(false);
-  const token = localStorage.getItem("JomMakanUser"); 
+  const [showPopup, setShowPopup] = useState(false);
+  const token = localStorage.getItem("JomMakanUser");
+
+  // const { edit, selectedReview } = props;
 
   const handleUploadFile = async (selectedFile) => {
     console.log("Uploading file:", selectedFile);
@@ -35,13 +37,6 @@ const AddReview = () => {
     }, 3000);
   };
 
-  const handleClickOutside = (event) => {
-    if (popRef.current && !popRef.current.contains(event.target)) {
-      setConfirm(false);
-      setSubmit(false);
-    }
-  };
-
   const resetUploadStatus = () => {
     setUploadStatus("idle");
   };
@@ -50,7 +45,53 @@ const AddReview = () => {
     console.log("Rating:", rate);
     setratingInput(rate);
   };
+  // const updateReview = async () => {
+  //   try {
+  //     const response = await axios.put(
+  //       `http://localhost:3001/api/review/${selectedReview.reviewId}`, // Assuming you have a unique identifier for each review (e.g., reviewId)
+  //       {
+  //         rating: ratingInput,
+  //         reviewDescription: descriptionInput,
+  //         media: mediaInput,
+  //         agreeToTerms: isChecked,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: token,
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+  //     console.log("Review updated successfully:", response.data);
+  //     // Optionally, you can navigate to another page or perform other actions upon successful review update
+  //   } catch (error) {
+  //     console.error("Error updating review:", error);
+  //     // Handle error scenarios here
+  //   }
+  // };
+  const handleClickOutside = (event) => {
+    if (popRef.current && !popRef.current.contains(event.target)) {
+      setShowPopup(false);
+    }
+  };
+  const resetForm = () => {
+    setratingInput(0);
+    setDescriptionInput("");
+    setMediaInput("");
+    setIsChecked(false);
+    setUploadStatus("idle");
+    window.location.reload();
+  };
+
   const submitReview = async () => {
+    // if (edit) {
+    //   updateReview();
+    // } else {
+    if (!ratingInput || !descriptionInput || !mediaInput || !isChecked) {
+      alert("Please complete all fields before submitting the review.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         `http://localhost:3001/api/review/${restaurant_id}/addReview`,
@@ -70,6 +111,7 @@ const AddReview = () => {
         }
       );
       console.log("Review submitted successfully:", response.data);
+      resetForm();
     } catch (error) {
       if (error.response) {
         // that falls out of the range of 2xx
@@ -83,24 +125,30 @@ const AddReview = () => {
         console.error("Error message:", error.message);
       }
       console.error("Error config:", error.config);
+      //      }
     }
   };
 
-const handleDescriptionChange = (event) => {
-  setDescriptionInput(event.target.value);
-};
-   const handleCheckboxChange = () => {
-     setIsChecked(!isChecked);
-   };
+  const handleDescriptionChange = (event) => {
+    setDescriptionInput(event.target.value);
+  };
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
 
-   useEffect(() => {
-     document.addEventListener("mousedown", handleClickOutside);
-     return () => {
-       document.removeEventListener("mousedown", handleClickOutside);
-     };
-   }, []);
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  //  useEffect(() => {
+  //    if (edit && selectedReview) {
+  //      setratingInput(selectedReview.rating);
+  //      setDescriptionInput(selectedReview.reviewDescription);
+  //    }
+  //  }, [edit, selectedReview]);
 
-  
   return (
     <div>
       <div>
@@ -112,10 +160,9 @@ const handleDescriptionChange = (event) => {
               style={{ cursor: "pointer" }}
               onClick={() => navigate(-1)}
             >
-              <i class="bi bi-arrow-left-circle"></i> Back
+              <i className="bi bi-arrow-left-circle"></i> Back
             </div>
           </div>
-
           <div id="form">
             <h2>
               <b>Rate a restaurant</b>
@@ -138,7 +185,12 @@ const handleDescriptionChange = (event) => {
               <div>
                 Review:
                 <br />
-                <textarea className="textArea" rows="4" cols="50" onChange={handleDescriptionChange} />
+                <textarea
+                  className="textArea"
+                  rows="4"
+                  cols="50"
+                  onChange={handleDescriptionChange}
+                />
               </div>
               <br></br>
               <div>
@@ -152,52 +204,52 @@ const handleDescriptionChange = (event) => {
 
               <br></br>
               <div id="checkbox">
-                <input type="checkbox"
+                <input
+                  type="checkbox"
                   checked={isChecked}
                   onChange={(e) => {
-                handleCheckboxChange(e);
-              }}
-              required/>
+                    handleCheckboxChange(e);
+                  }}
+                  required
+                />
                 &nbsp;I agree to the JomMakan Terms of Use and that this review
                 is an honest and accurate account of my experience at the
                 restaurant.
                 <br />
               </div>
             </div>
-            <button id="form-submitButton" onClick={() => setSubmit(!submit)}>
-              Submit Review
-            </button>
-            {submit && (
-              <div className="popup-overlay">
-                <div className="popup" ref={popRef}>
-                  <div>Confirm submit?</div>
-                  <div>
-                    <button
-                      id="review-cancel-button"
-                      onClick={() => setSubmit(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={() => {
-                        setConfirm(true);
-                        setSubmit(false);
-                        submitReview();
-                      }}
-                    >
-                      Confirm
-                    </button>
+            <Popup
+              contentStyle={{ width: "450px", borderRadius: "20px" }}
+              trigger={
+                <button id="form-submitButton" onClick={submitReview}>
+                  Submit Review
+                </button>
+              }
+              modal
+              nested
+            >
+              {(close) => (
+                <div className="popup-overlay">
+                  <div className="popup log-out-popup" ref={popRef}>
+                    <div id="log-out-popup-title">Confirm</div>
+                    <div className="popup-buttons">
+                      <button id="cancel-button" onClick={close}>
+                        Cancel
+                      </button>
+                      <button
+                        id="yes-button"
+                        onClick={() => {
+                          submitReview();
+                          close();
+                        }}
+                      >
+                        Confirm
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-            {confirm && (
-              <div className="popup-overlay">
-                <div className="popup" ref={popRef}>
-                  <div>Confirmed</div>
-                </div>
-              </div>
-            )}
+              )}
+            </Popup>
           </div>
         </div>
       </div>
