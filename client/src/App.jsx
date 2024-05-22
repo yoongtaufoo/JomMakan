@@ -81,9 +81,9 @@ function App() {
                 recommendations to try out hidden gems or well-loved
                 neighborhood eateries operated by local entrepreneurs.
               </div>
-              <Link to="/signup">
+              {/* <Link to="/signup">
                 <button className="getstartedbtn">Get Started</button>
-              </Link>
+              </Link> */}
             </div>
           </div>
         </ParallaxLayer>
@@ -109,9 +109,9 @@ function App() {
                 online restaurant reservation services with zero-charge
                 cancellation fee!
               </div>
-              <Link to="/signup">
+              {/* <Link to="/signup">
                 <button className="getstartedbtn">Get Started</button>
-              </Link>
+              </Link> */}
             </div>
           </div>
         </ParallaxLayer>
@@ -136,9 +136,9 @@ function App() {
                 Get notified about workshops and events happening in restaurants
                 around you! Easily register through our online registration.
               </div>
-              <Link to="/signup">
+              {/* <Link to="/signup">
                 <button className="getstartedbtn">Get Started</button>
-              </Link>
+              </Link> */}
             </div>
           </div>
         </ParallaxLayer>
