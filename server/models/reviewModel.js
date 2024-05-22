@@ -7,7 +7,7 @@ const reviewSchema = new mongoose.Schema({
     rating: { type: Number, required: true },
     timePosted: { type: Date, required: true },
     reviewDescription: { type: String, required: true },
-    mediaUrl: { type: [String], required:true },
+    mediaUrl: { type: [String], required:false },
     agreeToTerms: { type: Boolean, required: true },
     likeCount: { type: Number, default: 0 },
     shareCount: { type: Number, default: 0 },

@@ -563,7 +563,6 @@ const Restaurant = () => {
             {review.mediaUrl && (
               <img
                 src={review.mediaUrl}
-                alt="Review"
                 className="review-photo"
               />
             )}
