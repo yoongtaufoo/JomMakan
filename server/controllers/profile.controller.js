@@ -83,7 +83,7 @@ const updateProfilePic = async (req, res, next) => {
     // Find the user by ID
     const currentUser = await User.findOne({ _id: userId });
 
-    console.log(currentUser);
+    // console.log(currentUser);
 
     //build the data object
     let data = { public_id: "", url: "" };
