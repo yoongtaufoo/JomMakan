@@ -190,8 +190,7 @@ const updatePassword = async (req, res) => {
               if (err) return res.json({ Status: "Error comparing passwords" });
               if (isMatch)
                 return res.json({
-                  Status:
-                    "New password cannot be the same as the current password",
+                  Status: "New password cannot be the same as current password",
                 });
 
               // Check password strength
