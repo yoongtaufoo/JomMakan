@@ -328,7 +328,7 @@ const ReservationForm = (props) => {
   };
 
   const isValidName = (nameinput) => {
-    const namePattern = /^[A-Za-z]+$/; // alphabets only
+    const namePattern = /^[A-Za-z\s]+$/; // alphabets and spaces only
     return namePattern.test(nameinput); // test if nameinput follow the pattern
   };
 
@@ -391,7 +391,7 @@ const ReservationForm = (props) => {
         setPaxInput("");
         setTableInput("");
         setConfirm(true);
-        window.location.reload(); // reload window after reserve successfully
+        //window.location.reload(); // reload window after reserve successfully
       })
       .catch((error) => {
         alert("Unable to reserve user");
@@ -402,6 +402,7 @@ const ReservationForm = (props) => {
     if (popRef.current && !popRef.current.contains(event.target)) {
       setConfirm(false);
       setSubmit(false);
+      window.location.reload(); // reload window after reserve successfully
     }
   };
   useEffect(() => {
