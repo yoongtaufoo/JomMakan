@@ -55,12 +55,22 @@ button{
   left:0;
   height: 100vh;
 }
-#breakfast{
+#left{
   width:70%;
   top: 10px;
   position: relative;
 }
-
+#right {
+  width: 70%;
+  top: -230px;
+  left:600px;
+  position: relative;
+}
+#right1 {
+  width: 40%;
+  left: 800px;
+  position: relative;
+}
 #gif{
   /* position: fixed; */
   width: 45%;
@@ -113,24 +123,25 @@ transition: opacity 0.5s ease;
     background-position: center; */
   /* background-color: #FBC355; */
   /* overflow: hidden; */
-  height: 200vh;
+  height: 180vh;
   padding-left: 5%;
   padding-right: 5%;
-  top:120px;
+  top:100px;
   display: flex;
   align-items: right;
   justify-content: right;
   position: relative;
   flex-direction: column;
+  background-color: #FBC355;
 }
 #yellow{
   background-color: #FBC355;
   justify-items: right;
   display: flex;
-  height: 120vh;
+  height: 180vh;
 }
 #red-view{
-  height: 100vh;
+  height: 180vh;
     padding-left: 5%;
     padding-right: 5%;
     display: flex;
@@ -145,18 +156,17 @@ transition: opacity 0.5s ease;
 #green-view {
   position: relative;
   display: flex;
-    /* align-items: right; */
       justify-content: right;
       align-items: center;
-        /* justify-content: center; */
-  height: 100vh;
+  height: 180vh;
 background-color: #2eb598;
 padding-left: 5%;
   padding-right: 5%;
   color: #FDFFEA;
 }
 #purple-view {
-  height: 100vh;
+  top:-300px;
+  height: 150vh;
   padding-left: 5%;
   padding-right: 5%;
   display: flex;
@@ -171,4 +181,10 @@ padding-left: 5%;
 .getstartedbtn{
   width: 200px;
   margin-top: 20px;
+}
+#yellow-view,
+#red-view,
+#green-view,
+#purple-view {
+  transition: opacity 3s ease-in-out;
 }
