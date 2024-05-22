@@ -5,41 +5,37 @@ import { Link } from "react-router-dom";
 import ProfileSection from "./components/ProfileSection";
 import PasswordStrengthMeter from "./components/PasswordStrengthMeter";
 import report from "./assets/report.png";
+import passwordIcon from "./assets/password.png";
 import savedWorkshop from "./assets/saved-workshops.png";
 import savedRestaurant from "./assets/saved-restaurant.png";
 import axios from "axios";
 
-const userInfo = {
-  id: 1,
-  username: "User123",
-  location: "Kuala Lumpur",
-  birthday: "2003-03-25", //retrieve data in yyyy-mm-dd, but shown as mm/dd/yyyy
-  email: "abc@gmail.com",
-  password: "1234testing1234",
-};
-
 const Profile = () => {
+  // axios.defaults.withCredentials = true;
+
   // Get userid from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
   let storedUserId = "";
+  let token = "";
   if (storedUser) {
     storedUserId = storedUser.user._id;
+    token = storedUser.token;
   }
 
   const [username, setUsername] = useState("");
   const [location, setLocation] = useState("");
   // const [birthday, setBirthday] = useState("");
   const [email, setEmail] = useState("");
-  const [pass, setPass] = useState(userInfo.password);
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-  const [pass2, setPass2] = useState(userInfo.password);
-  const [showPassword2, setShowPassword2] = useState(false);
-  const handleClickShowPassword2 = () => {
-    setShowPassword2(!showPassword2);
-  };
+  // const [pass, setPass] = useState(userInfo.password);
+  // const [showPassword, setShowPassword] = useState(false);
+  // const handleClickShowPassword = () => {
+  //   setShowPassword(!showPassword);
+  // };
+  // const [pass2, setPass2] = useState(userInfo.password);
+  // const [showPassword2, setShowPassword2] = useState(false);
+  // const handleClickShowPassword2 = () => {
+  //   setShowPassword2(!showPassword2);
+  // };
 
   useEffect(() => {
     //get token from local storage
@@ -174,7 +170,7 @@ const Profile = () => {
               />
             </div>
 
-            <div className="form-group position-relative">
+            {/* <div className="form-group position-relative">
               <label htmlFor="password">
                 <strong>Password</strong>
               </label>
@@ -242,16 +238,10 @@ const Profile = () => {
               <div className="ms-4">
                 <PasswordStrengthMeter password={pass2} />
               </div>
-            </div>
+            </div> */}
 
             <div>
-              {/* <button
-                className="prof-cancel-btn mt-0 mb-8 pt-3 pb-3"
-                type="button"
-              >
-                Cancel
-              </button> */}
-              <button className=" mt-0 mb-8 pt-3 pb-3 orange-btn" type="submit">
+              <button className=" mt-4 mb-8 pt-3 pb-3 orange-btn" type="submit">
                 Update
               </button>
             </div>
@@ -273,13 +263,21 @@ const Profile = () => {
                 </strong>
               </div>
             </Link>
-            <Link to="/report">
+            <Link to={`/reset-password`}>
               <div className="profile-selections">
-                <img className="profile-icons" src={report}></img>
-                <strong className="">Report & Feedback</strong>
+                <img className="profile-icons" src={passwordIcon}></img>
+                <strong>
+                  <div>Reset Password</div>
+                </strong>
               </div>
             </Link>
           </div>
+          <Link to="/report">
+            <div className="d-flex flex-row justify-content-center mt-5">
+              <img id="report-icon" src={report}></img>
+              <strong className="">Report & Feedback</strong>
+            </div>
+          </Link>
         </div>
       </div>
     </div>

@@ -24,8 +24,8 @@ app.use(express.json());
 // Use the CORS middleware
 app.use(
   cors({
-    origin: "http://localhost:5173", // Allow requests from this origin
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    origin: ["http://localhost:5173"], // Allow requests from this origin
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     credentials: true, // Allow cookies and other credentials
   })
 );

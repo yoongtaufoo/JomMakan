@@ -55,3 +55,9 @@
     justify-content: space-between;
     align-items: center;
 }
+
+#report-icon{
+    width: 15px;
+    height: 15px;
+    margin-right: 10px;
+}

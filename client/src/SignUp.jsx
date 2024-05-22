@@ -38,6 +38,10 @@ const SignUp = () => {
         // later in auth.controller
         // obj destructuring, must use same name "password"
         // const { username, location, email, password } = req.body;
+        profilePic: {
+          public_id: "profilePics/ugtuw9r3k1p9rhsz7jwp",
+          url: "https://res.cloudinary.com/djjyjupja/image/upload/v1716382629/profilePics/ugtuw9r3k1p9rhsz7jwp.png",
+        },
       })
       .then(() => {
         alert("Registration Successful");

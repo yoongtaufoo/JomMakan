@@ -37,7 +37,7 @@ const Navbar = () => {
         if (profilePicURL !== "") setProfilePic(profilePicURL);
       })
       .catch((error) => {
-        console.error("Error fetching username:", error);
+        console.error("Error fetching profile pic:", error);
       });
   }, []); // Empty dependency array to fetch data only once when component mounts
 

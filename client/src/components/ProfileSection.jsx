@@ -151,9 +151,7 @@ const ProfileSection = () => {
           contentStyle={{ width: "450px", borderRadius: "20px" }}
           trigger={
             <button className="log-out-btn">
-              <div>
-                <strong>Log Out</strong>
-              </div>
+              <div>Log Out</div>
             </button>
           }
           modal

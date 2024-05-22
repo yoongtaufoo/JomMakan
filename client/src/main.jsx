@@ -7,6 +7,7 @@ import Home from "./Home.jsx";
 import LogIn from "./LogIn.jsx";
 import SignUp from "./SignUp.jsx";
 import Profile from "./Profile.jsx";
+import ResetPassword from "./ResetPassword.jsx";
 import Report from "./Report.jsx";
 import Workshop from "./WorkshopPage.jsx";
 import FavWorkshop from "./FavWorkshop.jsx";
@@ -29,6 +30,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route exact path="/login" element={<LogIn />} />
           <Route exact path="/signup" element={<SignUp />} />
           <Route exact path="/profile" element={<Profile />} />
+          <Route
+            exact
+            path="/reset-password"
+            element={<ResetPassword />}
+          ></Route>
           <Route exact path="/report" element={<Report />} />
           <Route exact path="/home" element={<Home />} />
           <Route exact path="/workshop" element={<Workshop />} />
@@ -50,7 +56,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route exact path="/restaurant/:_id/reserve" element={<Reserve />} />
           <Route exact path="/reservations" element={<Reservations />} />
           <Route path="*" element={<NotFoundPage />} />
-          {/* add route for new pages here, import the component*/}
         </Routes>
       </AuthContextProvider>
     </Router>
