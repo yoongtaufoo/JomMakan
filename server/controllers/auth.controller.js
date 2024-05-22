@@ -185,25 +185,34 @@ const updatePassword = async (req, res) => {
             if (!isMatch)
               return res.json({ Status: "Incorrect current password" });
 
-            // Check password strength
-            const passwordStrength = zxcvbn(newPassword).score;
-            // console.log(passwordStrength);
-            if (passwordStrength < 3) {
-              return res.json({
-                Status: "Password strength must be at least 'Good'",
+            // Check if new password is the same as the current password
+            bcrypt.compare(newPassword, user.password, (err, isMatch) => {
+              if (err) return res.json({ Status: "Error comparing passwords" });
+              if (isMatch)
+                return res.json({
+                  Status:
+                    "New password cannot be the same as the current password",
+                });
+
+              // Check password strength
+              const passwordStrength = zxcvbn(newPassword).score;
+              if (passwordStrength < 3) {
+                return res.json({
+                  Status: "Password strength must be at least 'Good'",
+                });
+              }
+
+              // Hash new password and update
+              bcrypt.hash(newPassword, 10, (err, hash) => {
+                if (err)
+                  return res.json({ Status: "Error hashing new password" });
+
+                user.password = hash;
+                user
+                  .save()
+                  .then(() => res.json({ Status: "Success" }))
+                  .catch((err) => res.json({ Status: err.message }));
               });
-            }
-
-            // Hash new password and update
-            bcrypt.hash(newPassword, 10, (err, hash) => {
-              if (err)
-                return res.json({ Status: "Error hashing new password" });
-
-              user.password = hash;
-              user
-                .save()
-                .then(() => res.json({ Status: "Success" }))
-                .catch((err) => res.json({ Status: err.message }));
             });
           });
         })
