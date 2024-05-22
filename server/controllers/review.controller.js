@@ -50,6 +50,7 @@ const reviews = async (req, res) => {
     res.status(500).json({ error: "Internal server error" }); // Send error response
   }
 };
+
 const getReview = async (req, res) => {
   try {
     // const { _id } = req.params;
@@ -59,10 +60,12 @@ const getReview = async (req, res) => {
     const restaurantId = req.params._id;
     const reviews = await Review.find({ restaurant_id: restaurantId });
     // console.log(reviews);
-    if (!reviews) {
-      return res.status(404).json({ message: "Review not found" });
+     if (!reviews) {
+       return res.status(404).json({ message: "Review not found" });
     }
-    res.json(reviews); // Send sorted reservations array as response
+    reviews.sort((a, b) => new Date(b.timePosted) - new Date(a.timePosted));
+
+    res.json(reviews); 
   } catch (err) {
     console.error("Error fetching reviews:", err);
     res.status(500).json({ message: "Failed to fetch reviews" });
