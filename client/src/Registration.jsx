@@ -15,6 +15,8 @@ const Registration = () => {
   //   (workshop) => workshop.id === parseInt(id)
   // );
 
+  const { token } = useAuth(); //Get authentication
+
   useEffect(() => {
     axios
       .get(`http://localhost:3001/api/workshop/${_id}`)
@@ -71,7 +73,7 @@ const Registration = () => {
           </div>
           <div id="Rform-container">
             <h2 id="form-header">Registration Form</h2>
-            {workshop&&(<Form date={workshop.date} time={workshop.time} available={workshop.availableSlot}/>)}
+            {workshop&&(<Form date={workshop.date} time={workshop.time} available={workshop.availableSlot} token ={token}/>)}
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ const workshopSchema = new mongoose.Schema({
   date: { type: Date, required: true },
   availableSlot: { type: Number, required: true },
   photoLink: { type: String } ,// Assuming the photo will be stored as a URL
-  registered:{type: Array} // List of users that registered
+  registered: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 });
 
 const Workshop = mongoose.model("Workshop", workshopSchema);

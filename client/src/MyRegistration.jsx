@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import image from "./assets/image 3.png";
 import Tabs from "./components/Tabs.jsx";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from './context/AuthContext';
 import workshopPic from "./assets/workshop.png";
 import CollectionCard from "./components/CollectionCard.jsx";
 import axios from "axios";
@@ -17,8 +18,8 @@ const MyRegistration = () => {
 
   useEffect(() => {
     //get username from local storage
-    const token = localStorage.getItem("JomMakanUser");
-
+    //const token = localStorage.getItem("JomMakanUser");
+    const { token } = useAuth();
     if (!token) {
       alert("User is not authenticated.");
       return;
@@ -76,7 +77,7 @@ const MyRegistration = () => {
     const workshopDate = workshop ? workshop.date.toLowerCase() : "";
     const workshopAddress = workshop ? workshop.address.toLowerCase() : "";
 
-    if (workshop.status === status) {
+    if (registration.status === status) {
       return (
         // (reservation.status === status &&
         (registration.name.toLowerCase().includes(query) ||
@@ -123,7 +124,7 @@ const MyRegistration = () => {
         <br />
         <div className="card mb-3">
           {filteredWorkshops.map((registration) => (
-            <CollectionCard key={registration.id} workshops={registration} />
+            <CollectionCard key={registration.id} registrations={registration} />
             // <CollectionCard key={registration.id} workshop={registration} />
           ))}
         </div>

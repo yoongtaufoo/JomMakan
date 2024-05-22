@@ -76,35 +76,88 @@ const add_register = async (req, res) => {
     }
   };
 
-  // Cancel reservation
+  // Cancel registration
 const cancel_register = async (req, res) => {
-  const { registrationId } = req.params; // Get registrationId
+  const { registrationsId } = req.params; // Get registrationId
 
   try {
-    const registration = await Registration.findById(registrationId ); // Find the registration by registrationId
+    const registration = await Registration.findById(registrationsId ); // Find the registration by registrationId
 
     if (!registration) {
-      return res.status(404).json({ message: "Reservation not found" });
+      return res.status(404).json({ message: "Registration not found" });
     }
 
     registration.status = "C"; // Update the status of the reservation to "Cancelled"
-
     await registration.save(); // Save the changes
 
       // Find the workshop by ID and update the available slots
       const workshop = await Workshop.findById(registration.workshop_id);
       if (workshop) {
         workshop.availableSlot += registration.pax; // Increment the available slots by the number of participants
-        workshop.registered.remove(registration.user_id); // Set the registered status to false 
+        workshop.registered.pull(registration.user_id); // Remove the user id
         await workshop.save(); // Save the updated workshop
       }
 
-    res.json({ message: "Reservation cancelled successfully" });
+   res.json({ 
+      message: "Registration cancelled successfully", 
+      registrationId: registration ,
+      userId: registration.user_id 
+    });
   } catch (error) {
-    console.error("Error cancelling reservation:", error);
-    res.status(500).json({ message: "Failed to cancel reservation" });
+    console.error("Error cancelling registration:", error);
+    res.status(500).json({ message: "Failed to cancel registration" });
   }
 };
+
+// const cancel_register = async (req, res) => {
+//   const { registrationId } = req.params; // Get registrationId from URL parameters
+
+//   const session = await mongoose.startSession();
+//   session.startTransaction();
+
+//   try {
+//     // Find the registration by registrationId
+//     const registration = await Registration.findById(registrationId).session(session);
+
+//     // Check if the registration exists
+//     if (!registration) {
+//       await session.abortTransaction();
+//       session.endSession();
+//       return res.status(404).json({ message: "Registration not found" });
+//     }
+
+//     // Update the status of the reservation to "Cancelled"
+//     registration.status = "C";
+//     await registration.save({ session });
+
+//     // Find the workshop by ID
+//     const workshop = await Workshop.findById(registration.workshop_id).session(session);
+
+//     // Check if the workshop exists
+//     if (workshop) {
+//       // Increment the available slots by the number of participants
+//       workshop.availableSlot += registration.pax;
+
+//       // Remove the user from the registered list
+//       workshop.registered.pull(registration.user_id);
+
+//       await workshop.save({ session }); // Save the updated workshop
+//     }
+
+//     await session.commitTransaction();
+//     session.endSession();
+
+//     // Send success response
+//     res.json({ message: "Registration cancelled successfully" });
+//   } catch (error) {
+//     await session.abortTransaction();
+//     session.endSession();
+
+//     // Log the error and send failure response
+//     console.error("Error cancelling registration:", error);
+//     res.status(500).json({ message: "Failed to cancel registration" });
+//   }
+// };
 
 const findRegistrationsById = async (req, res) => {
   const { workshopId} = req.query; // Get workshopId and date

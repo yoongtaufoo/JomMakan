@@ -16,7 +16,7 @@ const RegistrationForm = (props) => {
   const [confirm, setConfirm] = useState(false);
   const popRef = useRef(null);
   const workshopId = useParams()._id; // Get workshopId from url
-
+  const token=props.token;
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -32,6 +32,7 @@ const RegistrationForm = (props) => {
       case "paxinput":
         if (props.available < value) {
           alert(`We do not have enough slots for ${value}. Please reduce the number of pax or choose another workshop.\nCurrent available slots: ${props.available}`);
+          setPaxInput(''); // Clear the pax input field
         } else {
           setPaxInput(value);
         }
@@ -98,8 +99,8 @@ const handleCheckboxChange = () => {
 };
 
 const isValidName = (nameinput) => {
-  const namePattern = /^[A-Za-z]+$/; // alphabets only
-  return namePattern.test(nameinput); // test if nameinput follow the pattern
+  const namePattern = /^[A-Za-z\s]+$/; // alphabets and spaces only
+  return namePattern.test(nameinput); // test if nameinput follows the pattern
 };
 
 const isValidPhoneNumber = (phoneinput) => {
@@ -127,8 +128,8 @@ const handleConfirm = () => {
     return; // Stop further execution if isChecked is false
   }
 
-  const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
-  
+  //const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
+  //const { token } = useAuth();
   if (!token) {
     alert("User is not authenticated."); // Handle case where user is not authenticated
     return;
@@ -219,6 +220,7 @@ const handleConfirm = () => {
           <br />
           <input id="Rinput" type="number" required
           name="paxinput"
+          value={paxinput}
           onChange={(e) => {
             handleInputChange(e);
             // handleDateChange(e);
@@ -247,7 +249,7 @@ const handleConfirm = () => {
       {submit && (
         <div className="popup-overlay">
           <div className="popup" ref={popRef}>
-            <div>Confirm reservation?</div>
+            <div>Confirm registration?</div>
             <div>
               <button id="buttonPopupCancel" onClick={() => setSubmit(false)}>
                 Cancel

@@ -1,11 +1,11 @@
 // This card can be used for displaying registration or reservation made
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 // import { restaurants } from "../RestaurantData";
 import axios from "axios";
-const today = new Date(); // Get today's date
 
-const CollectionCard = ({ workshops, reservations }) => {
+const CollectionCard = ({ registrations, reservations }) => {
   // let workshops=props.workshop;
     const [restaurantData, setRestaurantData] = useState(null);
     const [workshopData, setWorkshopData] = useState(null);
@@ -42,9 +42,27 @@ const CollectionCard = ({ workshops, reservations }) => {
     }
   }, [reservations]);
 
-  const cancelReservation = async (reservationId) => {
-    const token = localStorage.getItem("JomMakanUser");
+    // Get workshop that user registered
+    useEffect(() => {
+      if (registrations) {
+        axios
+          .get(
+            `http://localhost:3001/api/workshop/${registrations.workshop_id}`
+          )
+          .then(({ data }) => {
+            setWorkshopData(data);
+          })
+          .catch((error) => {
+            console.error("Error fetching workshop data:", error);
+          });
+      }
+    }, [registrations]);
 
+
+    //Cancel reservation
+  const cancelReservation = async (reservationId) => {
+    //const token = localStorage.getItem("JomMakanUser");
+    const { token } = useAuth();
     if (!token) {
       alert("User is not authenticated.");
       return;
@@ -64,10 +82,37 @@ const CollectionCard = ({ workshops, reservations }) => {
       });
   };
 
+  //Handle cancel reservation
   const handleCancel = (reservationId) => {
     cancelReservation(reservationId);
   };
 
+//Cancel registration
+  const cancelRegistration = async (registrationId) => {
+    //const token = localStorage.getItem("JomMakanUser");
+    const { token } = useAuth();
+    if (!token) {
+      alert("User is not authenticated.");
+      return;
+    }
+
+    axios
+      .put(
+        `http://localhost:3001/api/registration/${registrationId}/cancel`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .catch((error) => {
+        alert("Error cancelling registration:", error);
+      });
+  };
+
+  const handleCancelRegistration = (registrationId) => {
+    cancelRegistration(registrationId);
+  };
   const [tableName, setTableName] = useState(null);
 
   useEffect(() => {
@@ -86,42 +131,53 @@ const CollectionCard = ({ workshops, reservations }) => {
     }
   }, [reservations, restaurantData]);
 
+  //Format time slot
+  const getDateTime = (props) => {
+    if (!props || !props.date) return "";
+    const dateOnly = props.date.split('T')[0];
+    const date = new Date(dateOnly);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year} @ ${props.time}`;
+  };
+
     // For workshop
-    const renderWorkshop = (workshops) => {
+    const renderWorkshop = (registered) => {
         return (
         <div className="row g-0 custom-row">
             <div className="col-md-4">
             <img
-                src={workshops.image}
+                src={workshopData.photoLink}
                 className="img-fluid rounded-start card-img-top"
                 alt="..."
             />
             </div>
             <div className="col-md-4">
             <div className="card-body">
-                <Link to={`/workshop/${workshops.id}`}>
-                <h5 className="card-title">{workshops.name}</h5>
+                <Link to={`/workshop/${workshopData.id}`}>
+                <h5 className="card-title">{workshopData. workshopName}</h5>
                 </Link>
-                <p className="card-text">{workshops.description}</p>
+                <p className="card-text">{workshopData.workshopDescription}</p>
                 <p className="card-text">
                 <i className="bi-geo-alt-fill custom-icon"></i>
-                {workshops.address}
+                {workshopData.address}
                 </p>
                 <p className="card-text">
                 <i className="bi bi-telephone-fill custom-icon"></i>
-                {workshops.phone}
+                {workshopData.phoneNumber}
                 </p>
             </div>
             </div>
             <div className="col-md-2">
             <div className="card-body">
-                <h5 className="card-title">{workshops.timeslot}</h5>
-                <p className="card-text">Name : {workshops.Rname}</p>
-                <p className="card-text">Phone No: {workshops.Rphone}</p>
-                <p className="card-text">No. Pax: {workshops.Rpax}</p>
+                <h5 className="card-title">{getDateTime(workshopData)}</h5>
+                <p className="card-text">Name : {registered.name}</p>
+                <p className="card-text">Phone No: {registered.phone}</p>
+                <p className="card-text">No. Pax: {registered.pax}</p>
             </div>
             </div>
-            {workshops.Rstatus === "U" && (
+            {registered.status === "U" && (
             <div className="col-md-2">
                 <div className="card-body">
                 <div className="card-body">
@@ -148,6 +204,8 @@ const CollectionCard = ({ workshops, reservations }) => {
                     onClick={() => {
                         setConfirm(true);
                         setSubmit(false);
+                        handleCancelRegistration(registered._id);
+                        window.location.reload();
                     }}
                     >
                     Yes
@@ -262,7 +320,7 @@ const CollectionCard = ({ workshops, reservations }) => {
 
     return (
         <div>
-        {workshops ? renderWorkshop(workshops) : null}
+        {registrations&&workshopData ? renderWorkshop(registrations) : null}
         {reservations&&restaurantData ? renderReservation(reservations) : null}
         </div>
     );
