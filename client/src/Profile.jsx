@@ -158,7 +158,7 @@ const Profile = () => {
               <label htmlFor="email">
                 <strong>Email</strong>
               </label>
-              <input
+              {/* <input
                 type="email"
                 className="form-control auth register"
                 name="email"
@@ -166,8 +166,10 @@ const Profile = () => {
                 placeholder="Enter email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+                // onChange={(e) => setEmail(e.target.value)}
+                // readOnly
+              /> */}
+              <div className="form-control auth register">{email}</div>
             </div>
 
             {/* <div className="form-group position-relative">
