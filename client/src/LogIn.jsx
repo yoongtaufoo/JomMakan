@@ -52,7 +52,7 @@ const LogIn = () => {
       </nav>
       <div className="login-wrapper w-100 d-flex flex-row justify-content-between align-items-center">
         <img
-          className="log-in-pic pic-left"
+          className="log-in-pic log-in-pic-left"
           src={loginLeft}
           alt="left log in pic"
         />
@@ -130,7 +130,7 @@ const LogIn = () => {
             Click here to sign up !
           </a>
         </div>
-        <img className="log-in-pic" src={loginRight} alt="right log in pic" />
+        <img className="log-in-pic log-in-pic-right" src={loginRight} alt="right log in pic" />
       </div>
     </div>
   );

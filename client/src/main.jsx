@@ -17,6 +17,7 @@ import AddReview from "./AddReview.jsx";
 import Scehdule from "./MyRegistration.jsx";
 import Reserve from "./Reserve.jsx";
 import Reservations from "./Reservations.jsx";
+import NotFoundPage from "./404.jsx";
 import { AuthContextProvider } from "./context/AuthContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -48,6 +49,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route exact path="/schedule" element={<Scehdule />} />
           <Route exact path="/restaurant/:_id/reserve" element={<Reserve />} />
           <Route exact path="/reservations" element={<Reservations />} />
+          <Route path="*" element={<NotFoundPage />} />
           {/* add route for new pages here, import the component*/}
         </Routes>
       </AuthContextProvider>

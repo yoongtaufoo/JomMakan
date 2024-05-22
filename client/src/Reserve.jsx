@@ -10,6 +10,11 @@ const Reserve = () => {
   const [restaurant, setRestaurant] = useState(null);
   const { _id } = useParams();
 
+  // Go to the top of page when navigate to this page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     axios
       .get(`http://localhost:3001/api/restaurant/${_id}`)
@@ -21,8 +26,6 @@ const Reserve = () => {
         console.error("Error fetching restaurant:", error);
       });
   }, [_id]);
-
-
 
   function useOutsideAlerter(ref, onClick) {
     useEffect(() => {
@@ -68,7 +71,7 @@ const Reserve = () => {
           <div id="card">
             {/* restaurant card */}
             <div id="Fleft">
-              {restaurant && (<DetailCard restaurant={restaurant} />)}
+              {restaurant && <DetailCard restaurant={restaurant} />}
               <div id="disclaimer">
                 <h3>Reservation Policy</h3>
                 <p>
@@ -93,10 +96,12 @@ const Reserve = () => {
           </div>
           <div id="Rform-container">
             <h2>Reservation Form</h2>
-            {restaurant && (<ReservationForm
-              tables={restaurant.tables}
-              openinghours={restaurant.openinghours}
-            />)}
+            {restaurant && (
+              <ReservationForm
+                tables={restaurant.tables}
+                openinghours={restaurant.openinghours}
+              />
+            )}
           </div>
         </div>
       </div>

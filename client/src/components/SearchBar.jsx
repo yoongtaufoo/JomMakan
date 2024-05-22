@@ -12,7 +12,7 @@ const SearchBar = (props) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="search-bar">
+    <form onSubmit={handleSubmit}>
       <input
         className="search-term"
         style={{ backgroundColor: "" }}

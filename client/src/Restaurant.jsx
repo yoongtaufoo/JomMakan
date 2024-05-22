@@ -44,7 +44,23 @@ const Restaurant = () => {
   const [selectedShareOption, setSelectedShareOption] = useState(null);
   const [openDropdownIndex, setOpenDropdownIndex] = useState(0);
   const [isDropdownIndex, setIsDropdownIndex] = useState(null);
+
+  // Go to the top of page when navigate to this page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { _id } = useParams();
+
+  const handleFacebook = (index) => {
+    console.log("Share on Facebook clicked for review at index:", index);
+    setIsDropdownIndex(null);
+  };
+  const handleEmail = (index) => {
+    console.log("Share via email clicked for review at index:", index);
+    setIsDropdownIndex(null);
+  };
+
   const [restaurant, setRestaurant] = useState({});
   const [reviews, setReviews] = useState([]);
   const [restaurantReviews, setRestaurantReviews] = useState([]); // Initialize as empty array
@@ -326,7 +342,6 @@ const Restaurant = () => {
           </div>
         </div>
 
-        <br />
         <p className="card-text">{restaurant.description}</p>
         <p className="card-text">
           <i className="bi-geo-alt-fill custom-icon"></i>
