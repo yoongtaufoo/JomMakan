@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import workshopPic from "./assets/workshop.png";
 import CollectionCard from "./components/CollectionCard.jsx";
 import axios from "axios";
-
 const MyRegistration = () => {
   // Function body
   const navigate = useNavigate();
@@ -16,9 +15,8 @@ const MyRegistration = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    //get username from local storage
+    //get userid from local storage
     const token = localStorage.getItem("JomMakanUser");
-
     if (!token) {
       alert("User is not authenticated.");
       return;
@@ -26,6 +24,7 @@ const MyRegistration = () => {
 
     axios
       .get("http://localhost:3001/api/registration/my_registrations", {
+        //withCredentials: true // This ensures cookies are sent with the request
         headers: {
           Authorization: token,
         },
@@ -67,14 +66,14 @@ const MyRegistration = () => {
     // if (status === undefined) return true; // Default case
 
     const workshop = workshops.find(
-      (rest) => rest._id === registration.workshop_id
+      (workshop) => workshop._id === registration.workshop_id
     );
 
     const workshopName = workshop ? workshop.workshopName.toLowerCase() : "";
     const workshopDate = workshop ? workshop.date.toLowerCase() : "";
     const workshopAddress = workshop ? workshop.address.toLowerCase() : "";
 
-    if (workshop.status === status) {
+    if (registration.status === status) {
       return (
         // (reservation.status === status &&
         registration.name.toLowerCase().includes(query) ||
@@ -120,11 +119,14 @@ const MyRegistration = () => {
         />
         <br />
         <div className="card mb-3">
-          {filteredWorkshops.map((registration) => (
-            <CollectionCard key={registration.id} workshops={registration} />
-            // <CollectionCard key={registration.id} workshop={registration} />
-          ))}
-        </div>
+          {filteredWorkshops.map((registration) => {
+          console.log(registration._id);
+        return (
+          <CollectionCard key={registration._id} registrations={registration} />
+         );
+        })}
+      </div>
+        
       </div>
     </div>
   );

@@ -15,6 +15,8 @@ const Registration = () => {
   //   (workshop) => workshop.id === parseInt(id)
   // );
 
+
+
   useEffect(() => {
     axios
       .get(`http://localhost:3001/api/workshop/${_id}`)

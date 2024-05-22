@@ -3,9 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 // import { restaurants } from "../RestaurantData";
 import axios from "axios";
-const today = new Date(); // Get today's date
 
-const CollectionCard = ({ workshops, reservations }) => {
+const CollectionCard = ({ registrations, reservations }) => {
   // let workshops=props.workshop;
   const [restaurantData, setRestaurantData] = useState(null);
   const [workshopData, setWorkshopData] = useState(null);
@@ -13,18 +12,19 @@ const CollectionCard = ({ workshops, reservations }) => {
   const [confirm, setConfirm] = useState(false);
   const popRef = useRef(null);
 
-  const handleClickOutside = (event) => {
-    if (popRef.current && !popRef.current.contains(event.target)) {
-      setConfirm(false);
-      setSubmit(false);
-    }
-  };
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+    const handleClickOutside = (event) => {
+        if (popRef.current && !popRef.current.contains(event.target)) {
+        setConfirm(false);
+        setSubmit(false);
+        window.location.reload();
+        }
     };
-  }, []);
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
   // Get restaurants that user reserved
   useEffect(() => {
@@ -42,9 +42,27 @@ const CollectionCard = ({ workshops, reservations }) => {
     }
   }, [reservations]);
 
+    // Get workshop that user registered
+    useEffect(() => {
+      if (registrations) {
+        axios
+          .get(
+            `http://localhost:3001/api/workshop/${registrations.workshop_id}`
+          )
+          .then(({ data }) => {
+            setWorkshopData(data);
+          })
+          .catch((error) => {
+            console.error("Error fetching workshop data:", error);
+          });
+      }
+    }, [registrations]);
+
+
+    //Cancel reservation
   const cancelReservation = async (reservationId) => {
     const token = localStorage.getItem("JomMakanUser");
-
+    //const { token } = useAuth();
     if (!token) {
       alert("User is not authenticated.");
       return;
@@ -61,10 +79,37 @@ const CollectionCard = ({ workshops, reservations }) => {
       });
   };
 
+  //Handle cancel reservation
   const handleCancel = (reservationId) => {
     cancelReservation(reservationId);
   };
 
+//Cancel registration
+  const cancelRegistration = async (registrationId) => {
+    const token = localStorage.getItem("JomMakanUser");
+   // const { token } = useAuth();
+    if (!token) {
+      alert("User is not authenticated.");
+      return;
+    }
+
+    axios
+      .put(
+        `http://localhost:3001/api/registration/${registrationId}/cancel`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .catch((error) => {
+        alert("Error cancelling registration:", error);
+      });
+  };
+
+  const handleCancelRegistration = (registrationId) => {
+    cancelRegistration(registrationId);
+  };
   const [tableName, setTableName] = useState(null);
 
   useEffect(() => {
@@ -84,87 +129,100 @@ const CollectionCard = ({ workshops, reservations }) => {
     }
   }, [reservations, restaurantData]);
 
-  // For workshop
-  const renderWorkshop = (workshops) => {
-    return (
-      <div className="row g-0 custom-row">
-        <div className="col-md-4">
-          <img
-            src={workshops.image}
-            className="img-fluid rounded-start card-img-top"
-            alt="..."
-          />
-        </div>
-        <div className="col-md-4">
-          <div className="card-body">
-            <Link to={`/workshop/${workshops.id}`}>
-              <h5 className="card-title">{workshops.name}</h5>
-            </Link>
-            <p className="card-text">{workshops.description}</p>
-            <p className="card-text">
-              <i className="bi-geo-alt-fill custom-icon"></i>
-              {workshops.address}
-            </p>
-            <p className="card-text">
-              <i className="bi bi-telephone-fill custom-icon"></i>
-              {workshops.phone}
-            </p>
-          </div>
-        </div>
-        <div className="col-md-2">
-          <div className="card-body">
-            <h5 className="card-title">{workshops.timeslot}</h5>
-            <p className="card-text">Name : {workshops.Rname}</p>
-            <p className="card-text">Phone No: {workshops.Rphone}</p>
-            <p className="card-text">No. Pax: {workshops.Rpax}</p>
-          </div>
-        </div>
-        {workshops.Rstatus === "U" && (
-          <div className="col-md-2">
-            <div className="card-body">
-              <div className="card-body">
-                <button
-                  type="button"
-                  className="btn btn-outline-dark custom-button"
-                  onClick={() => setSubmit(!submit)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-        {submit && (
-          <div className="popup-overlay">
-            <div className="popup" ref={popRef}>
-              <div>Confirm Cancellation?</div>
-              <div>
-                <button id="buttonPopupCancel" onClick={() => setSubmit(false)}>
-                  No
-                </button>
-                <button
-                  onClick={() => {
-                    setConfirm(true);
-                    setSubmit(false);
-                  }}
-                >
-                  Yes
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-        {confirm && (
-          <div className="popup-overlay">
-            <div className="popup" ref={popRef}>
-              <i className="bi bi-calendar-x-fill"></i>
-              <div>Cancelled</div>
-            </div>
-          </div>
-        )}
-      </div>
-    );
+  //Format time slot
+  const getDateTime = (props) => {
+    if (!props || !props.date) return "";
+    const dateOnly = props.date.split('T')[0];
+    const date = new Date(dateOnly);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year} @ ${props.time}`;
   };
+
+    // For workshop
+    const renderWorkshop = (registered) => {
+        return (
+        <div className="row g-0 custom-row">
+            <div className="col-md-4">
+            <img
+                src={workshopData.photoLink}
+                className="img-fluid rounded-start card-img-top"
+                alt="..."
+            />
+            </div>
+            <div className="col-md-4">
+            <div className="card-body">
+                <Link to={`/workshop/${workshopData.id}`}>
+                <h5 className="card-title">{workshopData. workshopName}</h5>
+                </Link>
+                <p className="card-text">{workshopData.workshopDescription}</p>
+                <p className="card-text">
+                <i className="bi-geo-alt-fill custom-icon"></i>
+                {workshopData.address}
+                </p>
+                <p className="card-text">
+                <i className="bi bi-telephone-fill custom-icon"></i>
+                {workshopData.phoneNumber}
+                </p>
+            </div>
+            </div>
+            <div className="col-md-2">
+            <div className="card-body">
+                <h5 className="card-title">{getDateTime(workshopData)}</h5>
+                <p className="card-text">Name : {registered.name}</p>
+                <p className="card-text">Phone No: {registered.phone}</p>
+                <p className="card-text">No. Pax: {registered.pax}</p>
+            </div>
+            </div>
+            {registered.status === "U" && (
+            <div className="col-md-2">
+                <div className="card-body">
+                <div className="card-body">
+                    <button
+                    type="button"
+                    className="btn btn-outline-dark custom-button"
+                    onClick={() => setSubmit(!submit)}
+                    >
+                    Cancel
+                    </button>
+                </div>
+                </div>
+            </div>
+            )}
+            {submit && (
+            <div className="popup-overlay">
+                <div className="popup" ref={popRef}>
+                <div>Confirm Cancellation?</div>
+                <div>
+                    <button id="buttonPopupCancel" onClick={() => setSubmit(false)}>
+                    No
+                    </button>
+                    <button
+                    onClick={() => {
+                        setConfirm(true);
+                        setSubmit(false);
+                        handleCancelRegistration(registered._id);
+                        //window.location.reload();
+                    }}
+                    >
+                    Yes
+                    </button>
+                </div>
+                </div>
+            </div>
+            )}
+            {confirm && (
+            <div className="popup-overlay">
+                <div className="popup" ref={popRef}>
+                <i class="bi bi-calendar-x-fill"></i>
+                <div>Cancelled</div>
+                </div>
+            </div>
+            )}
+        </div>
+        );
+    };
 
   const renderReservation = (reservations) => {
     // const restaurantData = getRestaurantData(reservations, restaurants);
@@ -254,12 +312,12 @@ const CollectionCard = ({ workshops, reservations }) => {
     );
   };
 
-  return (
-    <div>
-      {workshops ? renderWorkshop(workshops) : null}
-      {reservations && restaurantData ? renderReservation(reservations) : null}
-    </div>
-  );
+    return (
+        <div>
+        {registrations&&workshopData ? renderWorkshop(registrations) : null}
+        {reservations&&restaurantData ? renderReservation(reservations) : null}
+        </div>
+    );
 };
 
 export default CollectionCard;
