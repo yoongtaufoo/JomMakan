@@ -566,7 +566,7 @@ const ReservationForm = (props) => {
       {confirm && (
         <div className="popup-overlay">
           <div className="popup" ref={popRef}>
-            <i class="bi bi-calendar2-check-fill"></i>
+            <i className="bi bi-calendar2-check-fill"></i>
             <div>Confirmed</div>
           </div>
         </div>

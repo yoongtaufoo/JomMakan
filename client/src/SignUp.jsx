@@ -68,13 +68,13 @@ const SignUp = () => {
             className="needs-validation"
             id="auth-form"
           >
-            <div class="form-group">
+            <div className="form-group">
               <label htmlFor="username">
                 <strong>Username</strong>
               </label>
               <input
                 type="text"
-                class="form-control auth register"
+                className="form-control auth register"
                 name="username"
                 id="username"
                 placeholder="Enter username"
@@ -84,13 +84,13 @@ const SignUp = () => {
               />
             </div>
 
-            <div class="form-group">
+            <div className="form-group">
               <label htmlFor="location">
                 <strong>Location</strong>
               </label>
               <input
                 type="text"
-                class="form-control auth register"
+                className="form-control auth register"
                 name="location"
                 id="location"
                 placeholder="Enter location"
@@ -100,14 +100,14 @@ const SignUp = () => {
               />
             </div>
 
-            {/* <div class="form-group">
+            {/* <div className="form-group">
               <label htmlFor="birthday">
                 <strong>Birthday</strong>
               </label>
               <input
                 type="date"
                 data-date-format="mm/dd/yyyy"
-                class="datepicker form-control auth register"
+                className="datepicker form-control auth register"
                 name="birthday"
                 id="birthday"
                 placeholder="Enter birthday"
@@ -117,13 +117,13 @@ const SignUp = () => {
               />
             </div> */}
 
-            <div class="form-group was-validated">
+            <div className="form-group was-validated">
               <label htmlFor="email">
                 <strong>Email</strong>
               </label>
               <input
                 type="email"
-                class="form-control auth register"
+                className="form-control auth register"
                 name="email"
                 id="email"
                 placeholder="Enter email"
@@ -141,7 +141,7 @@ const SignUp = () => {
                 <input
                   name="password"
                   id="password"
-                  class="form-control auth register2"
+                  className="form-control auth register2"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
                   required
@@ -152,13 +152,13 @@ const SignUp = () => {
                 />
                 {showPassword ? (
                   <i
-                    class="bi bi-eye fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    className="bi bi-eye fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
                     onClick={handleClickShowPassword}
                     style={{ cursor: "pointer" }}
                   ></i>
                 ) : (
                   <i
-                    class="bi bi-eye-slash fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    className="bi bi-eye-slash fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
                     onClick={handleClickShowPassword}
                     style={{ cursor: "pointer" }}
                   ></i>
@@ -169,7 +169,7 @@ const SignUp = () => {
               </div>
             </div>
 
-            <div class="form-group position-relative">
+            <div className="form-group position-relative">
               <label htmlFor="retype-password">
                 <strong>Retype Password</strong>
               </label>
@@ -177,7 +177,7 @@ const SignUp = () => {
                 <input
                   name="retype-password"
                   id="retype-password"
-                  class="form-control auth register2"
+                  className="form-control auth register2"
                   type={showPassword2 ? "text" : "password"}
                   placeholder="Enter password"
                   required
@@ -189,13 +189,13 @@ const SignUp = () => {
                 />
                 {showPassword2 ? (
                   <i
-                    class="bi bi-eye fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    className="bi bi-eye fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
                     onClick={handleClickShowPassword2}
                     style={{ cursor: "pointer" }}
                   ></i>
                 ) : (
                   <i
-                    class="bi bi-eye-slash fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
+                    className="bi bi-eye-slash fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
                     onClick={handleClickShowPassword2}
                     style={{ cursor: "pointer" }}
                   ></i>
@@ -215,7 +215,7 @@ const SignUp = () => {
             <strong>Already have an account ?</strong>
           </div>
           <a
-            class="link-danger link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+            className="link-danger link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
             href="/login"
           >
             Click here to log in !

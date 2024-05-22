@@ -48,10 +48,7 @@ const RegistrationForm = (props) => {
 
   useEffect(() => {
     // Check if all required fields are filled
-    const isValid =
-      nameinput !== "" &&
-      phoneinput !== "" &&
-      paxinput !== 0;
+    const isValid = nameinput !== "" && phoneinput !== "" && paxinput !== 0;
 
     console.log(
       "nameinput",
@@ -66,24 +63,20 @@ const RegistrationForm = (props) => {
 
     // Update form validity state
     setIsFormValid(isValid);
-  }, [
-    nameinput,
-    phoneinput,
-    paxinput,
-  ]);
+  }, [nameinput, phoneinput, paxinput]);
 
   const getDateTime = (props) => {
     if (!props || !props.date) return "";
-    const dateOnly = props.date.split('T')[0];
+    const dateOnly = props.date.split("T")[0];
     const date = new Date(dateOnly);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
     return `${day}/${month}/${year} @ ${props.time}`;
   };
 
- // Get registration with same workshopId
- useEffect(() => {
+  // Get registration with same workshopId
+  useEffect(() => {
     axios
       .get(
         `http://localhost:3001/api/registration/registrations?workshopId=${workshopId}`
@@ -94,43 +87,42 @@ const RegistrationForm = (props) => {
       .catch((error) => {
         console.error("Error fetching reservations:", error);
       });
-  }
-);
+  });
 
-const handleCheckboxChange = () => {
-  // Check if checkbox for registration policy is checked
-  setIsChecked(!isChecked);
-};
+  const handleCheckboxChange = () => {
+    // Check if checkbox for registration policy is checked
+    setIsChecked(!isChecked);
+  };
 
 const isValidName = (nameinput) => {
   const namePattern = /^[A-Za-z\s]+$/; // alphabets and spaces only
   return namePattern.test(nameinput); // test if nameinput follows the pattern
 };
 
-const isValidPhoneNumber = (phoneinput) => {
-  const mobilePattern = /^01\d{8,9}$/; // Start with 01 and 10 or 11 in length only
-  return mobilePattern.test(phoneinput); //test if phoneinput follow the pattern
-};
+  const isValidPhoneNumber = (phoneinput) => {
+    const mobilePattern = /^01\d{8,9}$/; // Start with 01 and 10 or 11 in length only
+    return mobilePattern.test(phoneinput); //test if phoneinput follow the pattern
+  };
 
-const handleConfirm = () => {
-  if (!isFormValid) {
-    alert("Please fill in all required fields.");
-    return;
-  }
-  if (!isValidName(nameinput)) {
-    alert("Are you sure this is your name, Mr " + nameinput + " ?");
-    return;
-  }
-  if (!isValidPhoneNumber(phoneinput)) {
-    alert("Please enter a valid phone number.");
-    return;
-  }
-  if (!isChecked) {
-    alert(
-      "Please check the box to indicate that you have read and understood the Registration Policy."
-    );
-    return; // Stop further execution if isChecked is false
-  }
+  const handleConfirm = () => {
+    if (!isFormValid) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+    if (!isValidName(nameinput)) {
+      alert("Are you sure this is your name, Mr " + nameinput + " ?");
+      return;
+    }
+    if (!isValidPhoneNumber(phoneinput)) {
+      alert("Please enter a valid phone number.");
+      return;
+    }
+    if (!isChecked) {
+      alert(
+        "Please check the box to indicate that you have read and understood the Registration Policy."
+      );
+      return; // Stop further execution if isChecked is false
+    }
 
   const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
   //const { token } = useAuth();
@@ -194,29 +186,34 @@ const handleConfirm = () => {
         <div>
           Name:
           <br />
-          <input id="Rinput" required 
-          name="nameinput"
-          onChange={(e) => {
-            handleInputChange(e);
-            // handleDateChange(e);
-          }}
-          onFocus={(e) => (e.target.placeholder = "")}
-          onBlur={(e) => (e.target.placeholder = "Enter your name")}
-          placeholder="Enter your name"
+          <input
+            id="Rinput"
+            required
+            name="nameinput"
+            onChange={(e) => {
+              handleInputChange(e);
+              // handleDateChange(e);
+            }}
+            onFocus={(e) => (e.target.placeholder = "")}
+            onBlur={(e) => (e.target.placeholder = "Enter your name")}
+            placeholder="Enter your name"
           ></input>
         </div>
         <div>
           Phone No:
           <br />
-          <input id="Rinput" type="tel" required
-          name="phoneinput"
-          onChange={(e) => {
-            handleInputChange(e);
-            // handleDateChange(e);
-          }}
-          onFocus={(e) => (e.target.placeholder = "")}
-          onBlur={(e) => (e.target.placeholder = "Enter your phone no")}
-          placeholder="Enter your phone no"
+          <input
+            id="Rinput"
+            type="tel"
+            required
+            name="phoneinput"
+            onChange={(e) => {
+              handleInputChange(e);
+              // handleDateChange(e);
+            }}
+            onFocus={(e) => (e.target.placeholder = "")}
+            onBlur={(e) => (e.target.placeholder = "Enter your phone no")}
+            placeholder="Enter your phone no"
           ></input>
         </div>
         <div>
@@ -236,13 +233,19 @@ const handleConfirm = () => {
         </div>
         <div id="Check">
           <label id="Rtext">
-            <input id="checkbox" type="checkbox" name="" if="" required
-            checked={isChecked}
-            onChange={(e) => {
-              handleCheckboxChange(e);
-            }}
-           />I have
-            read and understood the Registration Policy of this restaurant
+            <input
+              id="checkbox"
+              type="checkbox"
+              name=""
+              if=""
+              required
+              checked={isChecked}
+              onChange={(e) => {
+                handleCheckboxChange(e);
+              }}
+            />
+            I have read and understood the Registration Policy of this
+            restaurant
           </label>
         </div>
         <button id="form-submitButton" onClick={() => setSubmit(!submit)}>
@@ -272,7 +275,7 @@ const handleConfirm = () => {
       {confirm && (
         <div className="popup-overlay">
           <div className="popup" ref={popRef}>
-            <i class="bi bi-calendar2-check-fill"></i>
+            <i className="bi bi-calendar2-check-fill"></i>
             <div>Confirmed</div>
           </div>
         </div>

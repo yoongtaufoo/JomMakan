@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import profilePic from "../assets/default-pfp.png";
 import Popup from "reactjs-popup";
@@ -7,17 +7,42 @@ import { AuthContext } from ".././context/AuthContext";
 import "./ProfileSection.css";
 
 const ProfileSection = () => {
-  //Get username from local storage
+  const [username, setUsername] = useState("");
+  const [previewImage, setPreviewImage] = useState(profilePic);
+
+  //Get userId from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
-  let username = "";
+  let storedUserId = "";
   if (storedUser) {
-    username = storedUser.user.username;
+    storedUserId = storedUser.user._id;
   }
 
-  // Profile Pic
+  useEffect(() => {
+    //get token from local storage
+    const token = localStorage.getItem("JomMakanUser");
 
-  const [previewImage, setPreviewImage] = useState(profilePic);
-  const [uploadedImage, setUploadedImage] = useState(null);
+    if (!token) {
+      alert("User is not authenticated.");
+      return;
+    }
+
+    axios
+      .get(`http://localhost:3001/api/profile/${storedUserId}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then(({ data }) => {
+        setUsername(data.username);
+        const profilePicURL = data.profilePic.url;
+        if (profilePicURL !== "") setPreviewImage(profilePicURL);
+      })
+      .catch((error) => {
+        console.error("Error fetching username:", error);
+      });
+  }, []); // Empty dependency array to fetch data only once when component mounts
+
+  // Profile Pic
 
   const handleSelectImage = (event) => {
     const file = event.target.files[0];
@@ -28,19 +53,41 @@ const ProfileSection = () => {
     fileReader.readAsDataURL(file);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    //handle Upload Image
-    const data = new FormData();
-    data.append("files[]", previewImage);
+    try {
+      // Get token from local storage
+      const token = localStorage.getItem("JomMakanUser");
 
-    fetch(/* server url ,*/ { method: "POST", body: data })
-      .then(async (response) => {
-        const imageResponse = await response.json();
-        setUploadedImage(imageResponse);
-      })
-      .catch((err) => {});
+      if (!token) {
+        alert("User is not authenticated.");
+        return;
+      }
+      const { data } = await axios.put(
+        `http://localhost:3001/api/profile/profile-pic/${storedUserId}`,
+        {
+          image: previewImage,
+        }
+        // {
+        //   headers: {
+        //     Authorization: token,
+        //   },
+        //   withCredentials: true, // Include credentials with the request
+        // }
+      );
+      if (data.success === true) {
+        alert("Update successfully");
+        window.location.reload(); // reload window after update successfully
+      }
+      // console.log(data);
+    } catch (error) {
+      if (error.response && error.response.status === 413) {
+        alert("Payload too large. Please upload a smaller file.");
+      } else {
+        console.error("Error updating profile pic:", error);
+      }
+    }
   };
 
   // Log Out
@@ -62,26 +109,30 @@ const ProfileSection = () => {
   return (
     <>
       <div className="profile-sec d-flex flex-column justify-content-center align-items-center">
-        <div className="profile-edit">
-          <img className="profile-pic" src={previewImage} alt="profilePic" />
-          <div className="edit">
-            <label
-              for="file-upload"
-              className="custom-file-upload-button"
-              id="custom-file-upload-btn"
-            >
-              <i class="bi bi-pencil-fill edit-icon"></i>
-            </label>
-            <input
-              id="file-upload"
-              accept=".png, .jpg, .jpeg"
-              type="file"
-              onChange={handleSelectImage}
-            />
+        <form
+          onSubmit={handleSubmit}
+          className="profile-sec d-flex flex-column justify-content-center align-items-center"
+        >
+          <div className="profile-edit">
+            <img className="profile-pic" src={previewImage} alt="profilePic" />
+            <div className="edit">
+              <label
+                htmlFor="file-upload"
+                className="custom-file-upload-button"
+                id="custom-file-upload-btn"
+              >
+                <i className="bi bi-pencil-fill edit-icon"></i>
+              </label>
+              <input
+                id="file-upload"
+                accept=".png, .jpg, .jpeg"
+                type="file"
+                onChange={handleSelectImage}
+              />
+            </div>
           </div>
-        </div>
 
-        {/* {previewImage ? (
+          {/* {previewImage ? (
           <img
             id="preview-image"
             className="profile-pic"
@@ -90,14 +141,12 @@ const ProfileSection = () => {
           />
         ) : null} */}
 
-        <h1 className="mt-4 mb-5">{username}</h1>
-        <button
-          className="upload-image-btn orange-btn"
-          type="submit"
-          onSubmit={handleSubmit}
-        >
-          Update Image
-        </button>
+          <h1 className="mt-4 mb-5">{username}</h1>
+          <button className="upload-image-btn orange-btn" type="submit">
+            Update Image
+          </button>
+        </form>
+
         <Popup
           contentStyle={{ width: "450px", borderRadius: "20px" }}
           trigger={

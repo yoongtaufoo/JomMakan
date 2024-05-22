@@ -7,7 +7,9 @@ import axios from "axios";
 
 const renderRatingStars = (rating) => {
   const filledStars = Math.floor(rating);
-  const hasHalfStar = rating - filledStars === 0.5;
+  const decimalPart = rating - filledStars;
+  const hasHalfStar = decimalPart >= 0.25 && decimalPart < 0.75;
+  const hasPartialStar = decimalPart >= 0.75;
 
   return (
     <div className="star-container">
@@ -15,12 +17,14 @@ const renderRatingStars = (rating) => {
         <BsStarFill key={index} className="star-icon filled-star" />
       ))}
       {hasHalfStar && (
-        <i
-          key="halfStar"
-          className="bi bi-star-half star-icon filled-star half-star"
-        ></i>
+        <BsStarFill className="star-icon filled-star half-star" />
       )}
-      {[...Array(5 - filledStars - (hasHalfStar ? 1 : 0))].map((_, index) => (
+      {hasPartialStar && (
+        <BsStarFill className="star-icon filled-star partial-star" />
+      )}
+      {[
+        ...Array(5 - filledStars - (hasHalfStar || hasPartialStar ? 1 : 0)),
+      ].map((_, index) => (
         <BsStar key={filledStars + index} className="star-icon empty-star" />
       ))}
     </div>
@@ -35,50 +39,35 @@ const Restaurant = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [hasLiked, setHasLiked] = useState([]);
   const [likes, setLikes] = useState([]);
-  const [showDetailsPopups, setShowDetailsPopups] = useState(null);
+  const [showDetailsPopups, setShowDetailsPopups] = useState(0);
   const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
   const [selectedShareOption, setSelectedShareOption] = useState(null);
-  const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
+  const [openDropdownIndex, setOpenDropdownIndex] = useState(0);
   const [isDropdownIndex, setIsDropdownIndex] = useState(null);
   const { _id } = useParams();
   const [restaurant, setRestaurant] = useState({});
   const [reviews, setReviews] = useState([]);
+  const [restaurantReviews, setRestaurantReviews] = useState([]); // Initialize as empty array
+  const [ratingPercentages, setRatingPercentages] = useState([0, 0, 0, 0, 0]);
+  const [averageRating, setAverageRating] = useState(0);
+  const [selectedReview, setSelectedReview] = useState(null); // State to hold the selected review for editing
+  const [reviewDescription, setReviewDescription] = useState(""); // State to hold the review description
 
   let userid = "User123";
-  
-  // const handleFacebook = (index) => {
-  //   console.log("Share on Facebook clicked for review at index:", index);
-  //   setIsDropdownIndex(null);
-  // };
-  // const handleEmail = (index) => {
-  //   console.log("Share via email clicked for review at index:", index);
-  //   setIsDropdownIndex(null);
-  // };
-  // const toggleDropdown = (index) => {
-  //   setOpenDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
-  // };
-  // const toggleShareDropdown = (index) => {
-  //   setIsDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
-  // };
-  // // const handleSaveToggle = () => {
-  // //   setIsSaved((prevState) => !prevState);
-  // // };
-
-  // const restaurantId = useParams()._id;
-  // console.log(useParams());
-  // // const restaurantid = parseInt(id);
-  // console.log("restaurantId:", restaurantId);
-
-  // const id = typeof restaurantId === "object" ? restaurantId._id : restaurantId;
-  // console.log("id:", id);
-
- 
 
   // get userid from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
   if (storedUser) {
     userid = storedUser.user._id;
   }
+
+  const handleDropdownToggle = (index) => {
+    setIsDropdownIndex(isDropdownIndex === index ? null : index);
+  };
+
+  const handleEditDropdownToggle = (index) => {
+    setOpenDropdownIndex(openDropdownIndex === index ? null : index);
+  };
 
   const handleSaveToggle = async () => {
     const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
@@ -112,21 +101,8 @@ const Restaurant = () => {
     }
   };
 
-  // const id = typeof restaurantId === 'object' ? restaurantId._id : restaurantId;
-
-  // try {
-  //   const response = await axios.post(
-  //     "http://localhost:3001/api/restaurant/addFavRestaurant",
-  //     { restaurantId: id, isSaved: !isSaved } // Toggle the save state
-  //   );
-  //   console.log(response.data.message); // Log success message or handle as needed
-  //   setIsSaved(!isSaved); // Update the UI state
-  // } catch (error) {
-  //   console.error('Error toggling favorite:', error);
-  //   // Handle error
-  // }
-
   const handleLike = (index) => {
+    console.log(index);
     setLikes((prevLikes) => {
       const newLikes = [...prevLikes];
       if (newLikes[index] === 0) {
@@ -148,39 +124,169 @@ const Restaurant = () => {
     });
   };
 
-  const handleEdit = (index) => {
-    console.log("Edit review at index:", index);
-    setOpenDropdownIndex(null);
-  };
-
   useEffect(() => {
-    let handler = (e) => {
-      if (popRef.current && !popRef.current.contains(e.target)) {
-        setDelete(false);
-      }
-    };
+    // let handler = (e) => {
+    //   if (popRef.current && !popRef.current.contains(e.target)) {
+    //     setDelete(false);
+    //   }
+    // };
 
-    document.addEventListener("mousedown", handler);
+    // document.addEventListener("mousedown", handler);
 
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  },[]);
+    // return () => {
+    //   document.removeEventListener("mousedown", handler);
+    // };
 
-
-  useEffect(() => {
     axios
       .get(`http://localhost:3001/api/restaurant/${_id}`)
       .then(({ data }) => {
         setRestaurant(data);
-        setReviews(data.reviews || []);
-        setHasLiked(new Array(data.reviews.length).fill(false));
-        setLikes(new Array(data.reviews.length).fill(0));
+        if (data.reviews) {
+          setHasLiked(new Array(data.reviews.length).fill(false));
+          setLikes(new Array(data.reviews.length).fill(0));
+        }
       })
       .catch((error) => {
         console.error("Error fetching restaurant:", error);
       });
+
+    // axios
+    //   .get(`http://localhost:3001/api/review/${_id}/reviews`)
+    //   .then((response) => {
+    //     console.log("Fetched reviews:", response.data);
+    //     setRestaurantReviews(response.data);
+    //     setAverageRating(calculateAverageRating(response.data)); // Set average rating
+    //     calculateRatingPercentages(response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching reviews:", error);
+    //   });
+
+    const fetchReviews = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/api/review/${_id}/reviews`
+        );
+
+        // console.log("Fetched reviews:", response);
+        console.log("Fetched reviews:", response.data);
+        setRestaurantReviews(response.data);
+        setAverageRating(calculateAverageRating(response.data)); // Set average rating
+        calculateRatingPercentages(response.data);
+      } catch (error) {
+        console.error("Error fetch resreview:", error);
+      }
+    };
+    fetchReviews();
   }, [_id]);
+  const handleEdit = (index) => {
+    const selectedReview = restaurantReviews[index]; // Get the selected review
+    // console.log(restaurantReviews[index]);
+    setSelectedReview(selectedReview); // Set the selected review in state
+    navigate(
+      `/restaurant/${_id}/addReview?restaurantName=${restaurant.name}&edit=true`
+    ); // Navigate to the AddReview page with edit=true query parameter
+  };
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:3001/api/restaurant/${_id}`)
+  //     .then(({ data }) => {
+  //       setRestaurant(data);
+  //       if (data.reviews) {
+  //         setHasLiked(new Array(data.reviews.length).fill(false));
+  //         setLikes(new Array(data.reviews.length).fill(0));
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching restaurant:", error);
+  //     });
+  // }, [_id]);
+
+  // useEffect(() => {
+  //   const fetchReviews = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:3001/api/review/${_id}/reviews`
+  //       );
+  //       console.log("Fetched reviews:", response.data);
+  //       setRestaurantReviews(response.data);
+  //       setAverageRating(calculateAverageRating(response.data)); // Set average rating
+  //       calculateRatingPercentages(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetch resreview:", error);
+  //     }
+  //   };
+  //   fetchReviews();
+  // }, [_id]);
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("JomMakanUser");
+
+  //   if (!token) {
+  //     alert("User is not authenticated.");
+  //     return;
+  //   }
+
+  //   axios
+  //     .get(`http://localhost:3001/api/restaurant/${_id}/reviews`, {
+  //       headers: {
+  //         Authorization: token,
+  //       },
+  //     })
+  //     .then(({ data }) => {
+  //       setRestaurantReviews(data);
+  //       setRestaurantReviews(response.data);
+  //       setAverageRating(calculateAverageRating(response.data)); // Set average rating
+  //       calculateRatingPercentages(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching revieww:", error);
+  //     });
+  // }, []);
+
+  const calculateRatingPercentages = (reviews) => {
+    const total = reviews.length;
+    const totalRatings = reviews.reduce(
+      (acc, review) => acc + review.rating,
+      0
+    );
+    const averageRating = totalRatings / total;
+    const percentages = [0, 0, 0, 0, 0].map((_, index) => {
+      const rating = index + 1;
+      const count = reviews.filter(
+        (review) => Math.floor(review.rating) === rating
+      ).length;
+      return (count / total) * 100;
+    });
+    setRatingPercentages(percentages);
+  };
+
+  const calculateAverageRating = (reviews) => {
+    const total = reviews.length;
+    const totalRatings = reviews.reduce(
+      (acc, review) => acc + review.rating,
+      0
+    );
+    return total > 0 ? totalRatings / total : 0;
+  };
+  const getTimeDifferenceString = (timePosted) => {
+    const currentTime = new Date();
+    const postedTime = new Date(timePosted);
+    const timeDifference = Math.floor((currentTime - postedTime) / 1000); // Time difference in seconds
+
+    if (timeDifference < 60) {
+      return "now"; // If less than a minute ago
+    } else if (timeDifference < 3600) {
+      const minutes = Math.floor(timeDifference / 60);
+      return `${minutes} minute${minutes > 1 ? "s" : ""} ago`; // If less than an hour ago
+    } else if (timeDifference < 86400) {
+      const hours = Math.floor(timeDifference / 3600);
+      return `${hours} hour${hours > 1 ? "s" : ""} ago`; // If less than a day ago
+    } else {
+      const days = Math.floor(timeDifference / 86400);
+      return `${days} day${days > 1 ? "s" : ""} ago`; // If more than a day ago
+    }
+  };
 
   return (
     <div>
@@ -235,7 +341,7 @@ const Restaurant = () => {
           {restaurant.openinghours}
         </p>
         <p className="card-text">
-          <i class="bi bi-egg-fried custom-icon"></i>
+          <i className="bi bi-egg-fried custom-icon"></i>
           {restaurant.cuisine}
         </p>
         <br />
@@ -294,7 +400,9 @@ const Restaurant = () => {
             <strong>Reviews</strong>
           </h5>
           <div className="ml-auto">
-            <Link to={`/restaurant/${_id}/addReview?restaurantName=${restaurant.name}`}>
+            <Link
+              to={`/restaurant/${_id}/addReview?restaurantName=${restaurant.name}`}
+            >
               <button type="button" className="button-add-reviews">
                 <i className="bi-plus"></i>Add a review
               </button>
@@ -306,80 +414,42 @@ const Restaurant = () => {
           data-testid="info-reviews-rating"
         >
           <div className="info-left">
-            <div className="box-flex fd-row ai-center">{restaurant.review}</div>
             <div id="star-container">
-              {/* {renderRatingStars(restaurant.review)} */}
-            </div>
-            <div className="f-title-xlarge-secondary-font-size fw-title-xlarge-secondary-font-weight">
-              All ratings (6)
-            </div>
-          </div>
+              <div className="rating-value">{averageRating.toFixed(1)}</div>
 
+              <div className="rating-star-colour">
+                {renderRatingStars(averageRating)}
+              </div>
+            </div>
+            <br />
+            <div className="f-title-xlarge-secondary-font-size fw-title-xlarge-secondary-font-weight">
+              All ratings ({restaurantReviews.length})
+            </div>
+          </div>{" "}
           <div className="rating-bar-container">
-            <div className="rating-bar">
-              <div className="star-indicator">
-                5 <i className="bi bi-star-fill"></i>
+            {[5, 4, 3, 2, 1].map((rating, index) => (
+              <div className="rating-bar" key={index}>
+                <div className="star-indicator">
+                  {rating} <i className="bi bi-star-fill"></i>
+                </div>
+                <div className="rectangle-box">
+                  <div
+                    className="fillable-box"
+                    style={{
+                      width: `${Math.round(ratingPercentages[5 - index - 1])}%`,
+                      height: "100%",
+                    }}
+                  />
+                </div>
+                <div className="percentage">
+                  {ratingPercentages[5 - index - 1].toFixed(0)}%
+                </div>
               </div>
-              <div className="rectangle-box">
-                <div
-                  className="fillable-box"
-                  style={{ width: `67%`, height: "100%" }}
-                />
-              </div>
-              <div className="percentage">67%</div>
-            </div>
-            <div className="rating-bar">
-              <div className="star-indicator">
-                4 <i className="bi bi-star-fill"></i>
-              </div>
-              <div className="rectangle-box">
-                <div
-                  className="fillable-box"
-                  style={{ width: `33%`, height: "100%" }}
-                />
-              </div>
-              <div className="percentage">33%</div>
-            </div>
-            <div className="rating-bar">
-              <div className="star-indicator">
-                3 <i className="bi bi-star-fill"></i>
-              </div>
-              <div className="rectangle-box">
-                <div
-                  className="fillable-box"
-                  style={{ width: `0%`, height: "100%" }}
-                />
-              </div>
-              <div className="percentage">0%</div>
-            </div>
-            <div className="rating-bar">
-              <div className="star-indicator">
-                2 <i className="bi bi-star-fill"></i>
-              </div>
-              <div className="rectangle-box">
-                <div
-                  className="fillable-box"
-                  style={{ width: `0%`, height: "100%" }}
-                />
-              </div>
-              <div className="percentage">0%</div>
-            </div>
-            <div className="rating-bar">
-              <div className="star-indicator">
-                1 <i className="bi bi-star-fill"></i>
-              </div>
-              <div className="rectangle-box">
-                <div
-                  className="fillable-box"
-                  style={{ width: `0%`, height: "100%" }}
-                />
-              </div>
-              <div className="percentage">0%</div>
-            </div>
+            ))}{" "}
           </div>
         </div>
 
-        {reviews.map((review, index) => (
+        {restaurantReviews.map((review, index) => (
           <div key={index} className="review-card">
             <div className="name-and-view-more">
               <p>
@@ -388,8 +458,8 @@ const Restaurant = () => {
                 <button
                   className="btn btn-secondary dropdown-toggle dropdown-view-more"
                   type="button"
-                  id="dropdownViewMoreButton"
-                  onClick={() => toggleDropdown(index)}
+                  // id="dropdownViewMoreButton"
+                  onClick={() => handleEditDropdownToggle(index)}
                 >
                   <i className="bi-three-dots"></i>
                 </button>
@@ -399,12 +469,16 @@ const Restaurant = () => {
                   }`}
                 >
                   <li>
-                    <button
-                      className="dropdown-item"
-                      onClick={() => handleEdit(index)}
+                    <Link
+                      to={`/restaurant/${_id}/addReview?edit=true?restaurantName=${restaurant.name}`}
                     >
-                      <i className="bi bi-pencil"></i> Edit
-                    </button>
+                      <button
+                        className="dropdown-item"
+                        onClick={() => handleEdit(index)}
+                      >
+                        <i className="bi bi-pencil"></i> Edit
+                      </button>
+                    </Link>
                   </li>
                   <li>
                     <button
@@ -443,7 +517,7 @@ const Restaurant = () => {
             {confirm && (
               <div classNamec="popup-overlay">
                 <div className="popup" ref={popRef}>
-                  <i class="bi bi-calendar2-check-fill"></i>
+                  <i className="bi bi-calendar2-check-fill"></i>
                   <div>Deleted</div>
                 </div>
               </div>
@@ -455,25 +529,25 @@ const Restaurant = () => {
             {showDetailsPopups[index] && (
               <div className="review-options-popup">
                 <button onClick={() => handleEdit(index)}>
-                  {" "}
                   <i className="bi bi-pencil"></i> Edit
                 </button>
                 <button onClick={() => handleDelete(index)}>
-                  {" "}
                   <i className="bi bi-trash"></i> Delete
                 </button>
               </div>
             )}
 
             <div className="d-flex justify-content-start">
-              <div>{renderRatingStars(review.rating)}</div>
-              <p className="time-post">{review.timePosted}</p>
+              <div>{renderRatingStars(review.rating)}</div>&nbsp;&nbsp;
+              <p className="time-post">
+                {getTimeDifferenceString(review.timePosted)}
+              </p>
             </div>
 
             <p>{review.reviewDescription}</p>
-            {review.photoUrl && (
+            {review.mediaUrl && (
               <img
-                src={review.photoUrl}
+                src={review.mediaUrl}
                 alt="Review"
                 className="review-photo"
               />
@@ -500,7 +574,7 @@ const Restaurant = () => {
                   className="btn btn-secondary dropdown-toggle"
                   type="button"
                   id="dropdownMenuButton"
-                  onClick={() => toggleShareDropdown(index)}
+                  onClick={() => handleDropdownToggle(index)}
                 >
                   <i className="bi bi-share"></i> Share
                 </button>
