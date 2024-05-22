@@ -78,3 +78,7 @@
 .log-in-pic-right {
     animation: panInRight 1s ease-in-out forwards;
 }
+
+.forgot-password{
+    margin-left: 150px;
+}
