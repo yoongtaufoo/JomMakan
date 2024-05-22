@@ -98,7 +98,7 @@ const handleCheckboxChange = () => {
 };
 
 const isValidName = (nameinput) => {
-  const namePattern = /^[A-Za-z]+$/; // alphabets only
+  const namePattern = /^[A-Za-z\s]+$/; // alphabets only
   return namePattern.test(nameinput); // test if nameinput follow the pattern
 };
 
