@@ -1,7 +1,6 @@
 // This card can be used for displaying registration or reservation made
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 // import { restaurants } from "../RestaurantData";
 import axios from "axios";
 
@@ -17,6 +16,7 @@ const CollectionCard = ({ registrations, reservations }) => {
         if (popRef.current && !popRef.current.contains(event.target)) {
         setConfirm(false);
         setSubmit(false);
+        window.location.reload();
         }
     };
     useEffect(() => {
@@ -61,8 +61,8 @@ const CollectionCard = ({ registrations, reservations }) => {
 
     //Cancel reservation
   const cancelReservation = async (reservationId) => {
-    //const token = localStorage.getItem("JomMakanUser");
-    const { token } = useAuth();
+    const token = localStorage.getItem("JomMakanUser");
+    //const { token } = useAuth();
     if (!token) {
       alert("User is not authenticated.");
       return;
@@ -89,8 +89,8 @@ const CollectionCard = ({ registrations, reservations }) => {
 
 //Cancel registration
   const cancelRegistration = async (registrationId) => {
-    //const token = localStorage.getItem("JomMakanUser");
-    const { token } = useAuth();
+    const token = localStorage.getItem("JomMakanUser");
+   // const { token } = useAuth();
     if (!token) {
       alert("User is not authenticated.");
       return;
@@ -205,7 +205,7 @@ const CollectionCard = ({ registrations, reservations }) => {
                         setConfirm(true);
                         setSubmit(false);
                         handleCancelRegistration(registered._id);
-                        window.location.reload();
+                        //window.location.reload();
                     }}
                     >
                     Yes
@@ -296,7 +296,7 @@ const CollectionCard = ({ registrations, reservations }) => {
                         setConfirm(true);
                         setSubmit(false);
                         handleCancel(reservations._id);
-                        window.location.reload();
+                        //window.location.reload();
                     }}
                   >
                     Yes

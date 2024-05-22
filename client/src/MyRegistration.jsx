@@ -3,11 +3,9 @@ import Navbar from "./components/Navbar";
 import image from "./assets/image 3.png";
 import Tabs from "./components/Tabs.jsx";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from './context/AuthContext';
 import workshopPic from "./assets/workshop.png";
 import CollectionCard from "./components/CollectionCard.jsx";
 import axios from "axios";
-
 const MyRegistration = () => {
   // Function body
   const navigate = useNavigate();
@@ -17,9 +15,8 @@ const MyRegistration = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    //get username from local storage
-    //const token = localStorage.getItem("JomMakanUser");
-    const { token } = useAuth();
+    //get userid from local storage
+    const token = localStorage.getItem("JomMakanUser");
     if (!token) {
       alert("User is not authenticated.");
       return;
@@ -27,6 +24,7 @@ const MyRegistration = () => {
 
     axios
       .get("http://localhost:3001/api/registration/my_registrations", {
+        //withCredentials: true // This ensures cookies are sent with the request
         headers: {
           Authorization: token,
         },
@@ -69,7 +67,7 @@ const MyRegistration = () => {
     // if (status === undefined) return true; // Default case
 
     const workshop = workshops.find(
-      (rest) => rest._id === registration.workshop_id
+      (workshop) => workshop._id === registration.workshop_id
     );
     
 
@@ -123,11 +121,14 @@ const MyRegistration = () => {
         />
         <br />
         <div className="card mb-3">
-          {filteredWorkshops.map((registration) => (
-            <CollectionCard key={registration.id} registrations={registration} />
-            // <CollectionCard key={registration.id} workshop={registration} />
-          ))}
-        </div>
+          {filteredWorkshops.map((registration) => {
+          console.log(registration._id);
+        return (
+          <CollectionCard key={registration._id} registrations={registration} />
+         );
+        })}
+      </div>
+        
       </div>
     </div>
   );

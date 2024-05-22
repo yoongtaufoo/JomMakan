@@ -52,22 +52,28 @@ const add_register = async (req, res) => {
       const token = JSON.parse(authHeader);
   
       const userId = token.user._id; // Get the userId from the decoded token
-  
-      const registrations = await Registration.find({ user_id: userId }).populate('workshop_id'); // Find registrations with user_id = userId and populate workshop_id
-  
-      // Sort registrations by the workshop date
-      registrations.sort((a, b) => new Date(a.workshop_id.date) - new Date(b.workshop_id.date));
-  
-      // Update status based on current date
-      const currentDateTime = new Date();
-      for (const registration of registrations) {
-        const workshop = registration.workshop_id;
-        if (new Date(workshop.date) < currentDateTime && registration.status !== "C") {
-          registration.status = "D"; // Past reservations will have status "D" meaning "Completed" // C means cancelled
-          await registration.save(); // Save the changes
-        }
+      const registrations = await Registration.find({ user_id: userId }); // Find registrations with user_id = userId and populate workshop_id
+       // Fetch workshops for each registration
+    for (const registration of registrations) {
+      const workshop = await Workshop.findById(registration.workshop_id);
+      if (!workshop) {
+        throw new Error(`Workshop not found for registration with ID ${registration._id}`);
       }
-  
+      registration.workshop = workshop; // Attach workshop to registration object
+    }
+
+    // Sort registrations by the workshop date
+    registrations.sort((a, b) => new Date(a.workshop.date) - new Date(b.workshop.date));
+
+    // Update status based on current date
+    const currentDateTime = new Date();
+    for (const registration of registrations) {
+      const workshopDate = new Date(registration.workshop.date);
+      if (workshopDate < currentDateTime && registration.status !== "C") {
+        registration.status = "D"; // Past reservations will have status "D" meaning "Completed" // C means cancelled
+        await registration.save(); // Save the changes
+      }
+    }
       res.json(registrations); // Send sorted reservations array as response
       
     } catch (err) {
@@ -94,7 +100,7 @@ const cancel_register = async (req, res) => {
       const workshop = await Workshop.findById(registration.workshop_id);
       if (workshop) {
         workshop.availableSlot += registration.pax; // Increment the available slots by the number of participants
-        workshop.registered.pull(registration.user_id); // Remove the user id
+        workshop.registered.pull(registration.user_id.toString()); // Remove the user id
         await workshop.save(); // Save the updated workshop
       }
 
