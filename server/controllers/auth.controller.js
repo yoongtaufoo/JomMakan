@@ -120,7 +120,7 @@ const forgotPassword = async (req, res) => {
         .send({ Status: "Error", Message: "Email has not registered" });
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: "1d",
+      expiresIn: "10m",
     });
     var transporter = nodemailer.createTransport({
       service: "gmail",
@@ -134,7 +134,12 @@ const forgotPassword = async (req, res) => {
       from: process.env.EMAIL,
       to: email,
       subject: "JomMakan Reset Password Link",
-      text: `http://localhost:5173/reset-password/${user._id}/${token}`,
+      // text: `http://localhost:5173/reset-password/${user._id}/${token}`,
+      html: `<h1>Reset Your JomMakan Password</h1>
+      <p>Click on the following link to reset your password:</p>
+      <a href="http://localhost:5173/reset-password/${user._id}/${token}">http://localhost:5173/reset-password/${user._id}/${token}</a>
+      <p>The link will expire in 10 minutes.</p>
+      <p>If you didn't request a password reset, please ignore this email.</p>`,
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -159,7 +164,8 @@ const resetPassword = async (req, res) => {
 
   jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decoded) => {
     if (err) {
-      return res.json({ Status: "Error", Message: "Error with token" });
+      // return res.json({ Status: "Error", Message: "Error with token" });
+      return res.json({ Status: "Error", Message: "The link has expired" });
     } else {
       try {
         const user = await User.findById(id);
