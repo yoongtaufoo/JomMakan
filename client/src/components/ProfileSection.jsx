@@ -46,6 +46,13 @@ const ProfileSection = () => {
 
   const handleSelectImage = (event) => {
     const file = event.target.files[0];
+    const maxSize = 10 * 1024 * 1024; // 2MB in bytes
+
+    if (file.size > maxSize) {
+      alert("File size exceeds 10MB. Please upload a smaller file.");
+      return;
+    }
+
     const fileReader = new FileReader();
     fileReader.addEventListener("load", () => {
       setPreviewImage(fileReader.result);

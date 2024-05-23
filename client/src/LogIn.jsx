@@ -88,7 +88,7 @@ const LogIn = () => {
                 <input
                   name="passwordLogin"
                   id="passwordLogin"
-                  className="form-control auth"
+                  className="form-control auth mb-2"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
                   required
@@ -110,11 +110,17 @@ const LogIn = () => {
                     style={{ cursor: "pointer" }}
                   ></i>
                 )}
+                <a
+                  className="link-danger forgot-password "
+                  href="/forgot-password"
+                >
+                  Forgot Password ?
+                </a>
               </div>
               {/* <PasswordStrengthMeter password={pass} /> */}
             </div>
 
-            <button type="submit" id="auth-button">
+            <button type="submit" className="mt-4" id="auth-button">
               Log In
             </button>
           </form>
@@ -123,14 +129,15 @@ const LogIn = () => {
           <div>
             <strong>Don't have an account ?</strong>
           </div>
-          <a
-            className="link-danger link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-            href="/signup"
-          >
+          <a className="link-danger " href="/signup">
             Click here to sign up !
           </a>
         </div>
-        <img className="log-in-pic log-in-pic-right" src={loginRight} alt="right log in pic" />
+        <img
+          className="log-in-pic log-in-pic-right"
+          src={loginRight}
+          alt="right log in pic"
+        />
       </div>
     </div>
   );

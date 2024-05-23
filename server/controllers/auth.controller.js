@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const zxcvbn = require("zxcvbn");
+const nodemailer = require("nodemailer"); // Add this line
 
 // POST register users
 const register = async (req, res) => {
@@ -111,58 +112,98 @@ const logout = (req, res) => {
 
 // forgot password
 const forgotPassword = async (req, res) => {
-  const { id, token } = req.params;
-  const { password } = req.body;
-
-  // Find the user by user id
-  const user = await User.findOne({ _id: id }).then((user) => {
+  const { email } = req.body;
+  User.findOne({ email: email }).then((user) => {
     if (!user) {
-      return res.send({ Status: "User not existed" });
+      return res
+        .status(400)
+        .send({ Status: "Error", Message: "Email has not registered" });
     }
-
-    const userEmail = user.email;
-
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: "1d",
+      expiresIn: "10m",
     });
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "youremail@gmail.com",
-        pass: "your password",
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
 
     var mailOptions = {
-      from: "youremail@gmail.com",
-      to: userEmail,
-      subject: "Reset Password Link",
-      text: `http://localhost:5173/reset_password/${user._id}/${token}`,
+      from: process.env.EMAIL,
+      to: email,
+      subject: "JomMakan Reset Password Link",
+      // text: `http://localhost:5173/reset-password/${user._id}/${token}`,
+      html: `<h1>Reset Your JomMakan Password</h1>
+      <p>Click on the following link to reset your password:</p>
+      <a href="http://localhost:5173/reset-password/${user._id}/${token}">http://localhost:5173/reset-password/${user._id}/${token}</a>
+      <p>The link will expire in 10 minutes.</p>
+      <p>If you didn't request a password reset, please ignore this email.</p>`,
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log(error);
+        return res
+          .status(500)
+          .send({ Status: "Error", Message: "Failed to send email" });
       } else {
-        return res.send({ Status: "Success" });
+        return res.send({
+          Status: "Success",
+          Message: `Reset password link has been sent to ${email}. Please check your email.`,
+        });
       }
     });
   });
+};
 
-  // jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
-  //   if (err) {
-  //     return res.json({ Status: "Error with token" });
-  //   } else {
-  //     bcrypt
-  //       .hash(password, 10)
-  //       .then((hash) => {
-  //         UserModel.findByIdAndUpdate({ _id: id }, { password: hash })
-  //           .then((u) => res.send({ Status: "Success" }))
-  //           .catch((err) => res.send({ Status: err }));
-  //       })
-  //       .catch((err) => res.send({ Status: err }));
-  //   }
-  // });
+const resetPassword = async (req, res) => {
+  const { id, token } = req.params;
+  const { password } = req.body;
+
+  jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decoded) => {
+    if (err) {
+      // return res.json({ Status: "Error", Message: "Error with token" });
+      return res.json({ Status: "Error", Message: "The link has expired" });
+    } else {
+      try {
+        const user = await User.findById(id);
+        if (!user) {
+          return res.json({ Status: "Error", Message: "User not found" });
+        }
+
+        // Check password strength
+        const passwordStrength = zxcvbn(password).score;
+        if (passwordStrength < 3) {
+          return res.status(400).json({
+            Status: "Error",
+            Message: "Password strength must be at least 'Good'",
+          });
+        }
+
+        // Check if new password is the same as the old password
+        const isSamePassword = await bcrypt.compare(password, user.password);
+        if (isSamePassword) {
+          return res.json({
+            Status: "Error",
+            Message: "New password cannot be the same as the old password",
+          });
+        }
+
+        // Hash new password and update
+        const hash = await bcrypt.hash(password, 10);
+        await User.findByIdAndUpdate(id, { password: hash });
+
+        return res.json({
+          Status: "Success",
+          Message: "Reset password successfully",
+        });
+      } catch (err) {
+        return res.json({ Status: "Error", Message: err.message });
+      }
+    }
+  });
 };
 
 // update password (User Profile)
@@ -190,8 +231,7 @@ const updatePassword = async (req, res) => {
               if (err) return res.json({ Status: "Error comparing passwords" });
               if (isMatch)
                 return res.json({
-                  Status:
-                    "New password cannot be the same as the current password",
+                  Status: "New password cannot be the same as current password",
                 });
 
               // Check password strength
@@ -226,5 +266,6 @@ module.exports = {
   login,
   logout,
   forgotPassword,
+  resetPassword,
   updatePassword,
 };
