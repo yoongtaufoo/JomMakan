@@ -105,7 +105,7 @@ transition: opacity 0.5s ease;
   transition: opacity 1s;
 }
 #tagline1 {
-  /* position: relative; */
+  position:static;
   font-size: 65px;
   font-weight: bold;
   font-family: "Rubik", sans-serif;

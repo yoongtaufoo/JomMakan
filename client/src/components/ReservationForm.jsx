@@ -186,7 +186,7 @@ const ReservationForm = (props) => {
 
       for (
         let hour = parsedOpeningTime.hours;
-        hour <= parsedClosingTime.hours - 1;
+        hour <= parsedClosingTime.hours - 1.5;
         hour++
       ) {
         // Loop through each minute (0 and 30)
@@ -225,18 +225,18 @@ const ReservationForm = (props) => {
   // Generate select options for pax no based on the max table pax of the restaurant
   const nopaxOptions = props.tables
     ? [
-        <option key="null" value="">
-          Select no of pax
-        </option>,
-        ...Array.from(
-          { length: Math.max(...props.tables.map((table) => table.pax)) },
-          (_, index) => (
-            <option key={index + 1} value={index + 1}>
-              {index + 1}
-            </option>
-          )
-        ),
-      ]
+      <option key="null" value="">
+        Select no of pax
+      </option>,
+      ...Array.from(
+        { length: Math.max(...props.tables.map((table) => table.pax)) },
+        (_, index) => (
+          <option key={index + 1} value={index + 1}>
+            {index + 1}
+          </option>
+        )
+      ),
+    ]
     : [];
 
   // Function to check if a table has enough capacity for the selected number of pax
@@ -322,7 +322,13 @@ const ReservationForm = (props) => {
   const tableOptions = generateTableOptions();
 
   // ---- Checkings ----
-
+  const isClosedOnDate = (dateinput, openinghours) => {
+    const closedDays = getClosedDays(openinghours);
+    const date = new Date(dateinput);
+    const dayOfWeek = date.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+    return closedDays.includes(dayOfWeek);
+  };
+  
   const handleCheckboxChange = () => {
     // Check if checkbox for reservation policy is checked
     setIsChecked(!isChecked);
@@ -338,7 +344,12 @@ const ReservationForm = (props) => {
     return mobilePattern.test(phoneinput); //test if phoneinput follow the pattern
   };
 
+
   const handleConfirm = () => {
+    if (isClosedOnDate(dateinput, props.openinghours)) {
+      alert("Restaurant is not open on that day. Please try another date.");
+      return;
+    }
     if (!isFormValid) {
       alert("Please fill in all required fields.");
       return;

@@ -68,7 +68,7 @@ function App() {
         {/* </div> */}
         <ParallaxLayer
           offset={1.2}
-          speed={0.7}
+          speed={0.9}
           // sticky={{ start: 1.2, end: 2.2 }}
         >
           <div id="red-view">
