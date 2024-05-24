@@ -78,9 +78,10 @@ const AddReview = () => {
     setratingInput(0);
     setDescriptionInput("");
     setMediaInput("");
+    setSelectedFile(null);
     setIsChecked(false);
     setUploadStatus("idle");
-    window.location.reload();
+    // window.location.reload();
   };
 
   const submitReview = async () => {
@@ -99,7 +100,10 @@ const AddReview = () => {
           rating: ratingInput,
           timePosted: new Date(),
           reviewDescription: descriptionInput,
-          media: mediaInput,
+          mediaUrl: {
+            public_id: "mediaUpload/ndwm8rvip7fqearoixpm",
+            url: "https://res.cloudinary.com/djjyjupja/image/upload/v1716538365/mediaUpload/ndwm8rvip7fqearoixpm.jpg",
+          },
           restaurant_id: restaurant_id,
           agreeToTerms: isChecked,
         },

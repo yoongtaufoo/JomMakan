@@ -37,7 +37,6 @@ const Restaurant = () => {
   const [deleted, setDelete] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const [hasLiked, setHasLiked] = useState([]);
   const [likes, setLikes] = useState([]);
   const [showDetailsPopups, setShowDetailsPopups] = useState(0);
   const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
@@ -53,12 +52,35 @@ const Restaurant = () => {
   const { _id } = useParams();
 
   const handleFacebook = (index) => {
-    console.log("Share on Facebook clicked for review at index:", index);
+     const review = restaurantReviews[index];
+     const reviewUrl = `URL to the review page for review ID ${review._id}`;
+     const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=#${encodeURIComponent(
+       reviewUrl
+     )}`;
+
+     // Open the share dialog for Facebook
+     window.open(
+       shareUrl,
+       "_blank",
+       "toolbar=yes,scrollbars=yes,resizable=yes,top=100,left=500,width=600,height=800"
+     );
+
     setIsDropdownIndex(null);
   };
   const handleEmail = (index) => {
-    console.log("Share via email clicked for review at index:", index);
-    setIsDropdownIndex(null);
+  const review = restaurantReviews[index];
+  const reviewUrl = `URL to the review page for review ID ${review._id}`;
+  const subject = "Check out this review!";
+  const body = `Check out this restaurant's review: ${reviewUrl}`;
+  const mailtoUrl = `mailto:?subject=${encodeURIComponent(
+    subject
+  )}&body=${encodeURIComponent(body)}`;
+
+  // Open the default email client with the pre-filled email
+  window.location.href = mailtoUrl;
+
+  // Close the dropdown menu after sharing
+  setIsDropdownIndex(null);
   };
 
   const [restaurant, setRestaurant] = useState({});
@@ -117,28 +139,35 @@ const Restaurant = () => {
     }
   };
 
-  const handleLike = (index) => {
-    console.log(index);
-    setLikes((prevLikes) => {
-      const newLikes = [...prevLikes];
-      if (newLikes[index] === 0) {
-        newLikes[index] = 1;
-        setHasLiked((prevHasLiked) => {
-          const newHasLiked = [...prevHasLiked];
-          newHasLiked[index] = true;
-          return newHasLiked;
-        });
-      } else {
-        newLikes[index] = 0;
-        setHasLiked((prevHasLiked) => {
-          const newHasLiked = [...prevHasLiked];
-          newHasLiked[index] = false;
-          return newHasLiked;
-        });
-      }
-      return newLikes;
-    });
-  };
+ const handleLike = async (index) => {
+   const token = localStorage.getItem("JomMakanUser");
+
+   if (!token) {
+     alert("User is not authenticated.");
+     return;
+   }
+
+   try {
+     const response = await axios.post(
+       `http://localhost:3001/api/review/${_id}/likeReview`,
+       {}, // No data payload needed for liking
+       {
+         headers: {
+           Authorization: `Bearer ${token}`,
+         },
+       }
+     );
+
+     setLikes((prevLikes) => {
+       const newLikes = [...prevLikes];
+       newLikes[index] = response.data.likes;
+       return newLikes;
+     });
+   } catch (error) {
+     console.error("Error liking review:", error);
+   }
+ };
+
 
   useEffect(() => {
     // let handler = (e) => {
@@ -157,10 +186,6 @@ const Restaurant = () => {
       .get(`http://localhost:3001/api/restaurant/${_id}`)
       .then(({ data }) => {
         setRestaurant(data);
-        if (data.reviews) {
-          setHasLiked(new Array(data.reviews.length).fill(false));
-          setLikes(new Array(data.reviews.length).fill(0));
-        }
       })
       .catch((error) => {
         console.error("Error fetching restaurant:", error);
@@ -189,6 +214,7 @@ const Restaurant = () => {
         setRestaurantReviews(response.data);
         setAverageRating(calculateAverageRating(response.data)); // Set average rating
         calculateRatingPercentages(response.data);
+
       } catch (error) {
         console.error("Error fetch resreview:", error);
       }
@@ -203,6 +229,30 @@ const Restaurant = () => {
       `/restaurant/${_id}/addReview?restaurantName=${restaurant.name}&edit=true`
     ); // Navigate to the AddReview page with edit=true query parameter
   };
+
+  const handleDelete = async (index) => {
+    try {
+      // Send DELETE request to delete the review
+      await axios.delete(
+        `http://localhost:3001/api/review/${restaurantReviews[index]._id}/deleteReview`
+      );
+
+      // Update the state to reflect the deletion
+      setRestaurantReviews((prevReviews) => {
+        const newReviews = [...prevReviews];
+        newReviews.splice(index, 1); // Remove the deleted review from the array
+        return newReviews;
+      });
+
+      // Close the delete confirmation popup
+      setDelete(false);
+    } catch (error) {
+      console.error("Error deleting review:", error);
+      // Handle error or display error message to user
+    }
+  };
+
+
   // useEffect(() => {
   //   axios
   //     .get(`http://localhost:3001/api/restaurant/${_id}`)
@@ -529,14 +579,7 @@ const Restaurant = () => {
                 </div>
               </div>
             )}
-            {confirm && (
-              <div classNamec="popup-overlay">
-                <div className="popup" ref={popRef}>
-                  <i className="bi bi-calendar2-check-fill"></i>
-                  <div>Deleted</div>
-                </div>
-              </div>
-            )}
+            
             <span
               className="review-options"
               onClick={() => togglePopup(index)}
@@ -561,21 +604,18 @@ const Restaurant = () => {
 
             <p>{review.reviewDescription}</p>
             {review.mediaUrl && (
-              <img
-                src={review.mediaUrl}
-                className="review-photo"
-              />
+              <img src={review.mediaUrl} className="review-photo" />
             )}
 
             <div className="photo-buttons">
               <button
                 className="btn-like"
                 onClick={() => handleLike(index)}
-                style={{ color: hasLiked[index] ? "blue" : "black" }}
+                style={{ color: likes[index] ? "blue" : "black" }}
               >
                 <i
                   className={
-                    hasLiked[index]
+                    likes[index]
                       ? "bi bi-hand-thumbs-up-fill"
                       : "bi bi-hand-thumbs-up"
                   }
