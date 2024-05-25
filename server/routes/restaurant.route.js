@@ -3,7 +3,7 @@ const express = require("express");
 const {
     restaurants,
     restaurantDetails,
-    // fetchFavRestaurants,
+    fetchFavRestaurants,
     addFavouriteRestaurants
 } = require("../controllers/restaurant.controller");
 
@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.get("/restaurants", restaurants);
 router.get("/:_id", restaurantDetails);
-// router.get("/favRestaurants", fetchFavRestaurants);
+router.get("/favRestaurants", fetchFavRestaurants);
 router.post("/:restaurantId/addFavRestaurant", addFavouriteRestaurants)
 
 module.exports = router;

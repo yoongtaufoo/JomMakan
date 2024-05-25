@@ -74,61 +74,56 @@ const addFavouriteRestaurants = async (req, res)=>{
   }
 }
     
-// const fetchFavRestaurants = async (req, res) => {
-//   try {
-//     // Get token
-//     const authHeader = req.headers.authorization;
-//     const token = JSON.parse(authHeader);
-//     // const token = authHeader.split(' ')[1];
+const fetchFavRestaurants = async (req, res) => {
+  try {
+    // Get token
+    const authHeader = req.headers.authorization;
+    const token = JSON.parse(authHeader);
+    
 
-//     // Decode token to get userId
-//     // const decodedToken = jwt.verify(token, 'your_secret_key_here');
-//     // const userId = decodedToken.user._id;
+    // Get the userId from the decoded token
+    const userId = token.user._id;
+    console.log('Fetching favorite restaurants for user:', userId);
+    const user = await User.findById(userId);
 
-//     // Get the userId from the decoded token
-//     const userId = token.user._id;
-//     const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
+    // Extract favRestaurantIds
+    const favRestaurantIds = user.favRestaurants.map(fav => fav.favRestaurantId);
+    console.log(favRestaurantIds)
+    
+    // Find the restaurant details
+    const restaurants = await Restaurant.find({
+      _id: { $in: favRestaurantIds }
+    });
 
-//     const favRestaurants = await Restaurant.find({ _id: { $in: user.favRestaurants } });
-//     // const favRestaurants = await Restaurant.find({ _id: { $in: user.favRestaurants.map(restaurant => restaurant._id) } });
+    // const favRestaurants = await Restaurant.find({ _id: { $in: user.favRestaurants[0].favRestaurantId } });
+    // const favRestaurants = await Restaurant.find({ _id: { $in: user.favRestaurants.map(restaurant => restaurant._id) } });
 
-//     res.json(favRestaurants);
+    // res.json(favRestaurants);
+    res.json(restaurants)
 
-//   } catch (err) {
-//     console.error("Error fetching favRestaurants:", err);
-//     res.status(500).json({ message: "Failed to fetch favRestaurants" });
-//   }
-// };
+  } catch (err) {
+    console.error("Error fetching favRestaurants:", err);
+
+    // Handle specific CastError
+    if (err.name === 'CastError') {
+      return res.status(400).json({ message: "Invalid ObjectId" });
+    }
+
+    res.status(500).json({ message: "Failed to fetch favRestaurants" });
+  }
+};
 
 
-// const fetchFavRestaurants = async (req, res) => {
-//   try {
-//     const userId = req.user._id; // Assuming you have user information attached to the request
-
-//     const user = await User.findById(userId);
-
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     const favRestaurants = await Restaurant.find({ _id: { $in: user.favRestaurants } });
-//     res.json(favRestaurants);
-//   } catch (err) {
-//     console.error("Error fetching favorite restaurants:", err);
-//     res.status(500).json({ message: "Failed to fetch favorite restaurants" });
-//   }
-// };
- 
 
 
 module.exports = {
   restaurants,
   restaurantDetails,
-  // fetchFavRestaurants,
+  fetchFavRestaurants,
   addFavouriteRestaurants
  
 };

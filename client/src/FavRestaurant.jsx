@@ -100,30 +100,30 @@ import "./FavRestaurant.css";
 const FavRestaurant = () => {
   const navigate = useNavigate();
 
-  // const [favRestaurants, setUserFavRestaurants] = useState([]);
+  const [favRestaurants, setUserFavRestaurants] = useState([]);
 
-  // useEffect(() => {
-  //   //get username from local storage
-  //   const token = localStorage.getItem("JomMakanUser");
+  useEffect(() => {
+    //get username from local storage
+    const token = localStorage.getItem("JomMakanUser");
 
-  //   if (!token) {
-  //     alert("User is not authenticated.");
-  //     return;
-  //   }
+    if (!token) {
+      alert("User is not authenticated.");
+      return;
+    }
 
-  //   axios
-  //     .get("http://localhost:3001/api/restaurant/favRestaurants", {
-  //       headers: {
-  //         Authorization: token,
-  //       },
-  //     })
-  //     .then(({ data }) => {
-  //       setUserFavRestaurants(data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching favRestaurants:", error);
-  //     });
-  // }, []);
+    axios
+      .get("http://localhost:3001/api/restaurant/favRestaurants", {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then(({ data }) => {
+        setUserFavRestaurants(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching favRestaurants:", error);
+      });
+  }, []);
 
   return (
     <div>
