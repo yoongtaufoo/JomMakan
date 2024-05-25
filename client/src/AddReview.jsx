@@ -12,29 +12,32 @@ import Popup from "reactjs-popup";
 const AddReview = () => {
   const { _id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
+  const location = useLocation(); 
+
+   const editMode = new URLSearchParams(location.search).get("edit");
+  const reviewId = new URLSearchParams(location.search).get("reviewId");
+   const [reviewData, setReviewData] = useState(false);
   const params = new URLSearchParams(location.search);
   const restaurantName = params.get("restaurantName");
   const restaurant_id = _id;
   const popRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("idle");
-  const [ratingInput, setratingInput] = useState("");
-  const [descriptionInput, setDescriptionInput] = useState("");
-  const [mediaInput, setMediaInput] = useState("");
-  const [isChecked, setIsChecked] = useState(false);
+  
   const [showPopup, setShowPopup] = useState(false);
   const token = localStorage.getItem("JomMakanUser");
-
-  // const { edit, selectedReview } = props;
 
   const handleUploadFile = async (selectedFile) => {
     console.log("Uploading file:", selectedFile);
     setUploadStatus("loading");
-    setMediaInput(selectedFile);
+    setSelectedFile(selectedFile);
     setTimeout(() => {
       setUploadStatus("success");
     }, 3000);
+
+    const mediaUrl = URL.createObjectURL(selectedFile);
+    console.log(mediaUrl);
+    setMediaInput(mediaUrl);
   };
 
   const resetUploadStatus = () => {
@@ -74,62 +77,81 @@ const AddReview = () => {
       setShowPopup(false);
     }
   };
-  const resetForm = () => {
-    setratingInput(0);
-    setDescriptionInput("");
-    setMediaInput("");
-    setSelectedFile(null);
-    setIsChecked(false);
-    setUploadStatus("idle");
-    // window.location.reload();
-  };
 
+  // const resetForm = () => {
+  //   setratingInput("");
+  //   setDescriptionInput(" ");
+  //   setMediaInput("");
+  //   setSelectedFile(null);
+  //   setIsChecked(false);
+  //   setUploadStatus("idle");
+  // };
+const [ratingInput, setratingInput] = useState(params.get("rating") || "");
+const [descriptionInput, setDescriptionInput] = useState(
+  params.get("description") || ""
+);
+const [mediaInput, setMediaInput] = useState(params.get("media") || "");
+const [isChecked, setIsChecked] = useState(
+  params.get("isChecked") === "true" || false
+);
+
+  
   const submitReview = async () => {
-    // if (edit) {
-    //   updateReview();
-    // } else {
-    if (!ratingInput || !descriptionInput || !mediaInput || !isChecked) {
+    if (!ratingInput || !descriptionInput || !selectedFile || !isChecked) {
       alert("Please complete all fields before submitting the review.");
       return;
     }
 
-    try {
-      const response = await axios.post(
-        `http://localhost:3001/api/review/${restaurant_id}/addReview`,
-        {
-          rating: ratingInput,
-          timePosted: new Date(),
-          reviewDescription: descriptionInput,
-          mediaUrl: {
-            public_id: "mediaUpload/ndwm8rvip7fqearoixpm",
-            url: "https://res.cloudinary.com/djjyjupja/image/upload/v1716538365/mediaUpload/ndwm8rvip7fqearoixpm.jpg",
+    if (editMode === "true" && reviewId) {
+      // Update the review
+      try {
+        const response = await axios.put(
+          `http://localhost:3001/api/review/${_id}/addReview?edit=true`,
+          {
+            rating: ratingInput,
+            timePosted: new Date(),
+            reviewDescription: descriptionInput,
+            media: mediaInput,
+            restaurant_id: restaurant_id,
+            agreeToTerms: isChecked,
           },
-          restaurant_id: restaurant_id,
-          agreeToTerms: isChecked,
-        },
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log("Review submitted successfully:", response.data);
-      resetForm();
-    } catch (error) {
-      if (error.response) {
-        // that falls out of the range of 2xx
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-        console.error("Error response headers:", error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("Error request data:", error.request);
-      } else {
-        console.error("Error message:", error.message);
+          {
+            headers: {
+              Authorization: token,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("Review updated successfully:", response.data);
+        navigate(`/restaurant/${restaurant_id}`);
+      } catch (error) {
+        console.error("Error updating review:", error);
       }
-      console.error("Error config:", error.config);
-      //      }
+    } else {
+      // Add a new review
+      try {
+        const response = await axios.post(
+          `http://localhost:3001/api/review/${restaurant_id}/addReview`,
+          {
+            rating: ratingInput,
+            timePosted: new Date(),
+            reviewDescription: descriptionInput,
+            media: mediaInput,
+            restaurant_id: restaurant_id,
+            agreeToTerms: isChecked,
+          },
+          {
+            headers: {
+              Authorization: token,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("Review submitted successfully:", response.data);
+        navigate(`/restaurant/${restaurant_id}`);
+      } catch (error) {
+        console.error("Error submitting review:", error);
+      }
     }
   };
 
@@ -183,7 +205,7 @@ const AddReview = () => {
               <div id="ratings">
                 Overall Ratings:
                 <br />
-                <Rating onClick={handleRating} ratingValue={ratingInput} />
+                <Rating onClick={handleRating} value={ratingInput} />
               </div>
               <br></br>
               <div>
@@ -193,6 +215,7 @@ const AddReview = () => {
                   className="textArea"
                   rows="4"
                   cols="50"
+                  value={descriptionInput}
                   onChange={handleDescriptionChange}
                 />
               </div>
@@ -200,9 +223,10 @@ const AddReview = () => {
               <div>
                 Media Upload:
                 <MyDropzone
-                  onUploadFile={handleUploadFile}
+                  handleUploadFile={handleUploadFile}
                   uploadStatus={uploadStatus}
                   resetUploadStatus={resetUploadStatus}
+                  selectedFile={selectedFile}
                 />
               </div>
 
@@ -210,6 +234,7 @@ const AddReview = () => {
               <div id="checkbox">
                 <input
                   type="checkbox"
+                  value={isChecked}
                   checked={isChecked}
                   onChange={(e) => {
                     handleCheckboxChange(e);
@@ -224,11 +249,7 @@ const AddReview = () => {
             </div>
             <Popup
               contentStyle={{ width: "450px", borderRadius: "20px" }}
-              trigger={
-                <button id="form-submitButton" onClick={submitReview}>
-                  Submit Review
-                </button>
-              }
+              trigger={<button id="form-submitButton">Submit Review</button>}
               modal
               nested
             >
