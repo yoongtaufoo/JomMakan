@@ -17,7 +17,7 @@ const review = async (req, res) => {
       rating,
       timePosted,
       reviewDescription,
-      mediaUrl,
+      media,
       agreeToTerms,
       likeCount,
       likedBy
@@ -30,7 +30,7 @@ const review = async (req, res) => {
       rating,
       timePosted,
       reviewDescription,
-      mediaUrl,
+      media,
       agreeToTerms,
       likeCount,
       likedBy
@@ -41,35 +41,6 @@ const review = async (req, res) => {
   } catch (err) {
     console.error("Error creating review:", err);
     res.status(500).json({ message: "Failed to create review" });
-  }
-};
-
-const uploadMediaReview = async (req, res, next) => {
-  try {
-    // Check if media file exists in the request
-    if (!req.file) {
-      return res
-        .status(400)
-        .json({ success: false, message: "No file uploaded" });
-    }
-
-    // Upload media to Cloudinary
-    const uploadedMedia = await cloudinary.uploader.upload(req.file.path, {
-      folder: "mediaUpload",
-    });
-
-    // Construct media URL from Cloudinary response
-    const mediaUrl = uploadedMedia.secure_url;
-    console.log(mediaUrl);
-    // Return the media URL in the response
-    res.status(200).json({
-      success: true,
-      message: "Media uploaded successfully",
-      mediaUrl: mediaUrl,
-    });
-  } catch (error) {
-    console.log(error);
-    next(error);
   }
 };
 
@@ -104,64 +75,54 @@ const getReview = async (req, res) => {
   }
 };
 
-const editReview = async (req, res) => {
+
+const deleteReview = async (req, res) => {
+  const { reviewId } = req.params;
+
   try {
-    const { _id } = req.params;
-    const review = await Review.findByIdAndUpdate(_id, req.body, { new: true });
+    const review = await Review.findByIdAndDelete(reviewId);
+
     if (!review) {
       return res.status(404).json({ message: "Review not found" });
     }
-    res.json({ message: "Review updated successfully", review });
+
+    res.json({ message: "Review deleted successfully" });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error("Error deleting review:", error);
+    res.status(500).json({ message: "Failed to delete review" });
   }
 };
 
-const deleteReview = async (req, res) => {
-  try {
-    const { _id } = req.params;
-    console.log(_id);
-    const review = await Review.findByIdAndDelete(_id);
-    if (!review) {
-      return res.status(404).json({ message: "Review not found" });
-    }
-    res.json({ message: "Review deleted successfully" });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+
 
 const likeReview = async (req, res) => {
   try {
-    const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
-    const userId = storedUser.user.id;
+    const userId = req.user.id;
     const reviewId = req.params._id;
-    const review = await Review.findById(reviewId);
+    console.log(reviewId);
+    const review = await Review.findOne({ _id: reviewId });
 
     if (!review) {
       return res.status(404).json({ message: "Review not found" });
     }
-    console.log(review.likes);
-    // Check if the user has already liked the review
-    const likeIndex = review.likedBy.indexOf(userId);
-    if (likeIndex === -1) {
-      // If the user hasn't liked the review, add like
-      review.likedBy.push(userId);
-      review.likes += 1;
+
+    if (review.likedBy.includes(userId)) {
+      review.likedBy.pop(userId);
+      review.likeCount -= 1;
     } else {
-      // If the user has already liked the review, remove like
-      review.likedBy.splice(likeIndex, 1);
-      review.likes -= 1;
+      review.likedBy.push(userId);
+      review.likeCount += 1;
     }
 
-    // Save changes to the database
     await review.save();
-
-    res.json({ likes: review.likes });
+    res.json({ message: "Review liked/unliked successfully", review });
   } catch (error) {
     console.error("Error liking review:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
 
 
 module.exports = {
@@ -170,6 +131,5 @@ module.exports = {
   // editReview,
   deleteReview,
   getReview,
-  // uploadMediaReview,
   likeReview,
 };

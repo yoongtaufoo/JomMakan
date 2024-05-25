@@ -37,8 +37,8 @@ const Restaurant = () => {
   const [deleted, setDelete] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const [likes, setLikes] = useState([]);
   const [showDetailsPopups, setShowDetailsPopups] = useState(0);
+  const [hasLikes, setHasLikes] = useState([]);
   const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
   const [selectedShareOption, setSelectedShareOption] = useState(null);
   const [openDropdownIndex, setOpenDropdownIndex] = useState(0);
@@ -51,36 +51,60 @@ const Restaurant = () => {
 
   const { _id } = useParams();
 
-  const handleFacebook = (index) => {
-     const review = restaurantReviews[index];
-     const reviewUrl = `URL to the review page for review ID ${review._id}`;
-     const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=#${encodeURIComponent(
-       reviewUrl
-     )}`;
-
-     // Open the share dialog for Facebook
-     window.open(
-       shareUrl,
-       "_blank",
-       "toolbar=yes,scrollbars=yes,resizable=yes,top=100,left=500,width=600,height=800"
-     );
-
-    setIsDropdownIndex(null);
+  const handleFacebook = () => {
+    FB.ui(
+      {
+        method: "share",
+        href: `https://www.facebook.com/sharer/sharer.php?u=#https://localhost:3001/api/review/${_id}`,
+      },
+      function (response) {
+        if (response && !response.error_message) {
+          console.log("Posting completed.");
+        } else {
+          console.log("Error while posting.");
+        }
+      }
+    );
   };
+
+  window.fbAsyncInit = function () {
+    FB.init({
+      appId: "426464723493517",
+      cookie: true,
+      xfbml: true,
+      version: "v12.0",
+    });
+
+    FB.AppEvents.logPageView();
+  };
+
+  (function (d, s, id) {
+    var js,
+      fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {
+      return;
+    }
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  })(document, "script", "facebook-jssdk");
+
+
   const handleEmail = (index) => {
-  const review = restaurantReviews[index];
-  const reviewUrl = `URL to the review page for review ID ${review._id}`;
-  const subject = "Check out this review!";
-  const body = `Check out this restaurant's review: ${reviewUrl}`;
-  const mailtoUrl = `mailto:?subject=${encodeURIComponent(
-    subject
-  )}&body=${encodeURIComponent(body)}`;
+    const review = restaurantReviews[index];
+    const reviewUrl = `URL to the review page for review ID ${review._id}`;
+    const subject = "Check out this review!";
+    const body = `Check out this restaurant's review: ${reviewUrl}`;
+    const mailtoUrl = `mailto:?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
 
-  // Open the default email client with the pre-filled email
-  window.location.href = mailtoUrl;
+    // Open the default email client with the pre-filled email
+    window.location.href = mailtoUrl;
 
-  // Close the dropdown menu after sharing
-  setIsDropdownIndex(null);
+    // Close the dropdown menu after sharing
+    setIsDropdownIndex(null);
   };
 
   const [restaurant, setRestaurant] = useState({});
@@ -89,7 +113,6 @@ const Restaurant = () => {
   const [ratingPercentages, setRatingPercentages] = useState([0, 0, 0, 0, 0]);
   const [averageRating, setAverageRating] = useState(0);
   const [selectedReview, setSelectedReview] = useState(null); // State to hold the selected review for editing
-  const [reviewDescription, setReviewDescription] = useState(""); // State to hold the review description
 
   let userid = "User123";
 
@@ -139,8 +162,10 @@ const Restaurant = () => {
     }
   };
 
- const handleLike = async (index) => {
-   const token = localStorage.getItem("JomMakanUser");
+ const handleLike = async (reviewId) => {
+   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
+   const token = storedUser && storedUser.token;
+   const userId = storedUser && storedUser.user._id;
 
    if (!token) {
      alert("User is not authenticated.");
@@ -148,9 +173,10 @@ const Restaurant = () => {
    }
 
    try {
-     const response = await axios.post(
-       `http://localhost:3001/api/review/${_id}/likeReview`,
-       {}, // No data payload needed for liking
+     // Send POST request to like/unlike the review
+     await axios.post(
+       `http://localhost:3001/api/review/${reviewId}/likeReview`,
+       {},
        {
          headers: {
            Authorization: `Bearer ${token}`,
@@ -158,16 +184,35 @@ const Restaurant = () => {
        }
      );
 
-     setLikes((prevLikes) => {
-       const newLikes = [...prevLikes];
-       newLikes[index] = response.data.likes;
-       return newLikes;
+     // Update state based on the response from the server
+     setRestaurantReviews((prevReviews) => {
+       return prevReviews.map((review) => {
+         if (review._id === reviewId) {
+           const likedByUser = review.likedBy.includes(userId);
+           if (likedByUser) {
+             // Unlike
+             return {
+               ...review,
+               likeCount: review.likeCount - 1,
+               likedBy: review.likedBy.filter((id) => id !== userId),
+             };
+           } else {
+             // Like
+             return {
+               ...review,
+               likeCount: review.likeCount + 1,
+               likedBy: [...review.likedBy, userId],
+             };
+           }
+         } else {
+           return review;
+         }
+       });
      });
    } catch (error) {
      console.error("Error liking review:", error);
    }
  };
-
 
   useEffect(() => {
     // let handler = (e) => {
@@ -214,38 +259,31 @@ const Restaurant = () => {
         setRestaurantReviews(response.data);
         setAverageRating(calculateAverageRating(response.data)); // Set average rating
         calculateRatingPercentages(response.data);
-
       } catch (error) {
         console.error("Error fetch resreview:", error);
       }
     };
     fetchReviews();
   }, [_id]);
-  const handleEdit = (index) => {
-    const selectedReview = restaurantReviews[index]; // Get the selected review
-    // console.log(restaurantReviews[index]);
-    setSelectedReview(selectedReview); // Set the selected review in state
-    navigate(
-      `/restaurant/${_id}/addReview?restaurantName=${restaurant.name}&edit=true`
-    ); // Navigate to the AddReview page with edit=true query parameter
-  };
 
-  const handleDelete = async (index) => {
+  
+
+  const handleDelete = async () => {
+    const token = localStorage.getItem("JomMakanUser");
+    if (!token) {
+      alert("User is not authenticated.");
+      return;
+    }
+
     try {
       // Send DELETE request to delete the review
-      await axios.delete(
-        `http://localhost:3001/api/review/${restaurantReviews[index]._id}/deleteReview`
-      );
-
-      // Update the state to reflect the deletion
-      setRestaurantReviews((prevReviews) => {
-        const newReviews = [...prevReviews];
-        newReviews.splice(index, 1); // Remove the deleted review from the array
-        return newReviews;
+      await axios.delete(`http://localhost:3001/api/review/${_id}/deleteReview`, {
+        headers: {
+          Authorization: token,
+        },
       });
 
-      // Close the delete confirmation popup
-      setDelete(false);
+      // Handle deletion success, e.g., remove review from state or refresh data
     } catch (error) {
       console.error("Error deleting review:", error);
       // Handle error or display error message to user
@@ -253,6 +291,9 @@ const Restaurant = () => {
   };
 
 
+const handleEdit = (reviewId) => {
+  navigate(`/restaurant/${_id}/addReview?edit=true&reviewId=${reviewId}`);
+};
   // useEffect(() => {
   //   axios
   //     .get(`http://localhost:3001/api/restaurant/${_id}`)
@@ -535,11 +576,11 @@ const Restaurant = () => {
                 >
                   <li>
                     <Link
-                      to={`/restaurant/${_id}/addReview?edit=true?restaurantName=${restaurant.name}`}
+                      to={`/restaurant/${_id}/addReview?edit=true?restaurantName=${restaurant.name}&reviewId=${review._id}`}
                     >
                       <button
                         className="dropdown-item"
-                        onClick={() => handleEdit(index)}
+                        onClick={() => handleEdit(review._id)}
                       >
                         <i className="bi bi-pencil"></i> Edit
                       </button>
@@ -561,14 +602,8 @@ const Restaurant = () => {
                 <div className="popup" ref={popRef}>
                   <div>Confirm delete?</div>
                   <div>
-                    <button
-                      onClick={() => {
-                        setConfirm(true);
-                        setDelete(false);
-                      }}
-                    >
-                      Confirm
-                    </button>
+                    <button onClick={() => handleDelete()}>Confirm</button>
+
                     <button
                       id="buttonPopupCancel"
                       onClick={() => setDelete(false)}
@@ -579,17 +614,17 @@ const Restaurant = () => {
                 </div>
               </div>
             )}
-            
+
             <span
               className="review-options"
               onClick={() => togglePopup(index)}
             ></span>
             {showDetailsPopups[index] && (
               <div className="review-options-popup">
-                <button onClick={() => handleEdit(index)}>
+                <button onClick={() => handleEdit(review._id)}>
                   <i className="bi bi-pencil"></i> Edit
                 </button>
-                <button onClick={() => handleDelete(index)}>
+                <button>
                   <i className="bi bi-trash"></i> Delete
                 </button>
               </div>
@@ -603,24 +638,24 @@ const Restaurant = () => {
             </div>
 
             <p>{review.reviewDescription}</p>
-            {review.mediaUrl && (
-              <img src={review.mediaUrl} className="review-photo" />
+            {review.media && (
+              <img src={review.media} className="review-photo" />
             )}
 
             <div className="photo-buttons">
               <button
                 className="btn-like"
-                onClick={() => handleLike(index)}
-                style={{ color: likes[index] ? "blue" : "black" }}
+                onClick={() => handleLike(review._id)}
+                style={{ color: hasLikes[index] ? "blue" : "black" }}
               >
                 <i
                   className={
-                    likes[index]
+                    hasLikes[index]
                       ? "bi bi-hand-thumbs-up-fill"
                       : "bi bi-hand-thumbs-up"
                   }
                 ></i>{" "}
-                Helpful ({likes[index]})
+                Helpful ({review.likeCount})
               </button>
 
               <div className="dropdown-share">
