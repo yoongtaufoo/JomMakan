@@ -10,20 +10,20 @@ import axios from "axios";
 import Popup from "reactjs-popup";
 
 const AddReview = () => {
-  const { _id } = useParams();
+  const { _id, reviewId } = useParams();
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const location = useLocation();
 
-   const editMode = new URLSearchParams(location.search).get("edit");
-  const reviewId = new URLSearchParams(location.search).get("reviewId");
-   const [reviewData, setReviewData] = useState(false);
+  const editMode = new URLSearchParams(location.search).get("edit");
+  // const reviewId = new URLSearchParams(location.search).get("reviewId");
+  const [reviewData, setReviewData] = useState(false);
   const params = new URLSearchParams(location.search);
   const restaurantName = params.get("restaurantName");
   const restaurant_id = _id;
   const popRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("idle");
-  
+
   const [showPopup, setShowPopup] = useState(false);
   const token = localStorage.getItem("JomMakanUser");
 
@@ -77,6 +77,30 @@ const AddReview = () => {
       setShowPopup(false);
     }
   };
+  //  useEffect(() => {
+  //     //get token from local storage
+  //     const token = localStorage.getItem("JomMakanUser");
+
+  //     if (!token) {
+  //       alert("User is not authenticated.");
+  //       return;
+  //     }
+
+  //     axios
+  //       .get(`http://localhost:3001/api/review/${_id}`, {
+  //         headers: {
+  //           Authorization: token,
+  //         },
+  //       })
+  //       .then(({ data }) => {
+  //         set(data.username);
+  //         setLocation(data.location);
+  //         setEmail(data.email);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching profile:", error);
+  //       });
+  //   }, []); // Empty dependency array to fetch data only once when component mounts
 
   // const resetForm = () => {
   //   setratingInput("");
@@ -86,16 +110,15 @@ const AddReview = () => {
   //   setIsChecked(false);
   //   setUploadStatus("idle");
   // };
-const [ratingInput, setratingInput] = useState(params.get("rating") || "");
-const [descriptionInput, setDescriptionInput] = useState(
-  params.get("description") || ""
-);
-const [mediaInput, setMediaInput] = useState(params.get("media") || "");
-const [isChecked, setIsChecked] = useState(
-  params.get("isChecked") === "true" || false
-);
+  const [ratingInput, setratingInput] = useState(params.get("rating") || "");
+  const [descriptionInput, setDescriptionInput] = useState(
+    params.get("description") || ""
+  );
+  const [mediaInput, setMediaInput] = useState(params.get("media") || "");
+  const [isChecked, setIsChecked] = useState(
+    params.get("isChecked") === "true" || false
+  );
 
-  
   const submitReview = async () => {
     if (!ratingInput || !descriptionInput || !selectedFile || !isChecked) {
       alert("Please complete all fields before submitting the review.");
@@ -106,12 +129,16 @@ const [isChecked, setIsChecked] = useState(
       // Update the review
       try {
         const response = await axios.put(
-          `http://localhost:3001/api/review/${_id}/addReview?edit=true`,
+          `http://localhost:3001/api/review/${reviewId}/editReview`,
           {
             rating: ratingInput,
             timePosted: new Date(),
             reviewDescription: descriptionInput,
             media: mediaInput,
+            // media: {
+            //   public_id: "mediaUpload",
+            //   url: "https://res.cloudinary.com/djjyjupja/image/upload/v1716382629/mediaUpload",
+            // },
             restaurant_id: restaurant_id,
             agreeToTerms: isChecked,
           },
@@ -137,7 +164,7 @@ const [isChecked, setIsChecked] = useState(
             timePosted: new Date(),
             reviewDescription: descriptionInput,
             media: mediaInput,
-            restaurant_id: restaurant_id,
+            restaurant_id,
             agreeToTerms: isChecked,
           },
           {
@@ -157,12 +184,14 @@ const [isChecked, setIsChecked] = useState(
 
   const handleDescriptionChange = (event) => {
     setDescriptionInput(event.target.value);
+    // console.log("Description:", descriptionInput);
   };
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
 
   useEffect(() => {
+    console.log("edit: " + editMode);
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
