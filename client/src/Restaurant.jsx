@@ -633,41 +633,45 @@ const Restaurant = () => {
             <div className="name-and-view-more d-flex justify-content-between align-items-center">
               <p>
                 <strong>{review.userName}</strong>
-                <div className="dropdown-share">
-                  <button
-                    className="btn btn-secondary dropdown-toggle dropdown-view-more"
-                    type="button"
-                    id="dropdownViewMoreButton"
-                    onClick={() => handleEditDropdownToggle(index)}
-                  >
-                    <i className="bi-three-dots"></i>
-                  </button>
-                  <ul
-                    className={`dropdown-menu dropdown-view-more ${
-                      openDropdownIndex === index ? "show" : ""
-                    }`}
-                  >
-                    <li>
-                      <Link
-                        to={`/restaurant/${_id}/${review._id}/addReview?edit=true&restaurantName=${restaurant.name}`}
-                      >
-                        {" "}
-                        {/* <button className="dropdown-item" onChange={handleEdit}> */}
-                        <button className="dropdown-item">
-                          <i className="bi bi-pencil"></i> Edit
-                        </button>{" "}
-                      </Link>
-                    </li>
-                    <li>
-                      <button
-                        className="dropdown-item"
-                        onClick={() => setDelete(!deleted)}
-                      >
-                        <i className="bi bi-trash"></i> Delete
-                      </button>
-                    </li>
-                  </ul>
-                </div>
+                {review.user_id ===
+                  JSON.parse(localStorage.getItem("JomMakanUser")).user._id && (
+                  <div className="dropdown-share">
+                    <button
+                      className="btn btn-secondary dropdown-toggle dropdown-view-more"
+                      type="button"
+                      id="dropdownViewMoreButton"
+                      onClick={() => handleEditDropdownToggle(index)}
+                    >
+                      <i className="bi-three-dots"></i>
+                    </button>
+
+                    <ul
+                      className={`dropdown-menu dropdown-view-more ${
+                        openDropdownIndex === index ? "show" : ""
+                      }`}
+                    >
+                      <li>
+                        <Link
+                          to={`/restaurant/${_id}/${review._id}/addReview?edit=true&restaurantName=${restaurant.name}`}
+                        >
+                          {" "}
+                          {/* <button className="dropdown-item" onChange={handleEdit}> */}
+                          <button className="dropdown-item">
+                            <i className="bi bi-pencil"></i> Edit
+                          </button>{" "}
+                        </Link>
+                      </li>
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => setDelete(!deleted)}
+                        >
+                          <i className="bi bi-trash"></i> Delete
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                )}
               </p>
             </div>
             {deleted && (
