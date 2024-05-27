@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const reviewSchema = new mongoose.Schema({
+  // review_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   restaurant_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   userName: { type: String, required: true },
@@ -9,11 +10,9 @@ const reviewSchema = new mongoose.Schema({
   timePosted: { type: Date, required: true },
   reviewDescription: { type: String, required: true },
   agreeToTerms: { type: Boolean, required: true },
-  likeCount: { type: Number, default: 0 },
+  // likeCount: { type: Number, default: 0 },
   likedBy: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    default: [],
-  },
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],  },
 });
 
 const Review = mongoose.model("reviews", reviewSchema);

@@ -64,6 +64,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             path="/restaurant/:_id/addReview"
             element={<AddReview />}
           />
+          <Route
+            exact
+            path="/restaurant/:_id/:reviewId/addReview"
+            element={<AddReview />}
+          />
           <Route exact path="/schedule" element={<Scehdule />} />
           <Route exact path="/restaurant/:_id/reserve" element={<Reserve />} />
           <Route exact path="/reservations" element={<Reservations />} />
