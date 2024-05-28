@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as farStar } from "@fortawesome/free-regular-svg-icons";
+import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 
 
@@ -25,17 +26,37 @@ const WorkshopCard = ({ workshop }) => {
   }
 
   useEffect(() => {
+    if (userId && workshop.favourited) {
+      setStarred(workshop.favourited.includes(userId));
+    }
     if (userId && workshop.registered) {
       setIsRegistered(workshop.registered.includes(userId));
     }
-  }, [userId, workshop.registered]);
+  }, [userId, workshop.favourited,workshop.registered]);
 
-  const handleStarClick = () => {
-    setStarred(!starred);
+  const handleStarClick = async () => {
+    if (!workshop._id) {
+      console.error("Workshop ID is not defined");
+      return;
+    }
+
+    const url = `http://localhost:3001/api/workshops/${workshop._id}/addFavWorkshop`;
+    console.log(`Making request to: ${url}`);
+
+    try {
+      const response = await axios.post(url, { userId });
+      console.log(response.data);
+      setStarred(!starred);
+    } catch (error) {
+      console.error("Error updating favorite workshop:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+      }
+    }
   };
 
   // Add console logs to debug
-  console.log("Workshop Data:", workshop);
+  //console.log("Workshop Data:", workshop);
 
   return (
     <div key={workshop._id} className="col custom-col">
