@@ -291,25 +291,26 @@ const Restaurant = () => {
     }
   };
   
-  const fetchReviews = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3001/api/review/${_id}/reviews`
-        );
-
-        // console.log("Fetched reviews:", response);
-        console.log("Fetched reviews:", response.data);
-        setRestaurantReviews(response.data);
-        setAverageRating(calculateAverageRating(response.data)); // Set average rating
-        calculateRatingPercentages(response.data);
-      } catch (error) {
-        console.error("Error fetch resreview:", error);
-      }
-  };
+  
     fetchReviewData();
     fetchReviews();
   }, [_id]);
+const fetchReviews = async () => {
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/api/review/${_id}/reviews`
+    );
 
+    // console.log("Fetched reviews:", response);
+    console.log("Fetched reviews:", response.data);
+    setRestaurantReviews(response.data);
+    setAverageRating(calculateAverageRating(response.data)); // Set average rating
+    calculateRatingPercentages(response.data);
+    setReview(response.data);
+  } catch (error) {
+    console.error("Error fetch resreview:", error);
+  }
+};
   const handleDelete = async (reviewId) => {
     console.log(reviewId);
     const token = localStorage.getItem("JomMakanUser");
@@ -327,6 +328,7 @@ const Restaurant = () => {
           },
         }
       );
+      fetchReviews();
     } catch (error) {
       console.error("Error deleting review:", error);
       // Handle error or display error message to user
@@ -664,7 +666,7 @@ const Restaurant = () => {
                       <li>
                         <button
                           className="dropdown-item"
-                          onClick={() => setDelete(!deleted)}
+                          onClick={() => handleDelete(review._id)}
                         >
                           <i className="bi bi-trash"></i> Delete
                         </button>
@@ -674,7 +676,7 @@ const Restaurant = () => {
                 )}
               </p>
             </div>
-            {deleted && (
+            {/* {deleted && (
               <div className="popup-overlay">
                 <div className="popup" ref={popRef}>
                   <div>Confirm delete?</div>
@@ -692,7 +694,7 @@ const Restaurant = () => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
             {/* 
             <span
               className="review-options"
