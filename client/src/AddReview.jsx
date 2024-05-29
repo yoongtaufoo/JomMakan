@@ -11,15 +11,17 @@ import Popup from "reactjs-popup";
 
 const AddReview = () => {
   const { _id, reviewId } = useParams();
+  console.log(_id);
   const navigate = useNavigate();
   const location = useLocation();
+  const editMode = new URLSearchParams(location.search).get("edit") || "false";
 
-  const editMode = new URLSearchParams(location.search).get("edit");
+  // const editMode = new URLSearchParams(location.search).get("edit") || "false";
   // const reviewId = new URLSearchParams(location.search).get("reviewId");
+  // console.log(reviewId);
   const [reviewData, setReviewData] = useState(false);
   const params = new URLSearchParams(location.search);
   const restaurantName = params.get("restaurantName");
-  const restaurant_id = _id;
   const popRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("idle");
@@ -35,9 +37,9 @@ const AddReview = () => {
       setUploadStatus("success");
     }, 3000);
 
-    const mediaUrl = URL.createObjectURL(selectedFile);
-    console.log(mediaUrl);
-    setMediaInput(mediaUrl);
+    // const mediaUrl = URL.createObjectURL(selectedFile);
+    // console.log(mediaUrl);
+    // setMediaInput(mediaUrl);
   };
 
   const resetUploadStatus = () => {
@@ -125,59 +127,81 @@ const AddReview = () => {
       return;
     }
 
-    if (editMode === "true" && reviewId) {
-      // Update the review
+    if (editMode == "true") {
+      const formData = new FormData();
+      formData.append("restaurant_id", _id);
+      formData.append("rating", ratingInput);
+      formData.append("timePosted", new Date());
+      formData.append("reviewDescription", descriptionInput);
+      formData.append("image", selectedFile);
+      formData.append("agreeToTerms", isChecked);
+
+      console.log("Selected File:", selectedFile);
+
       try {
         const response = await axios.put(
           `http://localhost:3001/api/review/${reviewId}/editReview`,
-          {
-            rating: ratingInput,
-            timePosted: new Date(),
-            reviewDescription: descriptionInput,
-            media: mediaInput,
-            // media: {
-            //   public_id: "mediaUpload",
-            //   url: "https://res.cloudinary.com/djjyjupja/image/upload/v1716382629/mediaUpload",
-            // },
-            restaurant_id: restaurant_id,
-            agreeToTerms: isChecked,
-          },
+          formData,
           {
             headers: {
               Authorization: token,
-              "Content-Type": "application/json",
+              "Content-Type": "multipart/form-data",
             },
           }
         );
+
         console.log("Review updated successfully:", response.data);
-        navigate(`/restaurant/${restaurant_id}`);
+        navigate(`/restaurant/${_id}`);
       } catch (error) {
-        console.error("Error updating review:", error);
+        if (error.response) {
+          console.error("Error response data:", error.response.data);
+          console.error("Error response status:", error.response.status);
+          console.error("Error response headers:", error.response.headers);
+        } else if (error.request) {
+          console.error("Error request data:", error.request);
+        } else {
+          console.error("General error message:", error.message);
+        }
       }
     } else {
-      // Add a new review
+      const formData = new FormData();
+      formData.append("restaurant_id", _id);
+      formData.append("rating", ratingInput);
+      formData.append("timePosted", new Date());
+      formData.append("reviewDescription", descriptionInput);
+      formData.append("image", selectedFile);
+      formData.append("agreeToTerms", isChecked);
+
+      console.log("Rating Input:", ratingInput);
+      console.log("Date:", new Date());
+      console.log("Description Input:", descriptionInput);
+      console.log("Is Checked:", isChecked);
+      console.log("Selected File:", selectedFile);
+
       try {
         const response = await axios.post(
-          `http://localhost:3001/api/review/${restaurant_id}/addReview`,
-          {
-            rating: ratingInput,
-            timePosted: new Date(),
-            reviewDescription: descriptionInput,
-            media: mediaInput,
-            restaurant_id,
-            agreeToTerms: isChecked,
-          },
+          `http://localhost:3001/api/review/${_id}/addReview`,
+          formData,
           {
             headers: {
               Authorization: token,
-              "Content-Type": "application/json",
+              // "Content-Type": "multipart/form-data",
             },
           }
         );
+
         console.log("Review submitted successfully:", response.data);
-        navigate(`/restaurant/${restaurant_id}`);
+        navigate(`/restaurant/${_id}`);
       } catch (error) {
-        console.error("Error submitting review:", error);
+        if (error.response) {
+          console.error("Error response data:", error.response.data);
+          console.error("Error response status:", error.response.status);
+          console.error("Error response headers:", error.response.headers);
+        } else if (error.request) {
+          console.error("Error request data:", error.request);
+        } else {
+          console.error("General error message:", error.message);
+        }
       }
     }
   };
@@ -191,7 +215,7 @@ const AddReview = () => {
   };
 
   useEffect(() => {
-    console.log("edit: " + editMode);
+    console.log("editMode: " + editMode);
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
