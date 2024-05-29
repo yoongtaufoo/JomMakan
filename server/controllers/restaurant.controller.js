@@ -48,6 +48,10 @@ const restaurants = async (req, res) => {
   
       // const token = req.headers.authorization; // Get the token from the authorization header
       const authHeader = req.headers.authorization; // Get token
+      if (!authHeader) {
+        console.log("No token provided");
+        return res.json({ restaurant }); // Return restaurant details without isSaved flag
+      }
       const token = JSON.parse(authHeader)
       console.log("Authorization Header:", token);
   

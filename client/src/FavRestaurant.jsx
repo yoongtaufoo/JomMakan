@@ -53,7 +53,7 @@ const FavRestaurant = () => {
           "http://localhost:3001/api/restaurant/restaurants"
         );
         // const data = await response.json();
-        setRestaurants(response.data);
+        setRestaurants(response.data.restaurant);
       } catch (error) {
         console.error("Error fetching restaurants:", error);
       }
