@@ -55,64 +55,6 @@ const Restaurant = () => {
     userId = storedUser.user._id;
   }
 
-  // const handleFacebook = (restaurant,review) => {
-  //   if (!window.FB) {
-  //     console.error("Facebook SDK not loaded.");
-  //     return;
-  //   }
-  //   const shareParams = {
-  //     method: 'share',
-  //     href:'https://www.facebook.com/sharer/sharer.php',
-  //   title: `Check out this restaurant's review:\n\nRestaurant Name: ${restaurant.name}\nRating: ${review.rating} stars\nReview: ${review.reviewDescription}`,
-  // };
-
-  // FB.ui(shareParams, function (response) {
-  //   if (response && !response.error_message) {
-  //     console.log('Post shared successfully.');
-  //   } else {
-  //     console.log('Error while sharing post.');
-  //   }
-  // });
-  // };
-
-  // window.fbAsyncInit = function () {
-  //   FB.init({
-  //     appId: "426464723493517",
-  //     cookie: true,
-  //     xfbml: true,
-  //     version: "v12.0",
-  //   });
-
-  //   FB.AppEvents.logPageView();
-  // };
-
-  // (function (d, s, id) {
-  //   var js,
-  //     fjs = d.getElementsByTagName(s)[0];
-  //   if (d.getElementById(id)) {
-  //     return;
-  //   }
-  //   js = d.createElement(s);
-  //   js.id = id;
-  //   js.src = "https://connect.facebook.net/en_US/sdk.js";
-  //   fjs.parentNode.insertBefore(js, fjs);
-  // })(document, "script", "facebook-jssdk");
-
-  // const handleEmail = (index) => {
-  //   const review = restaurantReviews[index];
-  //   const reviewUrl = `URL to the review page for review ID ${review._id}`;
-  //   const subject = "Check out this review!";
-  //   const body = `Check out this restaurant's review: ${reviewUrl}`;
-  //   const mailtoUrl = `mailto:?subject=${encodeURIComponent(
-  //     subject
-  //   )}&body=${encodeURIComponent(body)}`;
-
-  //   // Open the default email client with the pre-filled email
-  //   window.location.href = mailtoUrl;
-
-  //   // Close the dropdown menu after sharing
-  //   setIsDropdownIndex(null);
-  // };
 
   const handleWhatsApp = (review) => {
     const message = `Hey there! I just discovered this amazing restaurant with fantastic reviews. People are raving about their delicious food and great service. Let's plan a date to check it out together! 😊🍽️ \n\nRestaurant Name: ${restaurant.name} \nRatings: ${review.rating} stars \nReview: ${review.reviewDescription}`;
@@ -138,8 +80,7 @@ const Restaurant = () => {
   };
 
   const [restaurant, setRestaurant] = useState({});
-  const [review, setReview] = useState(null);
-  // const [reviewId, setReviewId] = useState("");
+  const [reviews, setReviews] = useState([]);
   const [restaurantReviews, setRestaurantReviews] = useState([]); // Initialize as empty array
   const [ratingPercentages, setRatingPercentages] = useState([0, 0, 0, 0, 0]);
   const [averageRating, setAverageRating] = useState(0);
@@ -153,37 +94,7 @@ const Restaurant = () => {
     setOpenDropdownIndex(openDropdownIndex === index ? null : index);
   };
 
-  const handleSaveToggle = async () => {
-    const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
-    if (!token) {
-      alert("User is not authenticated."); // Handle case where user is not authenticated
-      return;
-    }
-
-    if (!_id) {
-      console.log("favRestaurantId is undefined.");
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        `http://localhost:3001/api/restaurant/${_id}/addFavRestaurant`,
-        {
-          favRestaurantId: _id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include JWT in request headers
-          },
-        }
-      );
-      setIsSaved(!isSaved);
-      console.log("restaurant saved successfully" + response.data.message);
-      navigate(`/restaurant/${_id}`);
-    } catch (error) {
-      console.log("Unable to save restaurant:" + error.message);
-    }
-  };
+ 
 
   const handleLike = async (reviewId, index) => {
     try {
@@ -261,7 +172,7 @@ const Restaurant = () => {
     }
   };
 
-  useEffect(() => {
+  
     // let handler = (e) => {
     //   if (popRef.current && !popRef.current.contains(e.target)) {
     //     setDelete(false);
@@ -273,27 +184,44 @@ const Restaurant = () => {
     // return () => {
     //   document.removeEventListener("mousedown", handler);
     // };
-    axios
-      .get(`http://localhost:3001/api/restaurant/${_id}`)
-      .then(({ data }) => {
-        setRestaurant(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching restaurant:", error);
-      });
 
-    // axios
-    //   .get(`http://localhost:3001/api/review/${_id}/reviews`)
-    //   .then((response) => {
-    //     console.log("Fetched reviews:", response.data);
-    //     setRestaurantReviews(response.data);
-    //     setAverageRating(calculateAverageRating(response.data)); // Set average rating
-    //     calculateRatingPercentages(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching reviews:", error);
-    //   });
+    useEffect(() => {
+      const fetchRestaurantData = async () => {
+        try {
+          // Get the token from localStorage or from wherever it's stored
+          const token = localStorage.getItem("JomMakanUser");
+          if (!token) {
+            alert("User is not authenticated.");
+            return;
+          }
+    
+          // Set the request headers with the token
+          // const config = token ? { headers: { Authorization: token } } : {};
+    
+          const { data } = await axios.get(`http://localhost:3001/api/restaurant/${_id}`, { headers: { Authorization: token } });
+    
+          // Log the retrieved data for debugging
+          console.log(data.restaurant);
+          console.log(data.isSaved);
+    
+          // Update state with the retrieved restaurant data
+          setRestaurant(data.restaurant);
+          
+          // If isSaved is defined in the response, update the state
+          if (data.isSaved !== undefined) {
+            setIsSaved(data.isSaved);
+          }
+        } catch (error) {
+          console.error("Error fetching restaurant or isSaved status:", error);
+        }
+      };
+    
+      // Call the fetchRestaurantData function when the component mounts or when _id changes
+      fetchRestaurantData();
+    }, [_id]); // Dependency array
+    
 
+<<<<<<< HEAD
     // const fetchReviewData = async () => {
     //   try {
     //     const response = await axios.get(
@@ -341,12 +269,98 @@ const Restaurant = () => {
   const handleDelete = async (reviewId) => {
     console.log(reviewId);
     const token = localStorage.getItem("JomMakanUser");
+=======
+    useEffect(() => {
+
+    const fetchReviews = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/api/review/${_id}/reviews`
+        );
+
+        // console.log("Fetched reviews:", response);
+        console.log("Fetched reviews:", response.data);
+        setRestaurantReviews(response.data);
+        setAverageRating(calculateAverageRating(response.data)); // Set average rating
+        calculateRatingPercentages(response.data);
+
+      } catch (error) {
+        console.error("Error fetch resreview:", error);
+      }
+    };
+    fetchReviews();
+  }, [_id]);
+  const handleEdit = (index) => {
+    const selectedReview = restaurantReviews[index]; // Get the selected review
+    // console.log(restaurantReviews[index]);
+    setSelectedReview(selectedReview); // Set the selected review in state
+    navigate(
+      `/restaurant/${_id}/addReview?restaurantName=${restaurant.name}&edit=true`
+    ); // Navigate to the AddReview page with edit=true query parameter
+  };
+
+  const handleSaveToggle = async () => {
+    const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
+>>>>>>> 5eae84c672f7dd71850d70dba359f1df14eb7b3a
     if (!token) {
-      alert("User is not authenticated.");
+      alert("User is not authenticated."); // Handle case where user is not authenticated
       return;
     }
-
+  
+    if (!restaurant) {
+      console.log("Restaurant data is not loaded.");
+      return;
+    }
+  
     try {
+      if (isSaved) {
+        // If the restaurant is already saved, perform unsave action
+        const savedRestaurant = await axios.get(
+          `http://localhost:3001/api/restaurant/favrestaurants/${restaurant._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        const favRestaurantId = savedRestaurant.data._id; // Extract favRestaurantId from the response
+  
+        await axios.delete(
+          `http://localhost:3001/api/restaurant/favrestaurants/${favRestaurantId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        console.log("Restaurant unsaved successfully");
+        setIsSaved(false); // Update the state to reflect the unsaved state
+      } else {
+        // If the restaurant is not saved, perform save action
+        await axios.post(
+          `http://localhost:3001/api/restaurant/${restaurant._id}/addFavRestaurant`,
+          {
+            ...restaurant,
+            restaurant_id: restaurant._id,
+            status: "S",
+          },
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        console.log("Restaurant saved successfully");
+        setIsSaved(true); // Update the state to reflect the saved state
+      }
+    } catch (error) {
+      console.log("Unable to perform save/unsave action:", error.message);
+    }
+  };
+
+  const handleDelete = async (index) => {
+    try {
+      // Send DELETE request to delete the review
       await axios.delete(
         `http://localhost:3001/api/review/${reviewId}/deleteReview`,
         {
@@ -362,62 +376,10 @@ const Restaurant = () => {
     }
   };
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:3001/api/restaurant/${_id}`)
-  //     .then(({ data }) => {
-  //       setRestaurant(data);
-  //       if (data.reviews) {
-  //         setHasLiked(new Array(data.reviews.length).fill(false));
-  //         setLikes(new Array(data.reviews.length).fill(0));
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching restaurant:", error);
-  //     });
-  // }, [_id]);
 
-  // useEffect(() => {
-  //   const fetchReviews = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:3001/api/review/${_id}/reviews`
-  //       );
-  //       console.log("Fetched reviews:", response.data);
-  //       setRestaurantReviews(response.data);
-  //       setAverageRating(calculateAverageRating(response.data)); // Set average rating
-  //       calculateRatingPercentages(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetch resreview:", error);
-  //     }
-  //   };
-  //   fetchReviews();
-  // }, [_id]);
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("JomMakanUser");
 
-  //   if (!token) {
-  //     alert("User is not authenticated.");
-  //     return;
-  //   }
 
-  //   axios
-  //     .get(`http://localhost:3001/api/restaurant/${_id}/reviews`, {
-  //       headers: {
-  //         Authorization: token,
-  //       },
-  //     })
-  //     .then(({ data }) => {
-  //       setRestaurantReviews(data);
-  //       setRestaurantReviews(response.data);
-  //       setAverageRating(calculateAverageRating(response.data)); // Set average rating
-  //       calculateRatingPercentages(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching revieww:", error);
-  //     });
-  // }, []);
 
   const calculateRatingPercentages = (reviews) => {
     const total = reviews.length;
@@ -463,11 +425,14 @@ const Restaurant = () => {
     }
   };
 
+<<<<<<< HEAD
   const handleEdit = async (reviewId) => {
     navigate(
       `/restaurant/${_id}/${reviewId}/addReview?edit=true&restaurantName=${restaurant.name}`
     );
   };
+=======
+>>>>>>> 5eae84c672f7dd71850d70dba359f1df14eb7b3a
 
   return (
     <div>

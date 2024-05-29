@@ -3,15 +3,18 @@ const express = require("express");
 const {
     workshops,
     workshopDetails,
-    addFavouriteWorkshops
+    addFavouriteWorkshops,
+    removeFavouriteWorkshops
 } = require("../controllers/workshop.controller");
+
 
 const router = express.Router();
 
 router.get("/workshops", workshops);
 //router.get("/workshop/:_id", workshopDetails); 
-router.get("/:_id", workshopDetails); // Corrected typo
+router.get("/:_id", workshopDetails); 
 router.post("/:workshopId/addFavWorkshop", addFavouriteWorkshops);
+router.delete("/:workshopId/removeFavWorkshop", removeFavouriteWorkshops);
 
 module.exports = router;
 
