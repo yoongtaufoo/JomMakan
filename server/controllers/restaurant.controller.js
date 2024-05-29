@@ -17,28 +17,6 @@ const restaurants = async (req, res) => {
   }
 
 
-  // const restaurantDetails = async(req, res) =>{
-  //   try{
-  //     const restaurant = await Restaurant.findById({"_id": req.params._id})
-  //     if (!restaurant) {
-  //       return res.status(404).json({ message: "Restaurant not found" });
-  //     }
-
-  //     const authHeader = req.headers.authorization; // Get token
-  //     const token = JSON.parse(authHeader);
-  
-  //     const userId = token.user._id;
-  //     const isSaved = await favRestaurant.exists({ user_id: userId, restaurant_id: req.params._id });
-
-  //   // Include the isSaved flag in the response
-  //   res.json({ restaurant, isSaved });
-  //     // res.json(restaurant)
-  //   }catch(error){
-  //     console.error(error)
-  //     res.status(500).json({message: "Internal server error"})
-  //   }
-  // }
-
   const restaurantDetails = async (req, res) => {
     try {
       const restaurant = await Restaurant.findById(req.params._id);
@@ -46,7 +24,6 @@ const restaurants = async (req, res) => {
         return res.status(404).json({ message: "Restaurant not found" });
       }
   
-      // const token = req.headers.authorization; // Get the token from the authorization header
       const authHeader = req.headers.authorization; // Get token
       if (!authHeader) {
         console.log("No token provided");
@@ -60,8 +37,6 @@ const restaurants = async (req, res) => {
         return res.json({ restaurant }); // Return restaurant details without isSaved flag
       }
   
-      // const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-      // const userId = decodedToken.user._id;
       const userId = token.user._id
   
       const savedRestaurant = await favRestaurant.findOne({ user_id: userId, restaurant_id: req.params._id });
@@ -79,37 +54,7 @@ const restaurants = async (req, res) => {
   };
   
 
-// const checkFavourites = async (req, res) => {
-//   try {
-//     const restaurantId = req.params._id;
-//     const token = req.headers.authorization;
-
-//     if (!token) {
-//       return res.status(401).json({ message: "Unauthorized" });
-//     }
-
-//     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-//     const userId = decodedToken.user._id;
-
-//     // Find if the restaurant is saved in the user's favorite list
-//     const savedRestaurant = await FavRestaurant.findOne({ user_id: userId, restaurant_id: restaurantId });
-//     console.log(savedRestaurant); // Logs the document or null
-//     const isSaved = !!savedRestaurant;
-//     console.log(isSaved); // Logs true or false
-
-//     return res.json({ isSaved });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: "Internal server error" });
-//   }
-// }
-
-  
-
-  
-
-
-// POST reservation
+// POST add favourite restaurant
 const saveRestaurant = async (req, res) => {
   const {
     name,
@@ -133,7 +78,7 @@ const saveRestaurant = async (req, res) => {
     const userId = token.user._id; // Get the userId from the decoded token
     console.log(userId)
 
-    // Create a new user ans dave to db
+    // Create a new favourite restaurant to db
     const newFavRestaurant = new favRestaurant({
       name,
       description,
@@ -147,8 +92,6 @@ const saveRestaurant = async (req, res) => {
       status,
       restaurant_id,
       user_id: userId,
-      // restaurant_id: mongoose.Types.ObjectId(restaurant_id), // Ensure this is an ObjectId
-      // user_id: mongoose.Types.ObjectId(userId)
     });
     await newFavRestaurant.save();
 
@@ -168,7 +111,6 @@ const myFavouriteRestaurant = async (req, res) => {
     const userId = token.user._id; // Get the userId from the decoded token
 
     const saved = await favRestaurant.find({ user_id: userId }); // Find reservations with user_id = userId
-    // const saved = await favRestaurant.find({ user_id: mongoose.Types.ObjectId(userId) });
     console.log(saved)
 
     res.json(saved); // Send sorted reservations array as response
@@ -179,13 +121,12 @@ const myFavouriteRestaurant = async (req, res) => {
   }
 };
 
+
+
+// Delete the favorite restaurant
 const deleteFavRestaurant = async (req, res) => {
   try {
 
-    
-    // const  id  = req.params.id;
-
-    // Delete the favorite restaurant
     const deleted = await favRestaurant.findByIdAndDelete({"_id": req.params._id});
     if (!deleted) {
       return res.status(404).json({ message: "Favorite restaurant not found" });
@@ -200,10 +141,6 @@ const deleteFavRestaurant = async (req, res) => {
 
 const getFavRestaurantById = async (req, res) => {
   try {
-    // const  _id  = req.params._id;
-    // const token = req.headers.authorization;
-    // const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    // const userId = decodedToken.user._id;
 
     const authHeader = req.headers.authorization; // Get token
     const token = JSON.parse(authHeader);
@@ -224,22 +161,12 @@ const getFavRestaurantById = async (req, res) => {
 
 
 
-
-
-
-
 module.exports = {
   restaurants,
   restaurantDetails,
-  // fetchFavRestaurants,
-  // addFavouriteRestaurants
   saveRestaurant,
   myFavouriteRestaurant ,
-  // cancel,
   deleteFavRestaurant,
   getFavRestaurantById,
-  // checkFavourites
-  // checkIsSaved
   
- 
 };

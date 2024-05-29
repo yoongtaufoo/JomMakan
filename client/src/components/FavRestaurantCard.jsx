@@ -94,9 +94,6 @@ const unsaveRestaurant = async (favRestaurantId) => {
     }
   };
 
-
-
-
   const renderFavourites = (favrestaurants) => {
     // const restaurantData = getRestaurantData(reservations, restaurants);
     return (

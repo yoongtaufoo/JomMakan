@@ -131,41 +131,7 @@ const FavRestaurant = () => {
         <div className="card mb-3">
           {filteredRestaurants.map((restaurant) => (
             <FavRestaurantCard key={restaurant._id} favrestaurants={restaurant} unsaveRestaurant={unsaveRestaurant} />
-            // <div className="row g-0 custom-row">
-            //   <div className="col-md-4">
-            //     <img
-            //       src={restaurant.image}
-            //       className="img-fluid rounded-start card-img-top"
-            //       alt="..."
-            //     />
-            //   </div>
-            //   <div className="col-md-8">
-            //     <div className="card-body">
-            //       <Link to={`/restaurant/${restaurant._id}`}> 
-            //         <h5 className="card-title">{restaurant.name}</h5>
-            //       </Link>
-            //       <p className="card-text">{restaurant.description}</p>
-            //       <p className="card-text">
-            //         <i className="bi-geo-alt-fill custom-icon"></i>
-            //         {restaurant.phone}
-            //       </p>
-            //       <p className="card-text">
-            //         <i className="bi bi-telephone-fill custom-icon"></i>
-            //         {restaurant.address}
-            //       </p>
-            //       <p className="card-text">
-            //         <i className="bi bi-clock-fill custom-icon"></i>
-            //         {restaurant.openinghours}
-            //       </p>
-            //       <button
-            //         type="button"
-            //         className="btn btn-outline-dark custom-button"
-            //       >
-            //         Unsaved
-            //       </button>
-            //     </div>
-            //   </div>
-            // </div>
+            
           ))}
         </div>
       </div>
