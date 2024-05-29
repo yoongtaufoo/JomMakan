@@ -17,11 +17,13 @@ const review = async (req, res) => {
       rating,
       timePosted,
       reviewDescription,
-      mediaUrl,
+      media,
       agreeToTerms,
-      likeCount,
-      likedBy
+      // likeCount,
+      likedBy,
     } = req.body;
+
+    console.log(req.body);
 
     const newReview = new Review({
       user_id: userId,
@@ -30,46 +32,18 @@ const review = async (req, res) => {
       rating,
       timePosted,
       reviewDescription,
-      mediaUrl,
+      media,
       agreeToTerms,
-      likeCount,
-      likedBy
+      // likeCount:0,
+      likedBy,
     });
+
     await newReview.save();
 
     res.status(201).json({ message: "Review submitted successfully" });
   } catch (err) {
     console.error("Error creating review:", err);
     res.status(500).json({ message: "Failed to create review" });
-  }
-};
-
-const uploadMediaReview = async (req, res, next) => {
-  try {
-    // Check if media file exists in the request
-    if (!req.file) {
-      return res
-        .status(400)
-        .json({ success: false, message: "No file uploaded" });
-    }
-
-    // Upload media to Cloudinary
-    const uploadedMedia = await cloudinary.uploader.upload(req.file.path, {
-      folder: "mediaUpload",
-    });
-
-    // Construct media URL from Cloudinary response
-    const mediaUrl = uploadedMedia.secure_url;
-    console.log(mediaUrl);
-    // Return the media URL in the response
-    res.status(200).json({
-      success: true,
-      message: "Media uploaded successfully",
-      mediaUrl: mediaUrl,
-    });
-  } catch (error) {
-    console.log(error);
-    next(error);
   }
 };
 
@@ -83,6 +57,38 @@ const reviews = async (req, res) => {
   }
 };
 
+const shareReview = async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization; // Get token
+    const token = JSON.parse(authHeader);
+    const userId = token.user._id;
+    const user = await User.findById(userId);
+    const userName = user.username;
+
+    const {
+      restaurant_id,
+      rating,
+      timePosted,
+      reviewDescription,
+      media,
+      agreeToTerms,
+      // likeCount,
+      likedBy,
+    } = req.body;
+
+    const restaurant = await Restaurant.findById(restaurant_id);
+
+    const reviewData = {
+      restaurantName: restaurant.name,
+      rating,
+      reviewDescription,
+    };
+
+    res.json(reviewData);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
 const getReview = async (req, res) => {
   try {
     // const { _id } = req.params;
@@ -103,73 +109,131 @@ const getReview = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch reviews" });
   }
 };
+// const uploadMedia = async (req, res, next) => {
+//   try {
+//     const { userId } = req.params;
+//     const currentUser = await User.findOne({ _id: userId });
 
-const editReview = async (req, res) => {
-  try {
-    const { _id } = req.params;
-    const review = await Review.findByIdAndUpdate(_id, req.body, { new: true });
-    if (!review) {
-      return res.status(404).json({ message: "Review not found" });
-    }
-    res.json({ message: "Review updated successfully", review });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+//     // console.log(currentUser);
+
+//     //build the data object
+//     let data = { public_id: "", url: "" };
+
+//     //modify image conditionnally
+//     if (req.body.image !== "") {
+//       //   const ImgId = currentUser.image.public_id;
+//       const ImgId = currentUser?.image?.public_id;
+
+//       if (ImgId) {
+//         await cloudinary.uploader.destroy(ImgId);
+//       }
+
+//       const newImage = await cloudinary.uploader.upload(req.body.image, {
+//         folder: "uploadMedia",
+//         // width: 1000,
+//         // crop: "scale",
+//       });
+
+//       data = {
+//         public_id: newImage.public_id,
+//         url: newImage.secure_url,
+//       };
+//     }
+
+//     // Save the updated user
+//     await currentUser.save();
+
+//     res.status(200).json({
+//       success: true,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     next(error);
+//   }
+// };
 
 const deleteReview = async (req, res) => {
+  const { _id } = req.params;
+  console.log(_id);
   try {
-    const { _id } = req.params;
-    console.log(_id);
-    const review = await Review.findByIdAndDelete(_id);
+    const review = await Review.findOneAndDelete({ _id });
     if (!review) {
       return res.status(404).json({ message: "Review not found" });
     }
+
     res.json({ message: "Review deleted successfully" });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error("Error deleting review:", error);
+    res.status(500).json({ message: "Failed to delete review" });
   }
 };
 
 const likeReview = async (req, res) => {
   try {
-    const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
-    const userId = storedUser.user.id;
-    const reviewId = req.params._id;
+    const userId = req.user.id;
+    console.log(userId);
+    const { _id } = req.params;
+    console.log(_id);
+
+    // Find the review by its ID
+    const review = await Review.findOne({ _id });
+    console.log("Review found:", review);
+
+    // Check if the user has already liked the review
+    const likedIndex = review.likedBy.indexOf(userId);
+
+    if (likedIndex !== -1) {
+      // User has already liked the review, remove the like
+      review.likedBy.splice(likedIndex, 1);
+    } else {
+      // User has not liked the review, add the like
+      review.likedBy.push(userId);
+    }
+
+    // Save the updated review
+    await review.save();
+
+    // Send response
+    res.json({ message: "Review liked/unliked successfully", review });
+  } catch (error) {
+    console.error("Error liking review:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+const updateReview = async (req, res) => {
+  const reviewId = req.params._id;
+
+  const { rating, reviewDescription, media, agreeToTerms } = req.body;
+
+  try {
     const review = await Review.findById(reviewId);
 
     if (!review) {
       return res.status(404).json({ message: "Review not found" });
     }
-    console.log(review.likes);
-    // Check if the user has already liked the review
-    const likeIndex = review.likedBy.indexOf(userId);
-    if (likeIndex === -1) {
-      // If the user hasn't liked the review, add like
-      review.likedBy.push(userId);
-      review.likes += 1;
-    } else {
-      // If the user has already liked the review, remove like
-      review.likedBy.splice(likeIndex, 1);
-      review.likes -= 1;
-    }
 
-    // Save changes to the database
+    review.rating = rating;
+    review.reviewDescription = reviewDescription;
+    review.media = media;
+    review.agreeToTerms = agreeToTerms;
+    review.timePosted = new Date();
+
     await review.save();
 
-    res.json({ likes: review.likes });
+    res.status(200).json({ message: "Review updated successfully", review });
   } catch (error) {
-    console.error("Error liking review:", error);
+    res.status(500).json({ message: "Error updating review", error });
   }
 };
-
 
 module.exports = {
   review,
   reviews,
-  // editReview,
   deleteReview,
   getReview,
-  // uploadMediaReview,
   likeReview,
+  updateReview,
+  shareReview,
 };

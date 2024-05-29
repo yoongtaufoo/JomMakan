@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import Navbar from "./components/Navbar";
-//import Tabs from "./components/Tabs";
 import image from "./assets/image 3.png";
 import WorkshopCard from "./components/WorkshopCard";
 import axios from "axios";
@@ -11,18 +9,12 @@ import SearchBar from "./components/SearchBar";
 const Workshop = () => {
   const [workshops, setWorkshops] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState(0);
-
-  const handleTabClick = (index) => {
-    setActiveTab(index);
-  };
 
   useEffect(() => {
     const fetchWorkshops = async () => {
       try {
         const response = await axios.get("http://localhost:3001/api/workshop/workshops");
         setWorkshops(response.data);
-        console.log(response.data)
       } catch (error) {
         console.error("Error fetching workshops:", error);
       }
@@ -38,6 +30,7 @@ const Workshop = () => {
       workshopDescription.toLowerCase().includes(query)
     );
   });
+  
 
   return (
     <div>
