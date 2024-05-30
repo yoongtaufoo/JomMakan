@@ -274,12 +274,12 @@ const Profile = () => {
               </div>
             </Link>
           </div>
-          <Link to="/report">
+          {/* <Link to="/report">
             <div className="d-flex flex-row justify-content-center mt-5">
               <img id="report-icon" src={report}></img>
               <strong className="">Report & Feedback</strong>
             </div>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>
