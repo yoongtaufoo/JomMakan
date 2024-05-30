@@ -221,55 +221,6 @@ const Restaurant = () => {
     }, [_id]); // Dependency array
     
 
-<<<<<<< HEAD
-    // const fetchReviewData = async () => {
-    //   try {
-    //     const response = await axios.get(
-    //       `http://localhost:3001/api/review/${_id}/shareReview`
-    //     );
-    //     setReview(response.data);
-    //   } catch (error) {
-    //     console.error("Error fetching review data:", error);
-    //   }
-    // };
-
-    // fetchReviewData();
-    fetchReviews();
-  }, [_id, likedReviews]);
-
-  const fetchReviews = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3001/api/review/${_id}/reviews`
-      );
-
-      // console.log("Fetched reviews:", response);
-      console.log("Fetched reviews:", response.data);
-      const reviews = response.data;
-
-      setRestaurantReviews(reviews);
-      setAverageRating(calculateAverageRating(reviews)); // Set average rating
-      calculateRatingPercentages(reviews);
-      setReview(reviews);
-      console.log(reviews);
-
-      // Create the hasLike array & setHasLike array
-      // const likesArray = reviews.map((review) => review.likedBy);
-      // setHasLikes(likesArray);
-      // console.log("hasLikes: ",hasLikes);
-    } catch (error) {
-      console.error("Error fetch resreview:", error);
-    }
-  };
-
-  const isLikedFn = (review) => {
-    return review.likedBy.includes(userId);
-  };
-
-  const handleDelete = async (reviewId) => {
-    console.log(reviewId);
-    const token = localStorage.getItem("JomMakanUser");
-=======
     useEffect(() => {
 
     const fetchReviews = async () => {
@@ -290,18 +241,18 @@ const Restaurant = () => {
     };
     fetchReviews();
   }, [_id]);
-  const handleEdit = (index) => {
-    const selectedReview = restaurantReviews[index]; // Get the selected review
-    // console.log(restaurantReviews[index]);
-    setSelectedReview(selectedReview); // Set the selected review in state
-    navigate(
-      `/restaurant/${_id}/addReview?restaurantName=${restaurant.name}&edit=true`
-    ); // Navigate to the AddReview page with edit=true query parameter
-  };
+
+  // const handleEdit = (index) => {
+  //   const selectedReview = restaurantReviews[index]; // Get the selected review
+  //   // console.log(restaurantReviews[index]);
+  //   setSelectedReview(selectedReview); // Set the selected review in state
+  //   navigate(
+  //     `/restaurant/${_id}/addReview?restaurantName=${restaurant.name}&edit=true`
+  //   ); // Navigate to the AddReview page with edit=true query parameter
+  // };
 
   const handleSaveToggle = async () => {
     const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
->>>>>>> 5eae84c672f7dd71850d70dba359f1df14eb7b3a
     if (!token) {
       alert("User is not authenticated."); // Handle case where user is not authenticated
       return;
@@ -425,14 +376,11 @@ const Restaurant = () => {
     }
   };
 
-<<<<<<< HEAD
   const handleEdit = async (reviewId) => {
     navigate(
       `/restaurant/${_id}/${reviewId}/addReview?edit=true&restaurantName=${restaurant.name}`
     );
   };
-=======
->>>>>>> 5eae84c672f7dd71850d70dba359f1df14eb7b3a
 
   return (
     <div>
@@ -689,14 +637,14 @@ const Restaurant = () => {
                 className="btn-like"
                 onClick={() => handleLike(review._id, index)} // Pass index parameter here
                 // style={{ color: hasLikes[index] ? "blue" : "black" }}
-                style={{ color: isLikedFn(review) ? "blue" : "black" }}
+                // style={{ color: isLikedFn(review) ? "blue" : "black" }}
               >
                 <i
-                  className={
-                    isLikedFn(review)
-                      ? "bi bi-hand-thumbs-up-fill"
-                      : "bi bi-hand-thumbs-up"
-                  }
+                  // className={
+                  //   isLikedFn(review)
+                  //     ? "bi bi-hand-thumbs-up-fill"
+                  //     : "bi bi-hand-thumbs-up"
+                  // }
                 ></i>{" "}
                 Helpful ({review.likedBy.length})
               </button>
