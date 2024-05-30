@@ -110,7 +110,7 @@ const findReservationsByDateAndId = async (req, res) => {
       date: isodate,
       //2024-05-13T00:00:00.000+00:00
     });
-    console.log(reservations);
+    // console.log(reservations);
     res.json(reservations);
   } catch (err) {
     console.error(err);
