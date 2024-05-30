@@ -64,8 +64,8 @@ const Home = () => {
         </div>
         <div className="d-flex justify-content-end align-items-center">
           <div>
-            <SearchBar 
-              place="Locations, Restaurant, or Cuisines..." 
+            <SearchBar
+              place="Locations, Restaurant, or Cuisines..."
               onSearch={(query) => setSearchQuery(query)}
             />
           </div>
@@ -99,7 +99,11 @@ const Home = () => {
                       <i className="bi bi-star-half custom-icon"></i>
                       <span className="custom-card-text">
                         Review:
-                        {restaurant.review}
+                        {restaurant.averageRating
+                          ? `Average Rating: ${restaurant.averageRating.toFixed(
+                              1
+                            )}`
+                          : "No reviews yet"}
                       </span>
                     </small>
                   </div>

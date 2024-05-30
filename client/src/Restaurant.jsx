@@ -221,8 +221,8 @@ const Restaurant = () => {
     }, [_id]); // Dependency array
     
 
-<<<<<<< HEAD
-    // const fetchReviewData = async () => {
+  useEffect(() => {
+  // const fetchReviewData = async () => {
     //   try {
     //     const response = await axios.get(
     //       `http://localhost:3001/api/review/${_id}/shareReview`
@@ -249,8 +249,9 @@ const Restaurant = () => {
 
       setRestaurantReviews(reviews);
       setAverageRating(calculateAverageRating(reviews)); // Set average rating
+      // saveAverageRatingToDatabase(_id, average);
       calculateRatingPercentages(reviews);
-      setReview(reviews);
+      setReviews(reviews);
       console.log(reviews);
 
       // Create the hasLike array & setHasLike array
@@ -262,6 +263,22 @@ const Restaurant = () => {
     }
   };
 
+// const saveAverageRatingToDatabase = async (restaurantId, averageRating) => {
+//   try {
+//     // Send a request to your backend to update the average rating for the restaurant
+//     const response = await axios.put(
+//       `http://localhost:3001/api/restaurant/${restaurantId}`,
+//       {
+//         averageRating: averageRating,
+//       }
+//     );
+
+//     console.log("Average rating saved to database:", response.data);
+//   } catch (error) {
+//     console.error("Error saving average rating to database:", error);
+//   }
+//   };
+  
   const isLikedFn = (review) => {
     return review.likedBy.includes(userId);
   };
@@ -269,40 +286,53 @@ const Restaurant = () => {
   const handleDelete = async (reviewId) => {
     console.log(reviewId);
     const token = localStorage.getItem("JomMakanUser");
-=======
-    useEffect(() => {
-
-    const fetchReviews = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3001/api/review/${_id}/reviews`
-        );
-
-        // console.log("Fetched reviews:", response);
-        console.log("Fetched reviews:", response.data);
-        setRestaurantReviews(response.data);
-        setAverageRating(calculateAverageRating(response.data)); // Set average rating
-        calculateRatingPercentages(response.data);
-
-      } catch (error) {
-        console.error("Error fetch resreview:", error);
-      }
+    try {
+          // Send DELETE request to delete the review
+          await axios.delete(
+            `http://localhost:3001/api/review/${reviewId}/deleteReview`,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+          fetchReviews();
+        } catch (error) {
+          console.error("Error deleting review:", error);
+          // Handle error or display error message to user
+        }
     };
-    fetchReviews();
-  }, [_id]);
-  const handleEdit = (index) => {
-    const selectedReview = restaurantReviews[index]; // Get the selected review
-    // console.log(restaurantReviews[index]);
-    setSelectedReview(selectedReview); // Set the selected review in state
-    navigate(
-      `/restaurant/${_id}/addReview?restaurantName=${restaurant.name}&edit=true`
-    ); // Navigate to the AddReview page with edit=true query parameter
-  };
+   
+  //   const fetchReviews = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:3001/api/review/${_id}/reviews`
+  //       );
 
-  const handleSaveToggle = async () => {
-    const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
->>>>>>> 5eae84c672f7dd71850d70dba359f1df14eb7b3a
-    if (!token) {
+  //       // console.log("Fetched reviews:", response);
+  //       console.log("Fetched reviews:", response.data);
+  //       setRestaurantReviews(response.data);
+  //       setAverageRating(calculateAverageRating(response.data)); // Set average rating
+  //       calculateRatingPercentages(response.data);
+
+  //     } catch (error) {
+  //       console.error("Error fetch resreview:", error);
+  //     }
+  //   };
+  //   fetchReviews();
+  // }, [_id]);
+  // const handleEdit = (index) => {
+  //   const selectedReview = restaurantReviews[index]; // Get the selected review
+  //   // console.log(restaurantReviews[index]);
+  //   setSelectedReview(selectedReview); // Set the selected review in state
+  //   navigate(
+  //     `/restaurant/${_id}/addReview?restaurantName=${restaurant.name}&edit=true`
+  //   ); // Navigate to the AddReview page with edit=true query parameter
+  // };
+
+    const handleSaveToggle = async () => {
+     const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
+     if (!token) {
       alert("User is not authenticated."); // Handle case where user is not authenticated
       return;
     }
@@ -358,23 +388,23 @@ const Restaurant = () => {
     }
   };
 
-  const handleDelete = async (index) => {
-    try {
-      // Send DELETE request to delete the review
-      await axios.delete(
-        `http://localhost:3001/api/review/${reviewId}/deleteReview`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      fetchReviews();
-    } catch (error) {
-      console.error("Error deleting review:", error);
-      // Handle error or display error message to user
-    }
-  };
+  // const handleDelete = async (index) => {
+  //   try {
+  //     // Send DELETE request to delete the review
+  //     await axios.delete(
+  //       `http://localhost:3001/api/review/${reviewId}/deleteReview`,
+  //       {
+  //         headers: {
+  //           Authorization: token,
+  //         },
+  //       }
+  //     );
+  //     fetchReviews();
+  //   } catch (error) {
+  //     console.error("Error deleting review:", error);
+  //     // Handle error or display error message to user
+  //   }
+  // };
 
 
 
@@ -425,14 +455,11 @@ const Restaurant = () => {
     }
   };
 
-<<<<<<< HEAD
   const handleEdit = async (reviewId) => {
     navigate(
       `/restaurant/${_id}/${reviewId}/addReview?edit=true&restaurantName=${restaurant.name}`
     );
   };
-=======
->>>>>>> 5eae84c672f7dd71850d70dba359f1df14eb7b3a
 
   return (
     <div>
