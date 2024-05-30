@@ -5,13 +5,20 @@ const jwt = require("jsonwebtoken");
 
 const workshops = async (req, res) => {
   try {
-    const workshops = await Workshop.find();
-    res.json(workshops);
+    // Get the current date
+    const currentDate = new Date();
+
+    // Find workshops with dates greater than the current date
+    const upcomingWorkshops = await Workshop.find({ date: { $gt: currentDate } });
+
+    // Respond with the filtered workshops
+    res.json(upcomingWorkshops);
   } catch (error) {
     console.error("Error fetching workshops: ", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 const workshopDetails = async (req, res) => {
   try {

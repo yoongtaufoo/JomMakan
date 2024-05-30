@@ -19,8 +19,8 @@ const app = express();
 const dbURI = process.env.MONGO_URI;
 const port = process.env.PORT;
 app.use(bodyParser.json());
-app.use(bodyParser.json({ limit: "10mb" }));
-app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.json());
 
 // Use the CORS middleware
