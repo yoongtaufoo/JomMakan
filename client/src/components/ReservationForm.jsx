@@ -407,6 +407,7 @@ const ReservationForm = (props) => {
       })
       .catch((error) => {
         alert("Unable to reserve user");
+        console.error(error);
       });
   };
 

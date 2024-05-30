@@ -26,15 +26,20 @@ const CollectionCard = ({ registrations, reservations }) => {
         };
     }, []);
 
+  const token = localStorage.getItem("JomMakanUser");
   // Get restaurants that user reserved
   useEffect(() => {
     if (reservations) {
       axios
         .get(
-          `http://localhost:3001/api/restaurant/${reservations.restaurant_id}`
-        )
+          `http://localhost:3001/api/restaurant/${reservations.restaurant_id}`, {
+          headers: {
+            Authorization: token, // Include JWT in request headers
+          },
+        })
         .then(({ data }) => {
-          setRestaurantData(data);
+          // console.log(data)
+          setRestaurantData(data.restaurant);
         })
         .catch((error) => {
           console.error("Error fetching restaurant data:", error);
@@ -127,6 +132,7 @@ const CollectionCard = ({ registrations, reservations }) => {
       );
       setTableName(matchedTable.name); // Set table name
     }
+    console.log("wut")
   }, [reservations, restaurantData]);
 
   //Format time slot
