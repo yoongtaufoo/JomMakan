@@ -248,7 +248,7 @@ const Restaurant = () => {
       setAverageRating(average);
 
       // Update the average rating in the database
-      await updateAverageRatingInDatabase(average);
+       updateAverageRatingInDatabase(average);
 
       calculateRatingPercentages(reviews);
       setReviews(reviews);
