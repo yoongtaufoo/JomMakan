@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
 import "./Restaurant.css";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { BsStarFill, BsStar } from "react-icons/bs";
+import { BsStar } from "react-icons/bs";
 import axios from "axios";
 
 const renderRatingStars = (rating) => {
@@ -37,8 +37,9 @@ const Restaurant = () => {
   const [hasLikes, setHasLikes] = useState([]);
   const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
   const [selectedShareOption, setSelectedShareOption] = useState(null);
-  const [openDropdownIndex, setOpenDropdownIndex] = useState(0);
+  const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
   const [isDropdownIndex, setIsDropdownIndex] = useState(null);
+  const [likedReviews, setLikedReviews] = useState(new Set()); // Use a Set to track liked reviews
 
   // Go to the top of page when navigate to this page
   useEffect(() => {
@@ -46,8 +47,13 @@ const Restaurant = () => {
   }, []);
 
   const { _id } = useParams();
+  let userId = "User123";
 
-
+  // get userid from local storage
+  const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
+  if (storedUser) {
+    userId = storedUser.user._id;
+  }
 
 
   const handleWhatsApp = (review) => {
@@ -60,12 +66,11 @@ const Restaurant = () => {
   };
 
   const handleEmail = (review) => {
-    const subject = "Check out this restaurant review!";
-    const body = `Check out this restaurant's review: \n
+    const subject = "Check out this restaurant!";
+    const body = `Hey there! I just discovered this amazing restaurant with fantastic reviews. People are raving about their delicious food and great service. Let's plan a date to check it out together! 😊🍽️\n
       Restaurant Name: ${restaurant.name} \n 
       Ratings: ${review.rating} stars \n 
-      Review: ${review.reviewDescription} \n 
-      Media: ${review.media} `;
+      Review: ${review.reviewDescription} \n `;
     console.log(review.rating);
     const mailtoUrl = `mailto:?subject=${encodeURIComponent(
       subject
@@ -74,22 +79,12 @@ const Restaurant = () => {
     setIsDropdownIndex(null);
   };
 
-  
-
   const [restaurant, setRestaurant] = useState({});
   const [reviews, setReviews] = useState([]);
   const [restaurantReviews, setRestaurantReviews] = useState([]); // Initialize as empty array
   const [ratingPercentages, setRatingPercentages] = useState([0, 0, 0, 0, 0]);
   const [averageRating, setAverageRating] = useState(0);
   const [selectedReview, setSelectedReview] = useState(null); // State to hold the selected review for editing
-
-  let userid = "User123";
-
-  // get userid from local storage
-  const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
-  if (storedUser) {
-    userid = storedUser.user._id;
-  }
 
   const handleDropdownToggle = (index) => {
     setIsDropdownIndex(isDropdownIndex === index ? null : index);
@@ -101,64 +96,81 @@ const Restaurant = () => {
 
  
 
- const handleLike = async (reviewId, index) => {
-   try {
-     const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
-     const token = storedUser.token;
-    //  console.log(storedUser);
-    //  console.log(token);
-     if (!token) {
-       alert("User is not authenticated.");
-       return;
-     }
-
-     // Check if the review is already liked by the user
-     const isLiked = hasLikes[index];
-
-     // Toggle the like status
-     const updatedHasLikes = [...hasLikes];
-     updatedHasLikes[index] = !isLiked;
-
-     // Update the state with the modified hasLikes data
-     setHasLikes(updatedHasLikes);
-     // Send the request to the server to like/unlike the review
-     console.log(reviewId);
-     console.log(token);
-     const response = await axios.post(
-      `http://localhost:3001/api/review/${reviewId}/likeReview`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+  const handleLike = async (reviewId, index) => {
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
+      const token = storedUser.token;
+      // const userId = localStorage.getItem("JomMakanUser").user._id;
+      //  console.log(storedUser);
+      //  console.log(token);
+      if (!token) {
+        alert("User is not authenticated.");
+        return;
       }
-    );
-     console.log(reviewId);
 
-     console.log(response.data);
-     // Update likedBy field in the review database based on the user's action
-     const updatedReviews = [...restaurantReviews];
-     const likedBy = updatedReviews[index].likedBy || [];
-     const userId = storedUser.user._id;
-     console.log(userId);
-     if (isLiked) {
-       // If already liked, remove the user ID from likedBy
-       const updatedLikedBy = likedBy.filter((id) => id !== userId);
-       updatedReviews[index].likedBy = updatedLikedBy;
-     } else {
-       // If not liked, add the user ID to likedBy
-       const updatedLikedBy = [...likedBy, userId];
-       updatedReviews[index].likedBy = updatedLikedBy;
-     }
-     console.log(isLiked);
-     // Update the state with the modified reviews data
-     setRestaurantReviews(updatedReviews);
-   } catch (error) {
-     console.error("Error liking review:", error);
-     // Handle error
-   }
- };
+      // Check if the review is already liked by the user
+      // const isLiked = hasLikes[index];
 
+      // Toggle the like status
+      // const updatedHasLikes = [...hasLikes];
+      // updatedHasLikes[index] = !isLiked;
+
+      // Update the state with the modified hasLikes data
+      // setHasLikes(updatedHasLikes);
+
+      // Send the request to the server to like/unlike the review
+      console.log(reviewId);
+      console.log(token);
+      console.log(userId);
+      const response = await axios.post(
+        `http://localhost:3001/api/review/${reviewId}/likeReview`,
+        {
+          _id: reviewId,
+          userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(reviewId);
+      console.log("index", index);
+
+      console.log(response.data);
+      // // Update likedBy field in the review database based on the user's action
+      // const updatedReviews = [...restaurantReviews];
+      // const likedBy = updatedReviews[index].likedBy || [];
+      // // const userId = storedUser.user._id;
+      // // console.log(userId);
+      // if (isLiked) {
+      //   // If already liked, remove the user ID from likedBy
+      //   const updatedLikedBy = likedBy.filter((id) => id !== userId);
+      //   updatedReviews[index].likedBy = updatedLikedBy;
+      // } else {
+      //   // If not liked, add the user ID to likedBy
+      //   const updatedLikedBy = [...likedBy, userId];
+      //   updatedReviews[index].likedBy = updatedLikedBy;
+      // }
+      // console.log(isLiked);
+      // // Update the state with the modified reviews data
+      // setRestaurantReviews(updatedReviews);
+
+      setLikedReviews((prevLikedReviews) => {
+        const updatedLikedReviews = new Set(prevLikedReviews);
+        if (updatedLikedReviews.has(reviewId)) {
+          updatedLikedReviews.delete(reviewId);
+        } else {
+          updatedLikedReviews.add(reviewId);
+        }
+        return updatedLikedReviews;
+      });
+
+    } catch (error) {
+      console.error("Error liking review:", error);
+      // Handle error
+    }
+  };
 
   
     // let handler = (e) => {
@@ -209,6 +221,55 @@ const Restaurant = () => {
     }, [_id]); // Dependency array
     
 
+<<<<<<< HEAD
+    // const fetchReviewData = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       `http://localhost:3001/api/review/${_id}/shareReview`
+    //     );
+    //     setReview(response.data);
+    //   } catch (error) {
+    //     console.error("Error fetching review data:", error);
+    //   }
+    // };
+
+    // fetchReviewData();
+    fetchReviews();
+  }, [_id, likedReviews]);
+
+  const fetchReviews = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/api/review/${_id}/reviews`
+      );
+
+      // console.log("Fetched reviews:", response);
+      console.log("Fetched reviews:", response.data);
+      const reviews = response.data;
+
+      setRestaurantReviews(reviews);
+      setAverageRating(calculateAverageRating(reviews)); // Set average rating
+      calculateRatingPercentages(reviews);
+      setReview(reviews);
+      console.log(reviews);
+
+      // Create the hasLike array & setHasLike array
+      // const likesArray = reviews.map((review) => review.likedBy);
+      // setHasLikes(likesArray);
+      // console.log("hasLikes: ",hasLikes);
+    } catch (error) {
+      console.error("Error fetch resreview:", error);
+    }
+  };
+
+  const isLikedFn = (review) => {
+    return review.likedBy.includes(userId);
+  };
+
+  const handleDelete = async (reviewId) => {
+    console.log(reviewId);
+    const token = localStorage.getItem("JomMakanUser");
+=======
     useEffect(() => {
 
     const fetchReviews = async () => {
@@ -240,6 +301,7 @@ const Restaurant = () => {
 
   const handleSaveToggle = async () => {
     const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
+>>>>>>> 5eae84c672f7dd71850d70dba359f1df14eb7b3a
     if (!token) {
       alert("User is not authenticated."); // Handle case where user is not authenticated
       return;
@@ -363,6 +425,14 @@ const Restaurant = () => {
     }
   };
 
+<<<<<<< HEAD
+  const handleEdit = async (reviewId) => {
+    navigate(
+      `/restaurant/${_id}/${reviewId}/addReview?edit=true&restaurantName=${restaurant.name}`
+    );
+  };
+=======
+>>>>>>> 5eae84c672f7dd71850d70dba359f1df14eb7b3a
 
   return (
     <div>
@@ -547,15 +617,12 @@ const Restaurant = () => {
                       }`}
                     >
                       <li>
-                        <Link
-                          to={`/restaurant/${_id}/${review._id}/addReview?edit=true&restaurantName=${restaurant.name}`}
+                        <button
+                          className="dropdown-item"
+                          onClick={() => handleEdit(review._id)}
                         >
-                          {" "}
-                          {/* <button className="dropdown-item" onChange={handleEdit}> */}
-                          <button className="dropdown-item">
-                            <i className="bi bi-pencil"></i> Edit
-                          </button>{" "}
-                        </Link>
+                          <i className="bi bi-pencil"></i> Edit
+                        </button>{" "}
                       </li>
                       <li>
                         <button
@@ -613,19 +680,20 @@ const Restaurant = () => {
             </div>
 
             <p>{review.reviewDescription}</p>
-            {review.media && (
-              <img src={review.media} className="review-photo" />
+            {review.media.url && (
+              <img src={review.media.url} className="review-photo" />
             )}
 
             <div className="photo-buttons">
               <button
                 className="btn-like"
                 onClick={() => handleLike(review._id, index)} // Pass index parameter here
-                style={{ color: hasLikes[index] ? "blue" : "black" }}
+                // style={{ color: hasLikes[index] ? "blue" : "black" }}
+                style={{ color: isLikedFn(review) ? "blue" : "black" }}
               >
                 <i
                   className={
-                    hasLikes[index]
+                    isLikedFn(review)
                       ? "bi bi-hand-thumbs-up-fill"
                       : "bi bi-hand-thumbs-up"
                   }

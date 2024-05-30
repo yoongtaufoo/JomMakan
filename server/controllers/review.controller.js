@@ -3,6 +3,7 @@ const Restaurant = require("../models/restaurantModel.js");
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const cloudinary = require("../utils/cloudinary");
+const multer = require("multer");
 
 const review = async (req, res) => {
   try {
@@ -16,28 +17,37 @@ const review = async (req, res) => {
       restaurant_id,
       rating,
       timePosted,
+      image,
       reviewDescription,
-      media,
       agreeToTerms,
-      // likeCount,
-      likedBy,
     } = req.body;
 
-    console.log(req.body);
+    if (!req.file) {
+      throw new Error("No file uploaded");
+    }
 
+    const imageData = req.file.path;
+
+    const newImage = await cloudinary.uploader.upload(imageData, {
+      folder: "mediaUpload",
+    });
+
+    // Create new review
     const newReview = new Review({
       user_id: userId,
       restaurant_id,
       userName,
       rating,
+      media: {
+        public_id: newImage.public_id,
+        url: newImage.secure_url,
+      },
       timePosted,
       reviewDescription,
-      media,
       agreeToTerms,
-      // likeCount:0,
-      likedBy,
     });
 
+    // Save review to database
     await newReview.save();
 
     res.status(201).json({ message: "Review submitted successfully" });
@@ -80,6 +90,7 @@ const shareReview = async (req, res) => {
 
     const reviewData = {
       restaurantName: restaurant.name,
+      restaurant_id: _id,
       rating,
       reviewDescription,
     };
@@ -96,6 +107,7 @@ const getReview = async (req, res) => {
     // const token = JSON.parse(authHeader);
     // const userId = token.user._id;
     const restaurantId = req.params._id;
+    console.log(restaurantId);
     const reviews = await Review.find({ restaurant_id: restaurantId });
     // console.log(reviews);
     if (!reviews) {
@@ -109,48 +121,6 @@ const getReview = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch reviews" });
   }
 };
-// const uploadMedia = async (req, res, next) => {
-//   try {
-//     const { userId } = req.params;
-//     const currentUser = await User.findOne({ _id: userId });
-
-//     // console.log(currentUser);
-
-//     //build the data object
-//     let data = { public_id: "", url: "" };
-
-//     //modify image conditionnally
-//     if (req.body.image !== "") {
-//       //   const ImgId = currentUser.image.public_id;
-//       const ImgId = currentUser?.image?.public_id;
-
-//       if (ImgId) {
-//         await cloudinary.uploader.destroy(ImgId);
-//       }
-
-//       const newImage = await cloudinary.uploader.upload(req.body.image, {
-//         folder: "uploadMedia",
-//         // width: 1000,
-//         // crop: "scale",
-//       });
-
-//       data = {
-//         public_id: newImage.public_id,
-//         url: newImage.secure_url,
-//       };
-//     }
-
-//     // Save the updated user
-//     await currentUser.save();
-
-//     res.status(200).json({
-//       success: true,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     next(error);
-//   }
-// };
 
 const deleteReview = async (req, res) => {
   const { _id } = req.params;
@@ -170,18 +140,19 @@ const deleteReview = async (req, res) => {
 
 const likeReview = async (req, res) => {
   try {
-    const userId = req.user.id;
-    console.log(userId);
-    const { _id } = req.params;
-    console.log(_id);
-
+    // const userId = req.user.id;
+    // console.log("user: " + req.user);
+    // console.log(userId);
+    const { _id, userId } = req.body;
+    console.log(_id, userId);
     // Find the review by its ID
     const review = await Review.findOne({ _id });
     console.log("Review found:", review);
-
-    // Check if the user has already liked the review
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
     const likedIndex = review.likedBy.indexOf(userId);
-
+    console.log("likedIndex: " + likedIndex);
     if (likedIndex !== -1) {
       // User has already liked the review, remove the like
       review.likedBy.splice(likedIndex, 1);
@@ -201,30 +172,93 @@ const likeReview = async (req, res) => {
   }
 };
 
-
 const updateReview = async (req, res) => {
-  const reviewId = req.params._id;
+  // const reviewId = req.params._id;
+  // console.log(reviewId);
+  // const { rating, reviewDescription, media, agreeToTerms } = req.body;
 
-  const { rating, reviewDescription, media, agreeToTerms } = req.body;
+  // try {
+  //   const review = await Review.findById(reviewId);
+
+  //   if (!review) {
+  //     return res.status(404).json({ message: "Review not found" });
+  //   }
+
+  // review.rating = rating;
+  // review.reviewDescription = reviewDescription;
+  // review.media = media;
+  // review.agreeToTerms = agreeToTerms;
+  // review.timePosted = new Date();
+  // console.log(media);
+  // await review.save();
+
+  //   res.status(200).json({ message: "Review updated successfully", review });
+  // } catch (error) {
+  //   res.status(500).json({ message: "Error updating review", error });
+  // }
+
+  const reviewId = req.params._id;
+  // console.log(reviewId);
+
+  const review = await Review.findById(reviewId);
+
+  if (!review) {
+    return res.status(404).json({ message: "Review not found" });
+  }
 
   try {
-    const review = await Review.findById(reviewId);
+    const authHeader = req.headers.authorization; // Get token
+    const token = JSON.parse(authHeader);
+    const userId = token.user._id;
+    const user = await User.findById(userId);
+    const userName = user.username;
 
-    if (!review) {
-      return res.status(404).json({ message: "Review not found" });
+    const {
+      restaurant_id,
+      rating,
+      timePosted,
+      image,
+      reviewDescription,
+      agreeToTerms,
+    } = req.body;
+
+    // if (!req.file) {
+    //   throw new Error("No file uploaded");
+    // }
+
+    const imageData = req.file.path;
+
+    // const imageData = image;
+    console.log("imageData: ", imageData);
+    console.log("req.file: ", req.file);
+
+    // const imageData = req.file?.path || req.body.image; // Check for file path or image URL
+    if (!imageData) {
+      return res.status(400).json({ message: "Image data is required" });
     }
+    console.log("imageData: ", imageData);
+
+    const newImage = await cloudinary.uploader.upload(imageData, {
+      folder: "mediaUpload",
+    });
 
     review.rating = rating;
     review.reviewDescription = reviewDescription;
-    review.media = media;
+    review.media = {
+      public_id: newImage.public_id,
+      url: newImage.secure_url,
+    };
     review.agreeToTerms = agreeToTerms;
     review.timePosted = new Date();
+    // console.log(media);
 
+    // save current review
     await review.save();
 
-    res.status(200).json({ message: "Review updated successfully", review });
-  } catch (error) {
-    res.status(500).json({ message: "Error updating review", error });
+    res.status(201).json({ message: "Review updated successfully" });
+  } catch (err) {
+    console.error("Error updating review:", err);
+    res.status(500).json({ message: "Failed to update review" });
   }
 };
 
