@@ -33,9 +33,9 @@ const Restaurant = () => {
   const [deleted, setDelete] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const [showDetailsPopups, setShowDetailsPopups] = useState(0);
-  const [hasLikes, setHasLikes] = useState([]);
-  const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
+  // const [showDetailsPopups, setShowDetailsPopups] = useState(0);
+  // const [hasLikes, setHasLikes] = useState([]);
+  // const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
   const [selectedShareOption, setSelectedShareOption] = useState(null);
   const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
   const [isDropdownIndex, setIsDropdownIndex] = useState(null);
