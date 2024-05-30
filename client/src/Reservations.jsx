@@ -46,6 +46,7 @@ const Reservations = () => {
           "http://localhost:3001/api/restaurant/restaurants"
         );
         // const data = await response.json();
+        // console.log(response.data)
         setRestaurants(response.data);
       } catch (error) {
         console.error("Error fetching restaurants:", error);

@@ -15,12 +15,18 @@ const Reserve = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const token = localStorage.getItem("JomMakanUser");
+  
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/api/restaurant/${_id}`)
+      .get(`http://localhost:3001/api/restaurant/${_id}`, {
+          headers: {
+            Authorization: token, // Include JWT in request headers
+          },
+      })
       .then(({ data }) => {
-        console.log("Received restaurant data:", data);
-        setRestaurant(data);
+        // console.log("Received restaurant data:", data);
+        setRestaurant(data.restaurant);
       })
       .catch((error) => {
         console.error("Error fetching restaurant:", error);
