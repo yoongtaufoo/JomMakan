@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const favRestaurantSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true },
+  name: { type: String, required: true},
   description: { type: String, required: true },
   location: { type: String, required: true },
   address: { type: String, required: true },
@@ -15,6 +15,6 @@ const favRestaurantSchema = new mongoose.Schema({
   user_id: { type: mongoose.Schema.Types.ObjectId , required:true},
 });
 
-const Reservation = mongoose.model("favRestaurant", favRestaurantSchema);
+const favRestaurant = mongoose.model("favRestaurant", favRestaurantSchema);
 
-module.exports = Reservation;
+module.exports = favRestaurant;
