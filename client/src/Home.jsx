@@ -99,12 +99,7 @@ const Home = () => {
                       <i className="bi bi-star-half custom-icon"></i>
                       <span className="custom-card-text">
                         Review:
-                        {restaurant.averageRating
-                          ? `Average Rating: ${restaurant.averageRating.toFixed(
-                              1
-                            )}`
-                          : "No reviews yet"}
-                      </span>
+                        {restaurant.averageRating.toFixed(1)}                      </span>
                     </small>
                   </div>
                 </div>
