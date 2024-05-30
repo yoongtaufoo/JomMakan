@@ -3,7 +3,7 @@ import Dropzone from "react-dropzone";
 import "./MyDropzone.css";
 
 export default function MyDropzone({
-  onUploadFile,
+  handleUploadFile,
   uploadStatus,
   resetUploadStatus,
 }) {
@@ -37,13 +37,14 @@ export default function MyDropzone({
 
   useEffect(() => {
     return () => {
-      URL.revokeObjectURL(previewRef.current);
-      previewRef.current = null;
+      if (previewRef.current) {
+        URL.revokeObjectURL(previewRef.current);
+      }
     };
   }, []);
 
   async function handleUploadClick() {
-    await onUploadFile(selectedFile);
+    await handleUploadFile(selectedFile);
   }
 
   const isUploading = uploadStatus === "loading";

@@ -1,20 +1,31 @@
-import React from "react";
+// FavWorkshop.jsx
+import React, { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import WorkshopCard from "./components/WorkshopCard";
-import workshopData from "./WorkshopData";
+import axios from "axios";
 import image from "./assets/image 3.png";
 import { useNavigate } from "react-router-dom";
 
 const FavWorkshop = () => {
   const navigate = useNavigate();
+  const [favoriteWorkshops, setFavoriteWorkshops] = useState([]);
 
-  // Filter workshops with status "1" (favorites)
-  const favoriteWorkshops = workshopData.filter(
-    (workshop) => workshop.isFav === 1
-  );
+  useEffect(() => {
+    const fetchFavoriteWorkshops = async () => {
+      try {
+        const token = localStorage.getItem("JomMakanUser");
+        if (!token) return;
 
-  // Limit the display to only 3 favorite workshops
-  const limitedWorkshops = favoriteWorkshops.slice(0, 3);
+        const response = await axios.get("http://localhost:3001/api/user/favWorkshops", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setFavoriteWorkshops(response.data);
+      } catch (error) {
+        console.error("Error fetching favorite workshops:", error);
+      }
+    };
+    fetchFavoriteWorkshops();
+  }, []);
 
   return (
     <div>
@@ -31,8 +42,8 @@ const FavWorkshop = () => {
         </div>
         <h1 className="customized-h1 workshop-header">Favourite Workshops</h1>
         <div className="workshop-grid">
-          {limitedWorkshops.map((workshop) => (
-            <WorkshopCard key={workshop.id} workshop={workshop} />
+          {favoriteWorkshops.map((workshop) => (
+            <WorkshopCard key={workshop._id} workshop={workshop} />
           ))}
         </div>
       </div>

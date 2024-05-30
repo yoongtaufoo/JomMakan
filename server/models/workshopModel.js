@@ -1,3 +1,4 @@
+// models/workshopModel.js
 const mongoose = require("mongoose");
 
 const workshopSchema = new mongoose.Schema({
@@ -8,8 +9,9 @@ const workshopSchema = new mongoose.Schema({
   time: { type: String, required: true },
   date: { type: Date, required: true },
   availableSlot: { type: Number, required: true },
-  photoLink: { type: String } ,// Assuming the photo will be stored as a URL
+  photoLink: { type: String },
   registered: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  favourited: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 const Workshop = mongoose.model("Workshop", workshopSchema);

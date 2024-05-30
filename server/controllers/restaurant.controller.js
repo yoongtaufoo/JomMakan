@@ -1,8 +1,10 @@
 
 const Restaurant = require("../models/restaurantModel.js")
+const favRestaurant = require("../models/favRestaurantModel.js")
 // const User = require("../models/userModel");
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 
 const restaurants = async (req, res) => {
     try {
@@ -15,120 +17,156 @@ const restaurants = async (req, res) => {
   }
 
 
-  const restaurantDetails = async(req, res) =>{
-    try{
-      const restaurant = await Restaurant.findById({"_id": req.params._id})
+  const restaurantDetails = async (req, res) => {
+    try {
+      const restaurant = await Restaurant.findById(req.params._id);
       if (!restaurant) {
         return res.status(404).json({ message: "Restaurant not found" });
       }
-      res.json(restaurant)
-    }catch(error){
-      console.error(error)
-      res.status(500).json({message: "Internal server error"})
-    }
-  }
-
   
-
-
-const addFavouriteRestaurants = async (req, res)=>{
- 
-  const  favRestaurantId  = req.params.restaurantId;
-  console.log(req.params)
-  console.log(req.params.value)
-  console.log(req.params.restaurantId)
-  console.log("Request body:", req.body);
-    console.log("Saving restaurant...");
-    if (!favRestaurantId) {
-      return res.status(400).json({ message: "favRestaurantId is missing in the request body" });
-    }
-
-    try {
-      // Get token
-      const authHeader = req.headers.authorization;
-      const token = JSON.parse(authHeader);
-  
-      // Get the userId from the decoded token
-      const userId = token.user._id;
-      console.log(userId)
-  
-      //Find user by userId
-      const user = await User.findById(userId);
-  
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
+      const authHeader = req.headers.authorization; // Get token
+      if (!authHeader) {
+        console.log("No token provided");
+        return res.json({ restaurant }); // Return restaurant details without isSaved flag
       }
+      const token = JSON.parse(authHeader)
+      console.log("Authorization Header:", token);
+  
+      if (!token) {
+        console.log("No token provided");
+        return res.json({ restaurant }); // Return restaurant details without isSaved flag
+      }
+  
+      const userId = token.user._id
+  
+      const savedRestaurant = await favRestaurant.findOne({ user_id: userId, restaurant_id: req.params._id });
+      const isSaved = !!savedRestaurant;
+  
+      console.log("isSaved:", isSaved);
+      console.log("Restaurant:", restaurant);
+  
+      // Include the isSaved flag in the response
+      return res.json({ restaurant, isSaved });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  };
+  
 
-       // Add the new reservation to the user's reservations array
-    user.favRestaurants.push({
-      favRestaurantId: favRestaurantId
-    });
-
-    // Save the updated user object with the new reservation
-    await user.save();
-
-    res.status(201).json({ message: "Restaurant saved successfully" });
-  } catch (err) {
-    console.error("Error saving restaurant:", err);
-    res.status(500).json({ message: "Failed to save restaurant" });
-  }
-}
+// POST add favourite restaurant
+const saveRestaurant = async (req, res) => {
+  const {
+    name,
+    description,
+    location,
+    address,
+    phone,
+    openinghours,
+    cuisine,
+    image,
+    foodImage,
+    status,
+    restaurant_id
     
-// const fetchFavRestaurants = async (req, res) => {
-//   try {
-//     // Get token
-//     const authHeader = req.headers.authorization;
-//     const token = JSON.parse(authHeader);
-//     // const token = authHeader.split(' ')[1];
+  } = req.body;
 
-//     // Decode token to get userId
-//     // const decodedToken = jwt.verify(token, 'your_secret_key_here');
-//     // const userId = decodedToken.user._id;
+  try {
+    const authHeader = req.headers.authorization; // Get token
+    const token = JSON.parse(authHeader);
 
-//     // Get the userId from the decoded token
-//     const userId = token.user._id;
-//     const user = await User.findById(userId);
+    const userId = token.user._id; // Get the userId from the decoded token
+    console.log(userId)
 
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
+    // Create a new favourite restaurant to db
+    const newFavRestaurant = new favRestaurant({
+      name,
+      description,
+      location,
+      address,
+      phone,
+      openinghours,
+      cuisine,
+      image,
+      foodImage,
+      status,
+      restaurant_id,
+      user_id: userId,
+    });
+    await newFavRestaurant.save();
 
-//     const favRestaurants = await Restaurant.find({ _id: { $in: user.favRestaurants } });
-//     // const favRestaurants = await Restaurant.find({ _id: { $in: user.favRestaurants.map(restaurant => restaurant._id) } });
+    res.status(201).json({ message: "Restaurant created successfully" });
+  } catch (err) {
+    console.error("Error creating restaurant:", err);
+    res.status(500).json({ message: "Failed to create restaurant" });
+  }
+};
 
-//     res.json(favRestaurants);
+// Get fav restaurants
+const myFavouriteRestaurant = async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization; // Get token
+    const token = JSON.parse(authHeader);
 
-//   } catch (err) {
-//     console.error("Error fetching favRestaurants:", err);
-//     res.status(500).json({ message: "Failed to fetch favRestaurants" });
-//   }
-// };
+    const userId = token.user._id; // Get the userId from the decoded token
+
+    const saved = await favRestaurant.find({ user_id: userId }); // Find reservations with user_id = userId
+    console.log(saved)
+
+    res.json(saved); // Send sorted reservations array as response
+    
+  } catch (err) {
+    console.error("Error fetching favourite restaurant:", err);
+    res.status(500).json({ message: "Failed to fetch favourite restaurant" });
+  }
+};
 
 
-// const fetchFavRestaurants = async (req, res) => {
-//   try {
-//     const userId = req.user._id; // Assuming you have user information attached to the request
 
-//     const user = await User.findById(userId);
+// Delete the favorite restaurant
+const deleteFavRestaurant = async (req, res) => {
+  try {
 
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
+    const deleted = await favRestaurant.findByIdAndDelete({"_id": req.params._id});
+    if (!deleted) {
+      return res.status(404).json({ message: "Favorite restaurant not found" });
+    }
 
-//     const favRestaurants = await Restaurant.find({ _id: { $in: user.favRestaurants } });
-//     res.json(favRestaurants);
-//   } catch (err) {
-//     console.error("Error fetching favorite restaurants:", err);
-//     res.status(500).json({ message: "Failed to fetch favorite restaurants" });
-//   }
-// };
- 
+    res.json({ message: "Favorite restaurant removed successfully" }); // Send a success message as response
+  } catch (err) {
+    console.error("Error deleting favourite restaurant:", err);
+    res.status(500).json({ message: "Failed to delete favourite restaurant" });
+  }
+};
+
+const getFavRestaurantById = async (req, res) => {
+  try {
+
+    const authHeader = req.headers.authorization; // Get token
+    const token = JSON.parse(authHeader);
+
+    const userId = token.user._id;
+
+    const restaurant = await favRestaurant.findOne({ "restaurant_id": req.params._id, user_id: userId });
+    if (!restaurant) {
+      return res.status(404).json({ message: "Favorite restaurant not found" });
+    }
+    return res.status(200).json(restaurant);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+
+};
+
 
 
 module.exports = {
   restaurants,
   restaurantDetails,
-  // fetchFavRestaurants,
-  addFavouriteRestaurants
- 
+  saveRestaurant,
+  myFavouriteRestaurant ,
+  deleteFavRestaurant,
+  getFavRestaurantById,
+  
 };

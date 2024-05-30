@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
 import "./Restaurant.css";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { BsStarFill, BsStar } from "react-icons/bs";
+import { BsStar } from "react-icons/bs";
 import axios from "axios";
 
 const renderRatingStars = (rating) => {
@@ -14,18 +14,14 @@ const renderRatingStars = (rating) => {
   return (
     <div className="star-container">
       {[...Array(filledStars)].map((_, index) => (
-        <BsStarFill key={index} className="star-icon filled-star" />
+        <i class="bi bi-star-fill"></i>
       ))}
-      {hasHalfStar && (
-        <BsStarFill className="star-icon filled-star half-star" />
-      )}
-      {hasPartialStar && (
-        <BsStarFill className="star-icon filled-star partial-star" />
-      )}
+      {hasHalfStar && <i class="bi bi-star-half"></i>}
+      {hasPartialStar && <i class="bi bi-star-fill"></i>}
       {[
         ...Array(5 - filledStars - (hasHalfStar || hasPartialStar ? 1 : 0)),
       ].map((_, index) => (
-        <BsStar key={filledStars + index} className="star-icon empty-star" />
+        <BsStar key={filledStars + index} class="bi bi-star" />
       ))}
     </div>
   );
@@ -37,12 +33,13 @@ const Restaurant = () => {
   const [deleted, setDelete] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const [likes, setLikes] = useState([]);
-  const [showDetailsPopups, setShowDetailsPopups] = useState(0);
-  const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
+  // const [showDetailsPopups, setShowDetailsPopups] = useState(0);
+  // const [hasLikes, setHasLikes] = useState([]);
+  // const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
   const [selectedShareOption, setSelectedShareOption] = useState(null);
-  const [openDropdownIndex, setOpenDropdownIndex] = useState(0);
+  const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
   const [isDropdownIndex, setIsDropdownIndex] = useState(null);
+  const [likedReviews, setLikedReviews] = useState(new Set()); // Use a Set to track liked reviews
 
   // Go to the top of page when navigate to this page
   useEffect(() => {
@@ -50,37 +47,35 @@ const Restaurant = () => {
   }, []);
 
   const { _id } = useParams();
+  let userId = "";
 
-  const handleFacebook = (index) => {
-     const review = restaurantReviews[index];
-     const reviewUrl = `URL to the review page for review ID ${review._id}`;
-     const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=#${encodeURIComponent(
-       reviewUrl
-     )}`;
+  // get userid from local storage
+  const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
+  if (storedUser) {
+    userId = storedUser.user._id;
+  }
 
-     // Open the share dialog for Facebook
-     window.open(
-       shareUrl,
-       "_blank",
-       "toolbar=yes,scrollbars=yes,resizable=yes,top=100,left=500,width=600,height=800"
-     );
+  const handleWhatsApp = (review) => {
+    const message = `Hey there! I just discovered this amazing restaurant with fantastic reviews. People are raving about their delicious food and great service. Let's plan a date to check it out together! 😊🍽️ \n\nRestaurant Name: ${restaurant.name} \nRatings: ${review.rating} stars \nReview: ${review.reviewDescription}`;
 
+    const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(message)}`;
+
+    window.location.href = whatsappUrl;
     setIsDropdownIndex(null);
   };
-  const handleEmail = (index) => {
-  const review = restaurantReviews[index];
-  const reviewUrl = `URL to the review page for review ID ${review._id}`;
-  const subject = "Check out this review!";
-  const body = `Check out this restaurant's review: ${reviewUrl}`;
-  const mailtoUrl = `mailto:?subject=${encodeURIComponent(
-    subject
-  )}&body=${encodeURIComponent(body)}`;
 
-  // Open the default email client with the pre-filled email
-  window.location.href = mailtoUrl;
-
-  // Close the dropdown menu after sharing
-  setIsDropdownIndex(null);
+  const handleEmail = (review) => {
+    const subject = "Check out this restaurant!";
+    const body = `Hey there! I just discovered this amazing restaurant with fantastic reviews. People are raving about their delicious food and great service. Let's plan a date to check it out together! 😊🍽️\n
+      Restaurant Name: ${restaurant.name} \n 
+      Ratings: ${review.rating} stars \n 
+      Review: ${review.reviewDescription} \n `;
+    console.log(review.rating);
+    const mailtoUrl = `mailto:?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
+    setIsDropdownIndex(null);
   };
 
   const [restaurant, setRestaurant] = useState({});
@@ -89,15 +84,6 @@ const Restaurant = () => {
   const [ratingPercentages, setRatingPercentages] = useState([0, 0, 0, 0, 0]);
   const [averageRating, setAverageRating] = useState(0);
   const [selectedReview, setSelectedReview] = useState(null); // State to hold the selected review for editing
-  const [reviewDescription, setReviewDescription] = useState(""); // State to hold the review description
-
-  let userid = "User123";
-
-  // get userid from local storage
-  const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
-  if (storedUser) {
-    userid = storedUser.user._id;
-  }
 
   const handleDropdownToggle = (index) => {
     setIsDropdownIndex(isDropdownIndex === index ? null : index);
@@ -107,102 +93,132 @@ const Restaurant = () => {
     setOpenDropdownIndex(openDropdownIndex === index ? null : index);
   };
 
-  const handleSaveToggle = async () => {
-    const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
-    if (!token) {
-      alert("User is not authenticated."); // Handle case where user is not authenticated
-      return;
-    }
-
-    if (!_id) {
-      console.log("favRestaurantId is undefined.");
-      return;
-    }
-
+  const handleLike = async (reviewId, index) => {
     try {
+      const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
+      const token = storedUser.token;
+      // const userId = localStorage.getItem("JomMakanUser").user._id;
+      //  console.log(storedUser);
+      //  console.log(token);
+      if (!token) {
+        alert("User is not authenticated.");
+        return;
+      }
+
+      // Check if the review is already liked by the user
+      // const isLiked = hasLikes[index];
+
+      // Toggle the like status
+      // const updatedHasLikes = [...hasLikes];
+      // updatedHasLikes[index] = !isLiked;
+
+      // Update the state with the modified hasLikes data
+      // setHasLikes(updatedHasLikes);
+
+      // Send the request to the server to like/unlike the review
+      console.log(reviewId);
+      console.log(token);
+      console.log(userId);
       const response = await axios.post(
-        `http://localhost:3001/api/restaurant/${_id}/addFavRestaurant`,
+        `http://localhost:3001/api/review/${reviewId}/likeReview`,
         {
-          favRestaurantId: _id,
+          _id: reviewId,
+          userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include JWT in request headers
+            Authorization: `Bearer ${token}`,
           },
         }
       );
-      setIsSaved(!isSaved);
-      console.log("restaurant saved successfully" + response.data.message);
-      navigate(`/restaurant/${_id}`);
+      console.log(reviewId);
+      console.log("index", index);
+
+      console.log(response.data);
+      // // Update likedBy field in the review database based on the user's action
+      // const updatedReviews = [...restaurantReviews];
+      // const likedBy = updatedReviews[index].likedBy || [];
+      // // const userId = storedUser.user._id;
+      // // console.log(userId);
+      // if (isLiked) {
+      //   // If already liked, remove the user ID from likedBy
+      //   const updatedLikedBy = likedBy.filter((id) => id !== userId);
+      //   updatedReviews[index].likedBy = updatedLikedBy;
+      // } else {
+      //   // If not liked, add the user ID to likedBy
+      //   const updatedLikedBy = [...likedBy, userId];
+      //   updatedReviews[index].likedBy = updatedLikedBy;
+      // }
+      // console.log(isLiked);
+      // // Update the state with the modified reviews data
+      // setRestaurantReviews(updatedReviews);
+
+      setLikedReviews((prevLikedReviews) => {
+        const updatedLikedReviews = new Set(prevLikedReviews);
+        if (updatedLikedReviews.has(reviewId)) {
+          updatedLikedReviews.delete(reviewId);
+        } else {
+          updatedLikedReviews.add(reviewId);
+        }
+        return updatedLikedReviews;
+      });
     } catch (error) {
-      console.log("Unable to save restaurant:" + error.message);
+      console.error("Error liking review:", error);
+      // Handle error
     }
   };
 
- const handleLike = async (index) => {
-   const token = localStorage.getItem("JomMakanUser");
+  // let handler = (e) => {
+  //   if (popRef.current && !popRef.current.contains(e.target)) {
+  //     setDelete(false);
+  //   }
+  // };
 
-   if (!token) {
-     alert("User is not authenticated.");
-     return;
-   }
+  // document.addEventListener("mousedown", handler);
 
-   try {
-     const response = await axios.post(
-       `http://localhost:3001/api/review/${_id}/likeReview`,
-       {}, // No data payload needed for liking
-       {
-         headers: {
-           Authorization: `Bearer ${token}`,
-         },
-       }
-     );
-
-     setLikes((prevLikes) => {
-       const newLikes = [...prevLikes];
-       newLikes[index] = response.data.likes;
-       return newLikes;
-     });
-   } catch (error) {
-     console.error("Error liking review:", error);
-   }
- };
-
+  // return () => {
+  //   document.removeEventListener("mousedown", handler);
+  // };
 
   useEffect(() => {
-    // let handler = (e) => {
-    //   if (popRef.current && !popRef.current.contains(e.target)) {
-    //     setDelete(false);
-    //   }
-    // };
+    const fetchRestaurantData = async () => {
+      try {
+        // Get the token from localStorage or from wherever it's stored
+        const token = localStorage.getItem("JomMakanUser");
+        if (!token) {
+          alert("User is not authenticated.");
+          return;
+        }
 
-    // document.addEventListener("mousedown", handler);
+        // Set the request headers with the token
+        // const config = token ? { headers: { Authorization: token } } : {};
 
-    // return () => {
-    //   document.removeEventListener("mousedown", handler);
-    // };
+        const { data } = await axios.get(
+          `http://localhost:3001/api/restaurant/${_id}`,
+          { headers: { Authorization: token } }
+        );
 
-    axios
-      .get(`http://localhost:3001/api/restaurant/${_id}`)
-      .then(({ data }) => {
-        setRestaurant(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching restaurant:", error);
-      });
+        // Log the retrieved data for debugging
+        console.log(data.restaurant);
+        console.log(data.isSaved);
 
-    // axios
-    //   .get(`http://localhost:3001/api/review/${_id}/reviews`)
-    //   .then((response) => {
-    //     console.log("Fetched reviews:", response.data);
-    //     setRestaurantReviews(response.data);
-    //     setAverageRating(calculateAverageRating(response.data)); // Set average rating
-    //     calculateRatingPercentages(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching reviews:", error);
-    //   });
+        // Update state with the retrieved restaurant data
+        setRestaurant(data.restaurant);
 
+        // If isSaved is defined in the response, update the state
+        if (data.isSaved !== undefined) {
+          setIsSaved(data.isSaved);
+        }
+      } catch (error) {
+        console.error("Error fetching restaurant or isSaved status:", error);
+      }
+    };
+
+    // Call the fetchRestaurantData function when the component mounts or when _id changes
+    fetchRestaurantData();
+  }, [_id, likedReviews]); // Dependency array
+
+  useEffect(() => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(
@@ -214,101 +230,101 @@ const Restaurant = () => {
         setRestaurantReviews(response.data);
         setAverageRating(calculateAverageRating(response.data)); // Set average rating
         calculateRatingPercentages(response.data);
-
       } catch (error) {
         console.error("Error fetch resreview:", error);
       }
     };
     fetchReviews();
-  }, [_id]);
-  const handleEdit = (index) => {
-    const selectedReview = restaurantReviews[index]; // Get the selected review
-    // console.log(restaurantReviews[index]);
-    setSelectedReview(selectedReview); // Set the selected review in state
-    navigate(
-      `/restaurant/${_id}/addReview?restaurantName=${restaurant.name}&edit=true`
-    ); // Navigate to the AddReview page with edit=true query parameter
+  }, [_id, likedReviews]);
+
+  const hasLikedFn = (review) => {
+    return review.likedBy.includes(userId);
+  };
+
+  // const handleEdit = (index) => {
+  //   const selectedReview = restaurantReviews[index]; // Get the selected review
+  //   // console.log(restaurantReviews[index]);
+  //   setSelectedReview(selectedReview); // Set the selected review in state
+  //   navigate(
+  //     `/restaurant/${_id}/addReview?restaurantName=${restaurant.name}&edit=true`
+  //   ); // Navigate to the AddReview page with edit=true query parameter
+  // };
+
+  const handleSaveToggle = async () => {
+    const token = localStorage.getItem("JomMakanUser"); // Get JWT from localStorage
+    if (!token) {
+      alert("User is not authenticated."); // Handle case where user is not authenticated
+      return;
+    }
+
+    if (!restaurant) {
+      console.log("Restaurant data is not loaded.");
+      return;
+    }
+
+    try {
+      if (isSaved) {
+        // If the restaurant is already saved, perform unsave action
+        const savedRestaurant = await axios.get(
+          `http://localhost:3001/api/restaurant/favrestaurants/${restaurant._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        const favRestaurantId = savedRestaurant.data._id; // Extract favRestaurantId from the response
+
+        await axios.delete(
+          `http://localhost:3001/api/restaurant/favrestaurants/${favRestaurantId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        console.log("Restaurant unsaved successfully");
+        setIsSaved(false); // Update the state to reflect the unsaved state
+      } else {
+        // If the restaurant is not saved, perform save action
+        await axios.post(
+          `http://localhost:3001/api/restaurant/${restaurant._id}/addFavRestaurant`,
+          {
+            ...restaurant,
+            restaurant_id: restaurant._id,
+            status: "S",
+          },
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        console.log("Restaurant saved successfully");
+        setIsSaved(true); // Update the state to reflect the saved state
+      }
+    } catch (error) {
+      console.log("Unable to perform save/unsave action:", error.message);
+    }
   };
 
   const handleDelete = async (index) => {
     try {
       // Send DELETE request to delete the review
       await axios.delete(
-        `http://localhost:3001/api/review/${restaurantReviews[index]._id}/deleteReview`
+        `http://localhost:3001/api/review/${reviewId}/deleteReview`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
       );
-
-      // Update the state to reflect the deletion
-      setRestaurantReviews((prevReviews) => {
-        const newReviews = [...prevReviews];
-        newReviews.splice(index, 1); // Remove the deleted review from the array
-        return newReviews;
-      });
-
-      // Close the delete confirmation popup
-      setDelete(false);
+      fetchReviews();
     } catch (error) {
       console.error("Error deleting review:", error);
       // Handle error or display error message to user
     }
   };
-
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:3001/api/restaurant/${_id}`)
-  //     .then(({ data }) => {
-  //       setRestaurant(data);
-  //       if (data.reviews) {
-  //         setHasLiked(new Array(data.reviews.length).fill(false));
-  //         setLikes(new Array(data.reviews.length).fill(0));
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching restaurant:", error);
-  //     });
-  // }, [_id]);
-
-  // useEffect(() => {
-  //   const fetchReviews = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:3001/api/review/${_id}/reviews`
-  //       );
-  //       console.log("Fetched reviews:", response.data);
-  //       setRestaurantReviews(response.data);
-  //       setAverageRating(calculateAverageRating(response.data)); // Set average rating
-  //       calculateRatingPercentages(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetch resreview:", error);
-  //     }
-  //   };
-  //   fetchReviews();
-  // }, [_id]);
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem("JomMakanUser");
-
-  //   if (!token) {
-  //     alert("User is not authenticated.");
-  //     return;
-  //   }
-
-  //   axios
-  //     .get(`http://localhost:3001/api/restaurant/${_id}/reviews`, {
-  //       headers: {
-  //         Authorization: token,
-  //       },
-  //     })
-  //     .then(({ data }) => {
-  //       setRestaurantReviews(data);
-  //       setRestaurantReviews(response.data);
-  //       setAverageRating(calculateAverageRating(response.data)); // Set average rating
-  //       calculateRatingPercentages(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching revieww:", error);
-  //     });
-  // }, []);
 
   const calculateRatingPercentages = (reviews) => {
     const total = reviews.length;
@@ -352,6 +368,12 @@ const Restaurant = () => {
       const days = Math.floor(timeDifference / 86400);
       return `${days} day${days > 1 ? "s" : ""} ago`; // If more than a day ago
     }
+  };
+
+  const handleEdit = async (reviewId) => {
+    navigate(
+      `/restaurant/${_id}/${reviewId}/addReview?edit=true&restaurantName=${restaurant.name}`
+    );
   };
 
   return (
@@ -516,59 +538,56 @@ const Restaurant = () => {
 
         {restaurantReviews.map((review, index) => (
           <div key={index} className="review-card">
-            <div className="name-and-view-more">
+            <div className="name-and-view-more d-flex justify-content-between align-items-center">
               <p>
                 <strong>{review.userName}</strong>
-
-                <button
-                  className="btn btn-secondary dropdown-toggle dropdown-view-more"
-                  type="button"
-                  // id="dropdownViewMoreButton"
-                  onClick={() => handleEditDropdownToggle(index)}
-                >
-                  <i className="bi-three-dots"></i>
-                </button>
-                <ul
-                  className={`dropdown-menu dropdown-view-more ${
-                    openDropdownIndex === index ? "show" : ""
-                  }`}
-                >
-                  <li>
-                    <Link
-                      to={`/restaurant/${_id}/addReview?edit=true?restaurantName=${restaurant.name}`}
-                    >
-                      <button
-                        className="dropdown-item"
-                        onClick={() => handleEdit(index)}
-                      >
-                        <i className="bi bi-pencil"></i> Edit
-                      </button>
-                    </Link>
-                  </li>
-                  <li>
+                {review.user_id ===
+                  JSON.parse(localStorage.getItem("JomMakanUser")).user._id && (
+                  <div className="dropdown-share">
                     <button
-                      className="dropdown-item"
-                      onClick={() => setDelete(!deleted)}
+                      className="btn btn-secondary dropdown-toggle dropdown-view-more"
+                      type="button"
+                      id="dropdownViewMoreButton"
+                      onClick={() => handleEditDropdownToggle(index)}
                     >
-                      <i className="bi bi-trash"></i> Delete
+                      <i className="bi-three-dots"></i>
                     </button>
-                  </li>
-                </ul>
+
+                    <ul
+                      className={`dropdown-menu dropdown-view-more ${
+                        openDropdownIndex === index ? "show" : ""
+                      }`}
+                    >
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => handleEdit(review._id)}
+                        >
+                          <i className="bi bi-pencil"></i> Edit
+                        </button>{" "}
+                      </li>
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => handleDelete(review._id)}
+                        >
+                          <i className="bi bi-trash"></i> Delete
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                )}
               </p>
             </div>
-            {deleted && (
+            {/* {deleted && (
               <div className="popup-overlay">
                 <div className="popup" ref={popRef}>
                   <div>Confirm delete?</div>
                   <div>
-                    <button
-                      onClick={() => {
-                        setConfirm(true);
-                        setDelete(false);
-                      }}
-                    >
+                    <button onClick={() => handleDelete(review._id)}>
                       Confirm
                     </button>
+
                     <button
                       id="buttonPopupCancel"
                       onClick={() => setDelete(false)}
@@ -578,22 +597,22 @@ const Restaurant = () => {
                   </div>
                 </div>
               </div>
-            )}
-            
+            )} */}
+            {/* 
             <span
               className="review-options"
               onClick={() => togglePopup(index)}
             ></span>
             {showDetailsPopups[index] && (
               <div className="review-options-popup">
-                <button onClick={() => handleEdit(index)}>
+                <button onClick={handleEdit} >
                   <i className="bi bi-pencil"></i> Edit
                 </button>
-                <button onClick={() => handleDelete(index)}>
+                <button>
                   <i className="bi bi-trash"></i> Delete
                 </button>
               </div>
-            )}
+            )} */}
 
             <div className="d-flex justify-content-start">
               <div>{renderRatingStars(review.rating)}</div>&nbsp;&nbsp;
@@ -603,24 +622,25 @@ const Restaurant = () => {
             </div>
 
             <p>{review.reviewDescription}</p>
-            {review.mediaUrl && (
-              <img src={review.mediaUrl} className="review-photo" />
+            {review.media.url && (
+              <img src={review.media.url} className="review-photo" />
             )}
 
             <div className="photo-buttons">
               <button
                 className="btn-like"
-                onClick={() => handleLike(index)}
-                style={{ color: likes[index] ? "blue" : "black" }}
+                onClick={() => handleLike(review._id, index)} // Pass index parameter here
+                // style={{ color: hasLikes[index] ? "blue" : "black" }}
+                style={{ color: hasLikedFn(review) ? "blue" : "black" }}
               >
                 <i
                   className={
-                    likes[index]
+                    hasLikedFn(review)
                       ? "bi bi-hand-thumbs-up-fill"
                       : "bi bi-hand-thumbs-up"
                   }
                 ></i>{" "}
-                Helpful ({likes[index]})
+                Helpful ({review.likedBy.length})
               </button>
 
               <div className="dropdown-share">
@@ -640,15 +660,15 @@ const Restaurant = () => {
                   <li>
                     <button
                       className="dropdown-item"
-                      onClick={() => handleFacebook(index)}
+                      onClick={() => handleWhatsApp(review)}
                     >
-                      Share On Facebook
+                      Share On WhatsApp
                     </button>
                   </li>
                   <li>
                     <button
                       className="dropdown-item"
-                      onClick={() => handleEmail(index)}
+                      onClick={() => handleEmail(review)}
                     >
                       Share On Email
                     </button>
