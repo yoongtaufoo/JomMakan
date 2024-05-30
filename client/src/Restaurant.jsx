@@ -47,14 +47,13 @@ const Restaurant = () => {
   }, []);
 
   const { _id } = useParams();
-  let userId = "User123";
+  let userId = "";
 
   // get userid from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
   if (storedUser) {
     userId = storedUser.user._id;
   }
-
 
   const handleWhatsApp = (review) => {
     const message = `Hey there! I just discovered this amazing restaurant with fantastic reviews. People are raving about their delicious food and great service. Let's plan a date to check it out together! 😊🍽️ \n\nRestaurant Name: ${restaurant.name} \nRatings: ${review.rating} stars \nReview: ${review.reviewDescription}`;
@@ -93,8 +92,6 @@ const Restaurant = () => {
   const handleEditDropdownToggle = (index) => {
     setOpenDropdownIndex(openDropdownIndex === index ? null : index);
   };
-
- 
 
   const handleLike = async (reviewId, index) => {
     try {
@@ -165,64 +162,63 @@ const Restaurant = () => {
         }
         return updatedLikedReviews;
       });
-
     } catch (error) {
       console.error("Error liking review:", error);
       // Handle error
     }
   };
 
-  
-    // let handler = (e) => {
-    //   if (popRef.current && !popRef.current.contains(e.target)) {
-    //     setDelete(false);
-    //   }
-    // };
+  // let handler = (e) => {
+  //   if (popRef.current && !popRef.current.contains(e.target)) {
+  //     setDelete(false);
+  //   }
+  // };
 
-    // document.addEventListener("mousedown", handler);
+  // document.addEventListener("mousedown", handler);
 
-    // return () => {
-    //   document.removeEventListener("mousedown", handler);
-    // };
+  // return () => {
+  //   document.removeEventListener("mousedown", handler);
+  // };
 
-    useEffect(() => {
-      const fetchRestaurantData = async () => {
-        try {
-          // Get the token from localStorage or from wherever it's stored
-          const token = localStorage.getItem("JomMakanUser");
-          if (!token) {
-            alert("User is not authenticated.");
-            return;
-          }
-    
-          // Set the request headers with the token
-          // const config = token ? { headers: { Authorization: token } } : {};
-    
-          const { data } = await axios.get(`http://localhost:3001/api/restaurant/${_id}`, { headers: { Authorization: token } });
-    
-          // Log the retrieved data for debugging
-          console.log(data.restaurant);
-          console.log(data.isSaved);
-    
-          // Update state with the retrieved restaurant data
-          setRestaurant(data.restaurant);
-          
-          // If isSaved is defined in the response, update the state
-          if (data.isSaved !== undefined) {
-            setIsSaved(data.isSaved);
-          }
-        } catch (error) {
-          console.error("Error fetching restaurant or isSaved status:", error);
+  useEffect(() => {
+    const fetchRestaurantData = async () => {
+      try {
+        // Get the token from localStorage or from wherever it's stored
+        const token = localStorage.getItem("JomMakanUser");
+        if (!token) {
+          alert("User is not authenticated.");
+          return;
         }
-      };
-    
-      // Call the fetchRestaurantData function when the component mounts or when _id changes
-      fetchRestaurantData();
-    }, [_id]); // Dependency array
-    
 
-    useEffect(() => {
+        // Set the request headers with the token
+        // const config = token ? { headers: { Authorization: token } } : {};
 
+        const { data } = await axios.get(
+          `http://localhost:3001/api/restaurant/${_id}`,
+          { headers: { Authorization: token } }
+        );
+
+        // Log the retrieved data for debugging
+        console.log(data.restaurant);
+        console.log(data.isSaved);
+
+        // Update state with the retrieved restaurant data
+        setRestaurant(data.restaurant);
+
+        // If isSaved is defined in the response, update the state
+        if (data.isSaved !== undefined) {
+          setIsSaved(data.isSaved);
+        }
+      } catch (error) {
+        console.error("Error fetching restaurant or isSaved status:", error);
+      }
+    };
+
+    // Call the fetchRestaurantData function when the component mounts or when _id changes
+    fetchRestaurantData();
+  }, [_id, likedReviews]); // Dependency array
+
+  useEffect(() => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(
@@ -234,13 +230,16 @@ const Restaurant = () => {
         setRestaurantReviews(response.data);
         setAverageRating(calculateAverageRating(response.data)); // Set average rating
         calculateRatingPercentages(response.data);
-
       } catch (error) {
         console.error("Error fetch resreview:", error);
       }
     };
     fetchReviews();
-  }, [_id]);
+  }, [_id, likedReviews]);
+
+  const hasLikedFn = (review) => {
+    return review.likedBy.includes(userId);
+  };
 
   // const handleEdit = (index) => {
   //   const selectedReview = restaurantReviews[index]; // Get the selected review
@@ -257,12 +256,12 @@ const Restaurant = () => {
       alert("User is not authenticated."); // Handle case where user is not authenticated
       return;
     }
-  
+
     if (!restaurant) {
       console.log("Restaurant data is not loaded.");
       return;
     }
-  
+
     try {
       if (isSaved) {
         // If the restaurant is already saved, perform unsave action
@@ -275,7 +274,7 @@ const Restaurant = () => {
           }
         );
         const favRestaurantId = savedRestaurant.data._id; // Extract favRestaurantId from the response
-  
+
         await axios.delete(
           `http://localhost:3001/api/restaurant/favrestaurants/${favRestaurantId}`,
           {
@@ -326,11 +325,6 @@ const Restaurant = () => {
       // Handle error or display error message to user
     }
   };
-
-
-
-
-
 
   const calculateRatingPercentages = (reviews) => {
     const total = reviews.length;
@@ -637,14 +631,14 @@ const Restaurant = () => {
                 className="btn-like"
                 onClick={() => handleLike(review._id, index)} // Pass index parameter here
                 // style={{ color: hasLikes[index] ? "blue" : "black" }}
-                // style={{ color: isLikedFn(review) ? "blue" : "black" }}
+                style={{ color: hasLikedFn(review) ? "blue" : "black" }}
               >
                 <i
-                  // className={
-                  //   isLikedFn(review)
-                  //     ? "bi bi-hand-thumbs-up-fill"
-                  //     : "bi bi-hand-thumbs-up"
-                  // }
+                  className={
+                    hasLikedFn(review)
+                      ? "bi bi-hand-thumbs-up-fill"
+                      : "bi bi-hand-thumbs-up"
+                  }
                 ></i>{" "}
                 Helpful ({review.likedBy.length})
               </button>
