@@ -9,8 +9,8 @@ const restaurantSchema = new mongoose.Schema({
   openinghours: {type:String, required: true},
   cuisine: {type:String, required:true},
   image: {type: String, required: true},
-  foodImage: {type: [String], required: true}
-  
+  foodImage: {type: [String], required: true},
+   averageRating: { type: Number, default: 0 }
 });
 
 
