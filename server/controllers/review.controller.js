@@ -261,6 +261,26 @@ const updateReview = async (req, res) => {
     res.status(500).json({ message: "Failed to update review" });
   }
 };
+const updateAverageRating = async (req, res) => {
+  const { _id } = req.params; // Get restaurant ID from URL parameters
+  const { averageRating } = req.body; // Get averageRating from request body
+  console.log(_id);
+  console.log(averageRating);
+  try {
+    // Find the restaurant by ID and update its averageRating
+    const restaurant = await Restaurant.findByIdAndUpdate(
+      _id,
+      { averageRating },
+      { new: true }
+    );
+
+    // Respond with the updated restaurant object
+    res.json({ message: "Average rating updated successfully", restaurant });
+  } catch (error) {
+    console.error("Error updating average rating:", error);
+    res.status(500).json({ message: "Error updating average rating" });
+  }
+};
 
 module.exports = {
   review,
@@ -270,4 +290,5 @@ module.exports = {
   likeReview,
   updateReview,
   shareReview,
+  updateAverageRating,
 };

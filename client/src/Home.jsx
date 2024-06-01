@@ -5,12 +5,14 @@ import image from "./assets/image 3.png";
 import SearchBar from "./components/SearchBar";
 import "./Home.css";
 import axios from "axios"
+import { useRating } from "./RatingContext";
 
 
 const Home = () => {
 
   const[restaurants, setRestaurants] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const { averageRatings, setAverageRatings } = useRating();
 
   useEffect(()=>{
     const fetchRestaurants = async () => {
@@ -39,7 +41,28 @@ const Home = () => {
     );
   });
   
-
+  useEffect(() => {
+    const fetchAllReviews = async () => {
+      const ratings = {};
+      for (const restaurant of restaurants) {
+        const response = await axios.get(
+          `http://localhost:3001/api/review/${restaurant._id}/reviews`
+        );
+        const reviews = response.data;
+        const total = reviews.length;
+        const totalRatings = reviews.reduce(
+          (acc, review) => acc + review.rating,
+          0
+        );
+        const average = total > 0 ? totalRatings / total : 0;
+        ratings[restaurant._id] = average;
+      }
+      setAverageRatings(ratings);
+    };
+    if (restaurants.length > 0) {
+      fetchAllReviews();
+    }
+  }, [restaurants, setAverageRatings]);
 
   return (
     <div>
@@ -99,7 +122,9 @@ const Home = () => {
                       <i className="bi bi-star-half custom-icon"></i>
                       <span className="custom-card-text">
                         Review:
-                        {restaurant.averageRating.toFixed(1)}                      </span>
+                        {averageRatings[restaurant._id]?.toFixed(1) ||
+                          "0.0"}{" "}
+                      </span>
                     </small>
                   </div>
                 </div>
