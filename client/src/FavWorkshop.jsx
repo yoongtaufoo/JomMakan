@@ -1,93 +1,86 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
-import WorkshopCard from "./components/WorkshopCard";
+import FavWorkshopCard from "./components/FavWorkshopCard";
 import axios from "axios";
 import image from "./assets/image 3.png";
 import { useNavigate } from "react-router-dom";
+import SearchBar from "./components/SearchBar";
+import WorkshopCard from "./components/WorkshopCard";
 
 const FavWorkshop = () => {
-  const navigate = useNavigate();
-  const [favoriteWorkshops, setUserFavoriteWorkshops] = useState([]);
-
-  useEffect(() => {
-    //get username from local storage
-    const token = localStorage.getItem("JomMakanUser");
-
-    if(!token){
-      alert("User is not authenticated");
-      return;
-    }
-    axios
-      .get("http://localhost:3001/api/workshop/favworkshops", {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then(({ data }) => {
-        setUserFavWorkshops(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching favWorkshops:", error);
-      });
-  }, []);
-
-
   const [workshops, setWorkshops] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
+  /*
+  useEffect(() => {
+    const fetchSavedWorkshops = async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("JomMakanUser")).token;
+        if (!token) {
+          console.error("No authorization token found");
+          return;
+        }
+  
+        const userId = getUserIdFromToken(token); // Extract user ID from token
+        console.log("Fetching saved workshops for user:", userId);
+  
+        // Fetch saved workshops from backend
+        const response = await axios.get(`http://localhost:3001/api/workshop/users/${userId}/saved-workshops`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        console.log("Received saved workshops:", response.data);
+        setWorkshops(response.data); // Update state with fetched workshops
+      } catch (error) {
+        console.error("Error fetching saved workshops:", error);
+      }
+    };
+  
+    fetchSavedWorkshops(); // Call the function to fetch saved workshops
+  }, []);
+  
+  */
+  
   useEffect(() => {
     const fetchWorkshops = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/api/workshop/workshops"
-        );
-        // const data = await response.json();
-        setWorkshop(response.data.workshop);
+        const token = JSON.parse(localStorage.getItem("JomMakanUser")).token;
+        if (!token) {
+          console.error("No authorization token found");
+          return;
+        }
+
+        console.log("Making request with token:", token);
+        const response = await axios.get("http://localhost:3001/api/workshop/favworkshops", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Ensure the token is prefixed with Bearer
+          },
+        });
+        
+
+        console.log("Received response:", response.data);
+        setWorkshops(response.data);
       } catch (error) {
         console.error("Error fetching workshops:", error);
       }
     };
-
     fetchWorkshops();
   }, []);
-
-  async function unsaveWorkshop(favWorkshopId) {
-    try {
-      const token = localStorage.getItem("JomMakanUser");
-
-    if (!token) {
-      alert("User is not authenticated.");
-      return;
-    }
-      const response = await fetch(`/favworkshops/${favWorkshopId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': token // Replace with actual token
-        }
-      });
   
-      const result = await response.json();
-      if (response.ok) {
-        console.log('Workshop unsaved successfully', result);
-        // Update UI accordingly, e.g., remove the workshop from the list
-      } else {
-        console.error('Failed to unsave workshop', result.message);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
 
-  const [searchQuery, setSearchQuery] = useState("");  
-    // Filter restaurants based on search query
-    const filteredWorkshops = favWorkshops.filter((workshop) => {
-      const { workshopName, workshopDescription, address } = workshop;
-      const query = searchQuery.toLowerCase();
-      return (
-        workshopName.toLowerCase().includes(query) ||
-        workshopDescription.toLowerCase().includes(query) ||
-        address.toLowerCase().includes(query)
-      );
-    });
+  const navigate = useNavigate();
+
+  const filteredWorkshops = workshops.filter((workshop) => {
+    const { workshopName, workshopDescription } = workshop;
+    const query = searchQuery.toLowerCase();
+    return (
+      workshopName.toLowerCase().includes(query) ||
+      workshopDescription.toLowerCase().includes(query)
+    );
+  });
+
   return (
     <div>
       <Navbar />
@@ -102,18 +95,18 @@ const FavWorkshop = () => {
           <i className="bi bi-arrow-left-circle"></i> Back
         </div>
         <div className="d-flex justify-content-between align-items-center">
-        <h1 className="customized-h1 workshop-header">Favourite Workshops</h1>
-        <div className="ml-auto">
-          <SearchBar 
-              place="workshops, events, ..." 
+          <h1 className="customized-h1 workshop-header">Favourite Workshops</h1>
+          <div className="ml-auto">
+            <SearchBar
+              place="workshops, events, ..."
               onSearch={(query) => setSearchQuery(query)}
             />
           </div>
         </div>
         <br />
         <div className="workshop-grid">
-          {favoriteWorkshops.map((workshop) => (
-            <WorkshopCard key={workshop._id} workshop={workshop} />
+          {filteredWorkshops.map((workshop, index) => (
+          <WorkshopCard key={workshop._id} workshop={workshop} />
           ))}
         </div>
       </div>

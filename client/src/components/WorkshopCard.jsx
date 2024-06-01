@@ -30,6 +30,29 @@ const WorkshopCard = ({ workshop }) => {
       setIsRegistered(workshop.registered.includes(userId));
     }
   }, [userId, workshop.registered]);
+
+  useEffect(() => {
+    const fetchIsSavedStatus = async () => {
+      if (!token || !workshop) return;
+
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/api/workshop/favworkshops/${workshop._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setIsSaved(!!response.data); // Set isSaved based on whether workshop is saved
+      } catch (error) {
+        console.error("Error fetching workshop isSaved status:", error);
+      }
+    };
+
+    fetchIsSavedStatus();
+  }, [token, workshop]);
+
   /*
   useEffect(()=>{
     const fetchWorkshopData = async() => {
@@ -66,6 +89,7 @@ const WorkshopCard = ({ workshop }) => {
     fetchWorkshopData();
   }, [_id]); //Dependency array
 */
+
   useEffect(() => {
     // Add console logs to debug
     //console.log("Workshop Data:", workshop);
@@ -194,7 +218,7 @@ const WorkshopCard = ({ workshop }) => {
             </Link>
           )}
           <FontAwesomeIcon
-            icon={starred ? faStar : farStar}
+            icon={starred || isSaved ? faStar : farStar} // Change icon based on isSaved status
             className="star-icon"
             onClick={handleSaveToggle}
           />

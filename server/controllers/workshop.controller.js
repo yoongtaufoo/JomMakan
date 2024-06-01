@@ -4,6 +4,54 @@ const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
+const myFavouriteWorkshop = async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      console.log("Authorization token not provided");
+      return res.status(401).json({ message: "Authorization token not provided" });
+    }
+
+    const token = authHeader.split(' ')[1]; // Extract token from "Bearer <token>"
+    let decoded;
+    try {
+      decoded = jwt.verify(token, 'your_jwt_secret'); // Use your secret key
+      console.log("Decoded token:", decoded);
+    } catch (err) {
+      console.log("Error decoding token:", err);
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    const userId = decoded.userId;
+    console.log("Fetching saved workshops for user:", userId);
+
+    const savedWorkshops = await FavWorkshop.find({ user_id: userId });
+    console.log("Found saved workshops:", savedWorkshops);
+
+    res.json(savedWorkshops);
+  } catch (err) {
+    console.error("Error fetching favourite workshops:", err);
+    res.status(500).json({ message: "Failed to fetch favourite workshops" });
+  }
+};
+
+const workshopDetails = async (req, res) => {
+  try {
+    const workshopId = req.params.id; // This is where we get the workshop ID from the URL
+    console.log("Fetching details for workshop ID:", workshopId);
+
+    const workshop = await Workshop.findById(workshopId);
+    if (!workshop) {
+      return res.status(404).json({ message: "Workshop not found" });
+    }
+
+    res.json(workshop);
+  } catch (err) {
+    console.error("Error fetching workshop details:", err);
+    res.status(500).json({ message: "Failed to fetch workshop details" });
+  }
+};
+
 const workshops = async (req, res) => {
   try {
     // Get the current date
@@ -19,6 +67,7 @@ const workshops = async (req, res) => {
   }
 };
 
+/*
 const workshopDetails = async (req, res) => {
   try {
     const workshop = await Workshop.findById(req.params._id);
@@ -53,6 +102,7 @@ const workshopDetails = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+*/
 
 // POST add favourite workshop
 const saveWorkshop = async (req, res) => {
@@ -97,6 +147,38 @@ const saveWorkshop = async (req, res) => {
   }
 };
 
+/*
+const myFavouriteWorkshop = async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      console.log("Authorization token not provided");
+      return res.status(401).json({ message: "Authorization token not provided" });
+    }
+
+    const token = authHeader;
+    let decoded;
+    try {
+      decoded = jwt.verify(token, 'your_jwt_secret'); // Use your secret key
+      console.log("Decoded token:", decoded);
+    } catch (err) {
+      console.log("Error decoding token:", err);
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    const userId = decoded.userId;
+    console.log("Fetching saved workshops for user:", userId);
+
+    const savedWorkshops = await FavWorkshop.find({ user_id: userId });
+    console.log("Found saved workshops:", savedWorkshops);
+
+    res.json(savedWorkshops);
+  } catch (err) {
+    console.error("Error fetching favourite workshops:", err);
+    res.status(500).json({ message: "Failed to fetch favourite workshops" });
+  }
+};
+
 // Get fav workshop
 const myFavouriteWorkshop = async (req, res) => {
   try {
@@ -115,8 +197,7 @@ const myFavouriteWorkshop = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch favourite workshop" });
   }
 };
-
-
+*/
 
 // Delete the favorite workshop
 const deleteFavWorkshop = async (req, res) => {
@@ -154,6 +235,22 @@ const getFavWorkshopById = async (req, res) => {
 
 };
 
+const getSavedWorkshops = async (req, res) => {
+  try {
+    const userId = req.params.userId; // Extract user ID from request parameters
+    console.log("Fetching saved workshops for user:", userId);
+
+    // Query the database for workshops saved by the user
+    const savedWorkshops = await FavWorkshop.find({ user_id: userId });
+    console.log("Found saved workshops:", savedWorkshops);
+
+    res.json(savedWorkshops); // Send the saved workshops as JSON response
+  } catch (error) {
+    console.error("Error fetching saved workshops:", error);
+    res.status(500).json({ message: "Failed to fetch saved workshops" });
+  }
+};
+
 
 module.exports = {
   workshops,
@@ -161,6 +258,7 @@ module.exports = {
   saveWorkshop,
   myFavouriteWorkshop,
   deleteFavWorkshop,
-  getFavWorkshopById
+  getFavWorkshopById,
+  getSavedWorkshops
 };
 
