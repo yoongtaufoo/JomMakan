@@ -9,7 +9,7 @@ import SearchBar from "./components/SearchBar";
 const Workshop = () => {
   const [workshops, setWorkshops] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
+  console.log(workshops)
   useEffect(() => {
     const fetchWorkshops = async () => {
       try {

@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar";
 import "./Reserve.css";
 import Form from "./components/Form";
 import { Link, useParams } from "react-router-dom";
-import workshopdatas from "./WorkshopData";
+//import workshopdatas from "./WorkshopData";
 import DetailCard from "./components/DetailCard";
 import axios from "axios";
 
@@ -24,8 +24,8 @@ const Registration = () => {
     axios
       .get(`http://localhost:3001/api/workshop/${_id}`)
       .then(({ data }) => {
-        console.log("Received workshop data:", data);
-        setWorkshop(data);
+        console.log("Received workshop data:", data.workshop);
+        setWorkshop(data.workshop);
       })
       .catch((error) => {
         console.error("Error fetching workshop:", error);
