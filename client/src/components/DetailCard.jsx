@@ -2,7 +2,7 @@ import React from "react";
 // import { get } from "../../../server/routes/reservation.route";
 
 const DetailCard = ({ workshop, restaurant }) => {
-  
+  // console.log(restaurant)
   const getMinMaxTableCapacity = (restaurant) => {
     if (!restaurant || !restaurant.tables) {
       return 0; // Return 0 if restaurant or tables data is missing
@@ -27,7 +27,7 @@ const DetailCard = ({ workshop, restaurant }) => {
     return { minCapacity, maxCapacity };
   };
   const getDateTime = (workshop) => {
-    if (!workshop || !workshop.date) return "";
+    if (!workshop || !workshop.date ) return "";
     const dateOnly = workshop.date.split('T')[0];
     const date = new Date(dateOnly);
     const day = String(date.getDate()).padStart(2, '0');

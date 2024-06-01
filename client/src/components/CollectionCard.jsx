@@ -55,7 +55,7 @@ const CollectionCard = ({ registrations, reservations }) => {
             `http://localhost:3001/api/workshop/${registrations.workshop_id}`
           )
           .then(({ data }) => {
-            setWorkshopData(data);
+            setWorkshopData(data.workshop);
           })
           .catch((error) => {
             console.error("Error fetching workshop data:", error);
