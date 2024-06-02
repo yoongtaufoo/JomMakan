@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./WorkshopCard.css";
-import { Link } from "react-router-dom";
+import { Link , useLocation} from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as farStar } from "@fortawesome/free-regular-svg-icons";
@@ -11,7 +11,7 @@ const WorkshopCard = ({ workshop }) => {
   const [starred, setStarred] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-
+  const location = useLocation(); // Get the current location
   // Extract user ID from JWT token
   const token = localStorage.getItem("JomMakanUser");
   let userId = null;
@@ -117,7 +117,9 @@ const WorkshopCard = ({ workshop }) => {
         console.log("Workshop unsaved successfully");
         setStarred(false); // Update fill star becomes filled star
         setIsSaved(false); // Update the state to reflect the unsaved state
-        window.location.reload();
+        // Conditionally reload the window if the current route is /fav-workshop
+        if (location.pathname === "/fav-workshop") {
+          window.location.reload();}
       } else {
         // If the restaurant is not saved, perform save action
         await axios.post(
