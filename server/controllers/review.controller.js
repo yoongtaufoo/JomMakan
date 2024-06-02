@@ -7,7 +7,7 @@ const multer = require("multer");
 
 const review = async (req, res) => {
   try {
-    const authHeader = req.headers.authorization; // Get token
+    const authHeader = req.headers.authorization; 
     const token = JSON.parse(authHeader);
     const userId = token.user._id;
     const user = await User.findById(userId);
@@ -32,7 +32,6 @@ const review = async (req, res) => {
       folder: "mediaUpload",
     });
 
-    // Create new review
     const newReview = new Review({
       user_id: userId,
       restaurant_id,
@@ -47,7 +46,6 @@ const review = async (req, res) => {
       agreeToTerms,
     });
 
-    // Save review to database
     await newReview.save();
 
     res.status(201).json({ message: "Review submitted successfully" });
@@ -140,31 +138,20 @@ const deleteReview = async (req, res) => {
 
 const likeReview = async (req, res) => {
   try {
-    // const userId = req.user.id;
-    // console.log("user: " + req.user);
-    // console.log(userId);
     const { _id, userId } = req.body;
-    console.log(_id, userId);
-    // Find the review by its ID
     const review = await Review.findOne({ _id });
-    console.log("Review found:", review);
+
     if (!review) {
       return res.status(404).json({ message: "Review not found" });
     }
     const likedIndex = review.likedBy.indexOf(userId);
-    console.log("likedIndex: " + likedIndex);
     if (likedIndex !== -1) {
-      // User has already liked the review, remove the like
       review.likedBy.splice(likedIndex, 1);
     } else {
-      // User has not liked the review, add the like
       review.likedBy.push(userId);
     }
 
-    // Save the updated review
     await review.save();
-
-    // Send response
     res.json({ message: "Review liked/unliked successfully", review });
   } catch (error) {
     console.error("Error liking review:", error);
@@ -173,71 +160,18 @@ const likeReview = async (req, res) => {
 };
 
 const updateReview = async (req, res) => {
-  // const reviewId = req.params._id;
-  // console.log(reviewId);
-  // const { rating, reviewDescription, media, agreeToTerms } = req.body;
-
-  // try {
-  //   const review = await Review.findById(reviewId);
-
-  //   if (!review) {
-  //     return res.status(404).json({ message: "Review not found" });
-  //   }
-
-  // review.rating = rating;
-  // review.reviewDescription = reviewDescription;
-  // review.media = media;
-  // review.agreeToTerms = agreeToTerms;
-  // review.timePosted = new Date();
-  // console.log(media);
-  // await review.save();
-
-  //   res.status(200).json({ message: "Review updated successfully", review });
-  // } catch (error) {
-  //   res.status(500).json({ message: "Error updating review", error });
-  // }
-
   const reviewId = req.params._id;
-  // console.log(reviewId);
-
-  const review = await Review.findById(reviewId);
-
-  if (!review) {
-    return res.status(404).json({ message: "Review not found" });
-  }
 
   try {
-    const authHeader = req.headers.authorization; // Get token
-    const token = JSON.parse(authHeader);
-    const userId = token.user._id;
-    const user = await User.findById(userId);
-    const userName = user.username;
+    const review = await Review.findById(reviewId);
 
-    const {
-      restaurant_id,
-      rating,
-      timePosted,
-      image,
-      reviewDescription,
-      agreeToTerms,
-    } = req.body;
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
 
-    // if (!req.file) {
-    //   throw new Error("No file uploaded");
-    // }
+    const { rating, reviewDescription, image, agreeToTerms } = req.body;
 
     const imageData = req.file.path;
-
-    // const imageData = image;
-    console.log("imageData: ", imageData);
-    console.log("req.file: ", req.file);
-
-    // const imageData = req.file?.path || req.body.image; // Check for file path or image URL
-    if (!imageData) {
-      return res.status(400).json({ message: "Image data is required" });
-    }
-    console.log("imageData: ", imageData);
-
     const newImage = await cloudinary.uploader.upload(imageData, {
       folder: "mediaUpload",
     });
@@ -250,38 +184,54 @@ const updateReview = async (req, res) => {
     };
     review.agreeToTerms = agreeToTerms;
     review.timePosted = new Date();
-    // console.log(media);
 
-    // save current review
     await review.save();
 
-    res.status(201).json({ message: "Review updated successfully" });
-  } catch (err) {
-    console.error("Error updating review:", err);
+    res.status(200).json({ message: "Review updated successfully" });
+  } catch (error) {
+    console.error("Error updating review:", error);
     res.status(500).json({ message: "Failed to update review" });
   }
 };
-const updateAverageRating = async (req, res) => {
-  const { _id } = req.params; // Get restaurant ID from URL parameters
-  const { averageRating } = req.body; // Get averageRating from request body
-  console.log(_id);
-  console.log(averageRating);
-  try {
-    // Find the restaurant by ID and update its averageRating
-    const restaurant = await Restaurant.findByIdAndUpdate(
-      _id,
-      { averageRating },
-      { new: true }
-    );
 
-    // Respond with the updated restaurant object
-    res.json({ message: "Average rating updated successfully", restaurant });
+
+// const updateAverageRating = async (req, res) => {
+//   const { _id } = req.params; // Get restaurant ID from URL parameters
+//   const { averageRating } = req.body; // Get averageRating from request body
+//   console.log(_id);
+//   console.log(averageRating);
+//   try {
+//     // Find the restaurant by ID and update its averageRating
+//     const restaurant = await Restaurant.findByIdAndUpdate(
+//       _id,
+//       { averageRating },
+//       { new: true }
+//     );
+
+//     // Respond with the updated restaurant object
+//     res.json({ message: "Average rating updated successfully", restaurant });
+//   } catch (error) {
+//     console.error("Error updating average rating:", error);
+//     res.status(500).json({ message: "Error updating average rating" });
+//   }
+// };
+const edit = async (req, res) => {
+  try {
+    const reviewId = req.params.reviewId;
+    const reviewData = await Review.findById(reviewId); // Example using Mongoose
+    // If review data is found, send it as a response
+    if (reviewData) {
+      res.status(200).json(reviewData);
+    } else {
+      // If review data is not found, return a 404 error
+      res.status(404).json({ message: "Review not found" });
+    }
   } catch (error) {
-    console.error("Error updating average rating:", error);
-    res.status(500).json({ message: "Error updating average rating" });
+    // If an error occurs, return a 500 error
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
-
 module.exports = {
   review,
   reviews,
@@ -290,5 +240,6 @@ module.exports = {
   likeReview,
   updateReview,
   shareReview,
-  updateAverageRating,
+  // updateAverageRating,
+  edit,
 };

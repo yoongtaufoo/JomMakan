@@ -121,6 +121,23 @@ const AddReview = () => {
     params.get("isChecked") === "true" || false
   );
 
+useEffect(() => {
+  const fetchReview = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/api/review/${reviewId}`
+      );
+      setReviewData(response.data);
+    } catch (error) {
+      console.error("Error fetching review:", error);
+    }
+  };
+
+  if (editMode) {
+    fetchReview();
+  }
+}, [reviewId, editMode]);
+  
   const submitReview = async () => {
     if (!ratingInput || !descriptionInput || !selectedFile || !isChecked) {
       alert("Please complete all fields before submitting the review.");
@@ -149,6 +166,7 @@ const AddReview = () => {
             },
           }
         );
+        
 
         console.log("Review updated successfully:", response.data);
         navigate(`/restaurant/${_id}`);
