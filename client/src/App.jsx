@@ -3,19 +3,18 @@ import { Link } from "react-router-dom";
 import "./App.css";
 import drip from "./assets/drip.png";
 import gif from "./assets/eggif.gif";
-import breakfast from "./assets/breakfast.png"
+import breakfast from "./assets/breakfast.png";
 import shadow from "./assets/shadow.png";
 import logo from "./assets/logo.png";
-import reservation from './assets/reservation.png';
-import reservationShadow from './assets/shadow3.png';
-import workshop from './assets/cooking.png';
-import workshopShadow from './assets/cookingshadow.png';
-import restaurant3d from './assets/restaurant3d.png';
-import restaurantshadow from './assets/restaurantshadow.png'
+import reservation from "./assets/reservation.png";
+import reservationShadow from "./assets/shadow3.png";
+import workshop from "./assets/cooking.png";
+import workshopShadow from "./assets/cookingshadow.png";
+import restaurant3d from "./assets/restaurant3d.png";
+import restaurantshadow from "./assets/restaurantshadow.png";
 import { useState } from "react";
-import {Typewriter } from 'react-simple-typewriter';
+import { Typewriter } from "react-simple-typewriter";
 function App() {
-
   return (
     <div>
       <Parallax pages={4} className="parallax-wrapper">
@@ -123,7 +122,7 @@ function App() {
         </ParallaxLayer>
         {/* </div> */}
         <ParallaxLayer
-          offset={3.2}
+          offset={3.0}
           speed={1}
           // sticky={{ start: 3.2, end: 4 }}
         >

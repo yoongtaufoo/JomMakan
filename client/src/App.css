@@ -63,12 +63,12 @@ button{
 #right {
   width: 70%;
   top: -230px;
-  left:600px;
+  left:750px;
   position: relative;
 }
 #right1 {
   width: 40%;
-  left: 800px;
+  left: 1000px;
   position: relative;
 }
 #gif{
@@ -156,11 +156,11 @@ transition: opacity 0.5s ease;
 #green-view {
   position: relative;
   display: flex;
-      justify-content: right;
-      align-items: center;
+  justify-content: right;
+  align-items: center;
   height: 180vh;
-background-color: #2eb598;
-padding-left: 5%;
+  background-color: #2eb598;
+  padding-left: 5%;
   padding-right: 5%;
   color: #FDFFEA;
 }
