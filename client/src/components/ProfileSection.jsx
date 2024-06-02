@@ -118,7 +118,7 @@ const ProfileSection = () => {
       <div className="profile-sec d-flex flex-column justify-content-center align-items-center">
         <form
           onSubmit={handleSubmit}
-          className="profile-sec d-flex flex-column justify-content-center align-items-center"
+          className="d-flex flex-column justify-content-center align-items-center"
         >
           <div className="profile-edit">
             <img className="profile-pic" src={previewImage} alt="profilePic" />

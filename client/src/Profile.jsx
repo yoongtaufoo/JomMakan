@@ -95,7 +95,7 @@ const Profile = () => {
     <div>
       <Navbar />
       <div className="profile-wrapper d-flex flex-row justify-content-center">
-        <div className="mt-5">
+        <div>
           <ProfileSection />
         </div>
         <div className="profile-details-wrapper d-flex flex-column justify-content-center align-items-center">
