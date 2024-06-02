@@ -121,6 +121,8 @@ const isValidName = (nameinput) => {
       alert(
         "Please check the box to indicate that you have read and understood the Registration Policy."
       );
+      setConfirm(false);
+      setSubmit(false);
       return; // Stop further execution if isChecked is false
     }
 
@@ -162,10 +164,11 @@ const isValidName = (nameinput) => {
 
   const handleClickOutside = (event) => {
     if (popRef.current && !popRef.current.contains(event.target)) {
-      setConfirm(false);
+        setConfirm(false);
       setSubmit(false);
       navigate(-1);// Navigate up one level in the URL hierarchy
       //window.location.reload(); // reload window after reserve successfully
+      
     }
   };
   useEffect(() => {
