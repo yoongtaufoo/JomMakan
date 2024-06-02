@@ -32,26 +32,11 @@ const WorkshopCard = ({ workshop }) => {
   }, [userId, workshop.registered]);
 
   useEffect(() => {
-    const fetchIsSavedStatus = async () => {
-      if (!token || !workshop) return;
-
-      try {
-        const response = await axios.get(
-          `http://localhost:3001/api/workshop/favworkshops/${workshop._id}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-        setIsSaved(!!response.data); // Set isSaved based on whether workshop is saved
-      } catch (error) {
-        console.error("Error fetching workshop isSaved status:", error);
-      }
-    };
-
-    fetchIsSavedStatus();
-  }, [token, workshop]);
+    if (userId && workshop.favourited) {
+      setStarred(workshop.favourited.includes(userId));
+      setIsSaved(workshop.favourited.includes(userId));
+    }
+  }, [userId, workshop.favourited]);
 
   /*
   useEffect(()=>{
@@ -89,6 +74,7 @@ const WorkshopCard = ({ workshop }) => {
     fetchWorkshopData();
   }, [_id]); //Dependency array
 */
+
 
   useEffect(() => {
     // Add console logs to debug
@@ -131,6 +117,7 @@ const WorkshopCard = ({ workshop }) => {
         console.log("Workshop unsaved successfully");
         setStarred(false); // Update fill star becomes filled star
         setIsSaved(false); // Update the state to reflect the unsaved state
+        window.location.reload();
       } else {
         // If the restaurant is not saved, perform save action
         await axios.post(
@@ -218,7 +205,7 @@ const WorkshopCard = ({ workshop }) => {
             </Link>
           )}
           <FontAwesomeIcon
-            icon={starred || isSaved ? faStar : farStar} // Change icon based on isSaved status
+            icon={starred ? faStar : farStar}
             className="star-icon"
             onClick={handleSaveToggle}
           />

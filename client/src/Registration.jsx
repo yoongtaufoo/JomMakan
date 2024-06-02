@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
 import "./Reserve.css";
 import Form from "./components/Form";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 //import workshopdatas from "./WorkshopData";
 import DetailCard from "./components/DetailCard";
 import axios from "axios";
@@ -10,6 +10,7 @@ import axios from "axios";
 const Registration = () => {
   const [workshop, setWorkshop] = useState(null);
   const {_id } = useParams();
+  const navigate = useNavigate();
 
   // const workshop = workshopdatas.find(
   //   (workshop) => workshop.id === parseInt(id)
@@ -39,9 +40,13 @@ const Registration = () => {
       <div className="container">
         <br />
         <div className="d-flex justify-content-between align-items-center">
-          <Link to="/workshop" className="back-btn">
-            <i className="bi bi-arrow-left-circle"></i> Back
-          </Link>
+          <div
+          className="back-btn"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate(-1)}
+        >
+          <i className="bi bi-arrow-left-circle"></i> Back
+        </div>
           <div className="ml-auto">
             <Link to="/schedule" className="back-btn">
               <i className="bi bi-calendar-heart custom-icon"></i>View My
