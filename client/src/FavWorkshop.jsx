@@ -14,6 +14,7 @@ const FavWorkshop = () => {
   // const token = user?.token; // Get token from local storage
   //const userId = user?.id; // Get user ID from local storage
 
+  /*
   useEffect(() => {
     //get userid from local storage
     const token = localStorage.getItem("JomMakanUser");
@@ -79,6 +80,7 @@ const FavWorkshop = () => {
     );
   });
 
+
   return (
     <div>
       <Navbar />
@@ -103,8 +105,10 @@ const FavWorkshop = () => {
         </div>
         <br />
         <div className="workshop-grid">
+
           {filteredWorkshops.map((workshop) => (
             <WorkshopCard key={workshop._id} workshop={workshop} />
+
           ))}
         </div>
       </div>
