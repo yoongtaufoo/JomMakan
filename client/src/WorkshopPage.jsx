@@ -30,11 +30,16 @@ const Workshop = () => {
   }, []);
 
   const filteredWorkshops = workshops.filter((workshop) => {
-    const { workshopName, workshopDescription } = workshop;
+    const { workshopName, workshopDescription , date } = workshop;
     const query = searchQuery.toLowerCase();
+    const currentDate = new Date();
+    // Convert workshop date to a Date object
+    const workshopDate = new Date(date);
+    // Check if workshop date is valid and greater than the current date
     return (
-      workshopName.toLowerCase().includes(query) ||
-      workshopDescription.toLowerCase().includes(query)
+      workshopDate > currentDate &&
+      (workshopName.toLowerCase().includes(query) ||
+        workshopDescription.toLowerCase().includes(query))
     );
   });
   

@@ -7,10 +7,12 @@ const mongoose = require("mongoose");
 const workshops = async (req, res) => {
   try {
     // Get the current date
-    const currentDate = new Date();
-
+    //const currentDate = new Date();
+    
     // Find workshops with dates greater than the current date
-    const upcomingWorkshops = await Workshop.find({ date: { $gt: currentDate } });
+   // const upcomingWorkshops = await Workshop.find({ date: { $gt: currentDate } });
+   const upcomingWorkshops = await Workshop.find();
+
 
     res.json(upcomingWorkshops);
   } catch (error) {
