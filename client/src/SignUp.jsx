@@ -66,7 +66,7 @@ const SignUp = () => {
       </nav>
       <div className="register-content d-flex flex-row justify-content-center align-items-center">
         <div className="register-container">
-          <h1 className="register-header mt-1 mb-3">Register an account</h1>
+          <h1 className="register-header mt-3 mb-3">Register an account</h1>
           <form
             onSubmit={handleSubmit}
             className="needs-validation"
