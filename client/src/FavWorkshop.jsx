@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import axios from "axios";
 import image from "./assets/image 3.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import SearchBar from "./components/SearchBar";
 import WorkshopCard from "./components/WorkshopCard";
 
@@ -66,7 +66,6 @@ const FavWorkshop = () => {
   //   fetchWorkshops();
   // }, [token]);
 
-  const navigate = useNavigate();
 
   // Filter workshops by user ID and search query
   const filteredWorkshops = favWorkshops.filter((workshop) => {
@@ -85,13 +84,9 @@ const FavWorkshop = () => {
       <img src={image} alt="" style={{ width: "100%" }} />
       <div className="container">
         <br />
-        <div
-          className="back-btn"
-          style={{ cursor: "pointer" }}
-          onClick={() => navigate(-1)}
-        >
-          <i className="bi bi-arrow-left-circle"></i> Back
-        </div>
+          <Link to={`/workshop`} className="back-btn">
+            <i className="bi bi-arrow-left-circle"></i> Back
+          </Link>
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="customized-h1 workshop-header">Favourite Workshops</h1>
           <div className="ml-auto">
