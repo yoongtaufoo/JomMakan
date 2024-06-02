@@ -11,6 +11,13 @@ const Workshop = () => {
   const [searchQuery, setSearchQuery] = useState("");
   console.log(workshops)
   useEffect(() => {
+    //get userid from local storage
+    const token = localStorage.getItem("JomMakanUser");
+    if (!token) {
+      alert("User is not authenticated.");
+      return;
+    }
+    
     const fetchWorkshops = async () => {
       try {
         const response = await axios.get("http://localhost:3001/api/workshop/workshops");

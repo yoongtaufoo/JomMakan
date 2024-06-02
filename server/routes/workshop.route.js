@@ -14,11 +14,11 @@ const router = express.Router();
 
 router.get("/workshops", workshops);
 //router.get("/workshop/:_id", workshopDetails); 
-router.get("/:_id", workshopDetails); 
 router.get("/favworkshops", myFavouriteWorkshop );
 router.delete("/favworkshops/:_id", deleteFavWorkshop); 
 router.get("/favworkshops/:_id", getFavWorkshopById);
-router.post("/:workshopId/addFavWorkshop", saveWorkshop)
+router.get("/:_id", workshopDetails); 
+router.post("/:workshopId/addFavWorkshop", saveWorkshop);
 
 module.exports = router;
 

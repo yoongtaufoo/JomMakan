@@ -30,6 +30,14 @@ const WorkshopCard = ({ workshop }) => {
       setIsRegistered(workshop.registered.includes(userId));
     }
   }, [userId, workshop.registered]);
+
+  useEffect(() => {
+    if (userId && workshop.favourited) {
+      setStarred(workshop.favourited.includes(userId));
+      setIsSaved(workshop.favourited.includes(userId));
+    }
+  }, [userId, workshop.favourited]);
+
   /*
   useEffect(()=>{
     const fetchWorkshopData = async() => {
@@ -66,6 +74,8 @@ const WorkshopCard = ({ workshop }) => {
     fetchWorkshopData();
   }, [_id]); //Dependency array
 */
+
+
   useEffect(() => {
     // Add console logs to debug
     //console.log("Workshop Data:", workshop);
@@ -107,6 +117,7 @@ const WorkshopCard = ({ workshop }) => {
         console.log("Workshop unsaved successfully");
         setStarred(false); // Update fill star becomes filled star
         setIsSaved(false); // Update the state to reflect the unsaved state
+        window.location.reload();
       } else {
         // If the restaurant is not saved, perform save action
         await axios.post(

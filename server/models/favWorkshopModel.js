@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const favWorkshopSchema = new mongoose.Schema({
-  workshopName: { type: String, required: true, unique: true },
+  workshopName: { type: String, required: true, unique:false},
   workshopDescription: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   address: { type: String, required: true },

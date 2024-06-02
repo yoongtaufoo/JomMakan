@@ -1,5 +1,5 @@
 const Workshop = require("../models/workshopModel");
-const favWorkshop = require("../models/favWorkshopModel.js")
+const favWorkshop = require("../models/favWorkshopModel")
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
@@ -90,6 +90,13 @@ const saveWorkshop = async (req, res) => {
     });
     await newFavWorkshop.save();
 
+    const workshop = await Workshop.findById(workshop_id);
+    console.log(workshop)
+    if (workshop) {
+      workshop.favourited.push(userId); // Set the registered status to true 
+      await workshop.save(); // Save the updated workshop
+    }
+
     res.status(201).json({ message: "Workshop created successfully" });
   } catch (err) {
     console.error("Error creating workshop:", err);
@@ -97,15 +104,18 @@ const saveWorkshop = async (req, res) => {
   }
 };
 
+//favworkshops
+//({ favourited: { $in: [userId.toString()] } })
 // Get fav workshop
 const myFavouriteWorkshop = async (req, res) => {
   try {
     const authHeader = req.headers.authorization; // Get token
     const token = JSON.parse(authHeader);
-
+  
     const userId = token.user._id; // Get the userId from the decoded token
 
-    const saved = await favWorkshop.find({ user_id: userId }); // Find saved workshop with user_id = userId
+    const saved = await Workshop.find({ favourited: { $in: [userId] } });// Find saved workshop where userId is in the favourited array
+    
     console.log(saved)
 
     res.json(saved); // Send sorted saved workshop array as response
@@ -126,6 +136,15 @@ const deleteFavWorkshop = async (req, res) => {
     if (!deleted) {
       return res.status(404).json({ message: "Favorite workshop not found" });
     }
+
+         // Find the workshop by ID and update the available slots
+         const workshop = await Workshop.findById(deleted.workshop_id);
+         console.log(workshop);
+         if (workshop) {
+           workshop.favourited.pull(deleted.user_id.toString()); // Remove the user id
+           await workshop.save(); // Save the updated workshop
+         }
+
 
     res.json({ message: "Favorite workshop removed successfully" }); // Send a success message as response
   } catch (err) {
