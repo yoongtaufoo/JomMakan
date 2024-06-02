@@ -159,9 +159,7 @@ const CollectionCard = ({ registrations, reservations }) => {
             </div>
             <div className="col-md-4">
             <div className="card-body">
-                <Link to={`/workshop/${workshopData.id}`}>
                 <h5 className="card-title">{workshopData. workshopName}</h5>
-                </Link>
                 <p className="card-text">{workshopData.workshopDescription}</p>
                 <p className="card-text">
                 <i className="bi-geo-alt-fill custom-icon"></i>
