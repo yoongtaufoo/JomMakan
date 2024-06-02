@@ -21,4 +21,3 @@ router.get("/:_id", workshopDetails);
 router.post("/:workshopId/addFavWorkshop", saveWorkshop);
 
 module.exports = router;
-
