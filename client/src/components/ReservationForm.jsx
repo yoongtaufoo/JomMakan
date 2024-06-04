@@ -360,7 +360,7 @@ const ReservationForm = (props) => {
     }
     if (!isChecked) {
       alert(
-        "Please check the box to indicate that you have read and understood the Registration Policy."
+        "Please check the box to indicate that you have read and understood the Reservation Policy."
       );
       return; // Stop further execution if isChecked is false
     }
