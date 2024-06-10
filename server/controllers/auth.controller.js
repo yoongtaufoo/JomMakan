@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const zxcvbn = require("zxcvbn");
-const nodemailer = require("nodemailer"); // Add this line
+const nodemailer = require("nodemailer");
 
 // POST register users
 const register = async (req, res) => {
