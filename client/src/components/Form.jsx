@@ -107,14 +107,20 @@ const RegistrationForm = (props) => {
   const handleConfirm = () => {
     if (!isFormValid) {
       alert("Please fill in all required fields.");
+      setConfirm(false);
+      setSubmit(false);
       return;
     }
     if (!isValidName(nameinput)) {
       alert("Are you sure this is your name, Mr " + nameinput + " ?");
+      setConfirm(false);
+      setSubmit(false);
       return;
     }
     if (!isValidPhoneNumber(phoneinput)) {
       alert("Please enter a valid phone number.");
+      setConfirm(false);
+      setSubmit(false);
       return;
     }
     if (!isChecked) {
