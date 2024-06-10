@@ -33,7 +33,7 @@ const RegistrationForm = (props) => {
           alert(`We do not have enough slots for ${value}. Please reduce the number of pax or choose another workshop.\nCurrent available slots: ${props.available}`);
           setPaxInput(''); // Clear the pax input field
         } 
-        else if(value < 0){
+        else if(value <=0){
           alert(`Please enter a valid pax number.`);
           setPaxInput(''); // Clear the pax input field
         }
@@ -107,14 +107,20 @@ const isValidName = (nameinput) => {
   const handleConfirm = () => {
     if (!isFormValid) {
       alert("Please fill in all required fields.");
+      setConfirm(false);
+      setSubmit(false);
       return;
     }
     if (!isValidName(nameinput)) {
       alert("Are you sure this is your name, Mr " + nameinput + " ?");
+      setConfirm(false);
+      setSubmit(false);
       return;
     }
     if (!isValidPhoneNumber(phoneinput)) {
       alert("Please enter a valid phone number.");
+      setConfirm(false);
+      setSubmit(false);
       return;
     }
     if (!isChecked) {
