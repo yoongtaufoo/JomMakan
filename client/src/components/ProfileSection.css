@@ -1,6 +1,8 @@
 .profile-sec{
-    height:fit-content;
+    height: calc(100vh - 90px);
     width:fit-content;
+    /* background-color: aqua; */
+
 }
 
 .profile-edit{
@@ -67,6 +69,7 @@ input[type="file"] {
     font-size: 13px ;
     padding: 13px 40px; 
     /* border-radius: 30px;*/
+    /* margin-bottom: 100px; */
 }
 
 #log-out-popup-title{

@@ -56,7 +56,7 @@ const Restaurant = () => {
   }
 
   const handleWhatsApp = (review) => {
-    const message = `Hey there! I just discovered this amazing restaurant with fantastic reviews. People are raving about their delicious food and great service. Let's plan a date to check it out together! 😊🍽️ \n\nRestaurant Name: ${restaurant.name} \nRatings: ${review.rating} stars \nReview: ${review.reviewDescription}`;
+    const message = `Hey there! I just discovered this amazing restaurant with fantastic reviews. People are craving about their delicious food and great service. Let's plan a date to check it out together! 😊🍽️ \n\nRestaurant Name: ${restaurant.name} \nRatings: ${review.rating} stars \nReview: ${review.reviewDescription}`;
 
     const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(message)}`;
 
@@ -66,7 +66,7 @@ const Restaurant = () => {
 
   const handleEmail = (review) => {
     const subject = "Check out this restaurant!";
-    const body = `Hey there! I just discovered this amazing restaurant with fantastic reviews. People are raving about their delicious food and great service. Let's plan a date to check it out together! 😊🍽️\n
+    const body = `Hey there! I just discovered this amazing restaurant with fantastic reviews. People are craving about their delicious food and great service. Let's plan a date to check it out together! 😊🍽️\n
       Restaurant Name: ${restaurant.name} \n 
       Ratings: ${review.rating} stars \n 
       Review: ${review.reviewDescription} \n `;
@@ -248,7 +248,7 @@ const Restaurant = () => {
       setAverageRating(average);
 
       // Update the average rating in the database
-       updateAverageRatingInDatabase(average);
+      // updateAverageRatingInDatabase(average);
 
       calculateRatingPercentages(reviews);
       setReviews(reviews);
@@ -257,26 +257,25 @@ const Restaurant = () => {
     }
   };
 
-  const updateAverageRatingInDatabase = async (averageRating) => {
-    try {
-      const token = localStorage.getItem("JomMakanUser");
-      const response = await axios.put(
-        `http://localhost:3001/api/restaurant/${_id}/updateAverageRating`,
-        {
-          averageRating: averageRating,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      console.log("Average rating updated successfully:", response.data);
-    } catch (error) {
-      console.error("Error updating average rating:", error);
-    }
-  };
-
+  // const updateAverageRatingInDatabase = async (averageRating) => {
+  //   try {
+  //     const token = localStorage.getItem("JomMakanUser");
+  //     const response = await axios.put(
+  //       `http://localhost:3001/api/restaurant/${_id}/updateAverageRating`,
+  //       {
+  //         averageRating: averageRating,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: token,
+  //         },
+  //       }
+  //     );
+  //     console.log("Average rating updated successfully:", response.data);
+  //   } catch (error) {
+  //     console.error("Error updating average rating:", error);
+  //   }
+  // };
 
   const isLikedFn = (review) => {
     return review.likedBy.includes(userId);
@@ -405,10 +404,30 @@ const Restaurant = () => {
   };
 
   const handleEdit = async (reviewId) => {
-    navigate(
-      `/restaurant/${_id}/${reviewId}/addReview?edit=true&restaurantName=${restaurant.name}`
-    );
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/api/review/${reviewId}`
+      );
+      const reviewData = response.data;
+
+      navigate(
+        `/restaurant/${_id}/${reviewId}/addReview?edit=true&restaurantName=${restaurant.name}`,
+        { state: { reviewData } }
+      );
+    } catch (error) {
+      console.error("Error fetching review data:", error);
+      // Handle error if needed
+    }
   };
+  useEffect(() => {
+    if (location.state && location.state.reviewData) {
+      const { rating, reviewDescription /* other fields */ } =
+        location.state.reviewData;
+      setRatingInput(rating);
+      setDescriptionInput(reviewDescription);
+      // Set other state variables for other form fields
+    }
+  }, [location.state]);
 
   return (
     <div>
@@ -416,9 +435,14 @@ const Restaurant = () => {
       <div className="container">
         <br />
         <div className="d-flex justify-content-between align-items-center">
-          <Link to={`/home`} className="back-btn">
+          {/* <Link to={`/home`} className="back-btn"> */}
+          <div
+          className="back-btn"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate(-1)}
+          >
             <i className="bi bi-arrow-left-circle"></i> Back
-          </Link>
+          </div>
           <div className="ml-auto">
             <small className="back-btn" onClick={handleSaveToggle}>
               <i

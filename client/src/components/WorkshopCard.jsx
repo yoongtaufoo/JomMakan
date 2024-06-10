@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./WorkshopCard.css";
-import { Link , useLocation} from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as farStar } from "@fortawesome/free-regular-svg-icons";
@@ -75,7 +75,6 @@ const WorkshopCard = ({ workshop }) => {
   }, [_id]); //Dependency array
 */
 
-
   useEffect(() => {
     // Add console logs to debug
     //console.log("Workshop Data:", workshop);
@@ -119,7 +118,8 @@ const WorkshopCard = ({ workshop }) => {
         setIsSaved(false); // Update the state to reflect the unsaved state
         // Conditionally reload the window if the current route is /fav-workshop
         if (location.pathname === "/fav-workshop") {
-          window.location.reload();}
+          window.location.reload();
+        }
       } else {
         // If the restaurant is not saved, perform save action
         await axios.post(
@@ -186,7 +186,7 @@ const WorkshopCard = ({ workshop }) => {
               }}
               disabled
             >
-              FULL XD
+              Full
             </button>
           ) : (
             <Link
