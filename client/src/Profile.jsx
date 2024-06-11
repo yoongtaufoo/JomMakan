@@ -3,16 +3,13 @@ import "./Profile.css";
 import Navbar from "./components/Navbar";
 import { Link } from "react-router-dom";
 import ProfileSection from "./components/ProfileSection";
-import PasswordStrengthMeter from "./components/PasswordStrengthMeter";
-import report from "./assets/report.png";
+// import report from "./assets/report.png";
 import passwordIcon from "./assets/password.png";
 import savedWorkshop from "./assets/saved-workshops.png";
 import savedRestaurant from "./assets/saved-restaurant.png";
 import axios from "axios";
 
 const Profile = () => {
-  // axios.defaults.withCredentials = true;
-
   // Get userid from local storage
   const storedUser = JSON.parse(localStorage.getItem("JomMakanUser"));
   let storedUserId = "";
@@ -24,18 +21,7 @@ const Profile = () => {
 
   const [username, setUsername] = useState("");
   const [location, setLocation] = useState("");
-  // const [birthday, setBirthday] = useState("");
   const [email, setEmail] = useState("");
-  // const [pass, setPass] = useState(userInfo.password);
-  // const [showPassword, setShowPassword] = useState(false);
-  // const handleClickShowPassword = () => {
-  //   setShowPassword(!showPassword);
-  // };
-  // const [pass2, setPass2] = useState(userInfo.password);
-  // const [showPassword2, setShowPassword2] = useState(false);
-  // const handleClickShowPassword2 = () => {
-  //   setShowPassword2(!showPassword2);
-  // };
 
   useEffect(() => {
     //get token from local storage
@@ -136,111 +122,12 @@ const Profile = () => {
               />
             </div>
 
-            {/* <div className="form-group">
-              <label htmlFor="birthday">
-                <strong>Birthday</strong>
-              </label>
-
-              <input
-                type="date"
-                data-date-format="mm/dd/yyyy"
-                className="datepicker form-control auth register"
-                name="birthday"
-                id="birthday"
-                placeholder="Enter birthday"
-                required
-                value={birthday}
-                onChange={(e) => setBirthday(e.target.value)}
-              />
-            </div> */}
-
             <div className="form-group was-validated">
               <label htmlFor="email">
                 <strong>Email</strong>
               </label>
-              {/* <input
-                type="email"
-                className="form-control auth register"
-                name="email"
-                id="email"
-                placeholder="Enter email"
-                required
-                value={email}
-                // onChange={(e) => setEmail(e.target.value)}
-                // readOnly
-              /> */}
               <div className="form-control auth register">{email}</div>
             </div>
-
-            {/* <div className="form-group position-relative">
-              <label htmlFor="password">
-                <strong>Password</strong>
-              </label>
-              <div className="position-relative">
-                <input
-                  name="password"
-                  id="password"
-                  className="form-control auth register2"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter password"
-                  required
-                  noValidate
-                  value={pass}
-                  onChange={(e) => setPass(e.target.value)}
-                />
-                {showPassword ? (
-                  <i
-                    className="bi bi-eye fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
-                    onClick={handleClickShowPassword}
-                    style={{ cursor: "pointer" }}
-                  ></i>
-                ) : (
-                  <i
-                    className="bi bi-eye-slash fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
-                    onClick={handleClickShowPassword}
-                    style={{ cursor: "pointer" }}
-                  ></i>
-                )}
-              </div>
-              <div className="ms-4">
-                <PasswordStrengthMeter password={pass} />
-              </div>
-            </div>
-
-            <div className="form-group position-relative">
-              <label htmlFor="retype-password">
-                <strong>Retype Password</strong>
-              </label>
-              <div className="position-relative">
-                <input
-                  name="retype-password"
-                  id="retype-password"
-                  className="form-control auth register2"
-                  type={showPassword2 ? "text" : "password"}
-                  placeholder="Enter password"
-                  required
-                  noValidate
-                  value={pass2}
-                  onChange={(e) => setPass2(e.target.value)}
-                />
-                {showPassword2 ? (
-                  <i
-                    className="bi bi-eye fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
-                    onClick={handleClickShowPassword2}
-                    style={{ cursor: "pointer" }}
-                  ></i>
-                ) : (
-                  <i
-                    className="bi bi-eye-slash fs-5 position-absolute me-4 pe-1 mt-1 end-0 top-0"
-                    onClick={handleClickShowPassword2}
-                    style={{ cursor: "pointer" }}
-                  ></i>
-                )}
-              </div>
-              <div className="ms-4">
-                <PasswordStrengthMeter password={pass2} />
-              </div>
-            </div> */}
 
             <div>
               <button className=" mt-4 mb-8 pt-3 pb-3 orange-btn" type="submit">

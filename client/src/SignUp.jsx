@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 const SignUp = () => {
   const [username, setUsername] = useState("");
   const [location, setLocation] = useState("");
-  const [birthday, setBirthday] = useState(new Date());
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -31,7 +30,6 @@ const SignUp = () => {
       .post("http://localhost:3001/api/auth/register", {
         username,
         location,
-        // birthday,
         email, // email from useState
         password: pass, // pass from useState
         password2: pass2,
@@ -47,7 +45,6 @@ const SignUp = () => {
         alert("Registration Successful");
         setUsername("");
         setLocation("");
-        // setBirthday("");
         setEmail("");
         setPass("");
         setPass2("");
@@ -103,23 +100,6 @@ const SignUp = () => {
                 onChange={(e) => setLocation(e.target.value)}
               />
             </div>
-
-            {/* <div className="form-group">
-              <label htmlFor="birthday">
-                <strong>Birthday</strong>
-              </label>
-              <input
-                type="date"
-                data-date-format="mm/dd/yyyy"
-                className="datepicker form-control auth register"
-                name="birthday"
-                id="birthday"
-                placeholder="Enter birthday"
-                required
-                value={birthday}
-                onChange={(e) => setBirthday(e.target.value)}
-              />
-            </div> */}
 
             <div className="form-group was-validated">
               <label htmlFor="email">

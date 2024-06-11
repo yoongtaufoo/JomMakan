@@ -139,15 +139,6 @@ const ProfileSection = () => {
             </div>
           </div>
 
-          {/* {previewImage ? (
-          <img
-            id="preview-image"
-            className="profile-pic"
-            src={previewImage}
-            alt="preview-image"
-          />
-        ) : null} */}
-
           <h1 className="mt-4 mb-5">{username}</h1>
           <button className="upload-image-btn orange-btn" type="submit">
             Update Image
