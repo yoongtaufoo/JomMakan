@@ -50,7 +50,6 @@ const review = async (req, res) => {
 
     res.status(201).json({ message: "Review submitted successfully" });
   } catch (err) {
-    console.error("Error creating review:", err);
     res.status(500).json({ message: "Failed to create review" });
   }
 };
@@ -58,16 +57,15 @@ const review = async (req, res) => {
 const reviews = async (req, res) => {
   try {
     const reviews = await Restaurant.find();
-    res.json(reviews); // Send JSON response
+    res.json(reviews); 
   } catch (error) {
-    console.error("Error fetching reviews:", error);
-    res.status(500).json({ error: "Internal server error" }); // Send error response
+    res.status(500).json({ error: "Internal server error" }); 
   }
 };
 
 const shareReview = async (req, res) => {
   try {
-    const authHeader = req.headers.authorization; // Get token
+    const authHeader = req.headers.authorization; 
     const token = JSON.parse(authHeader);
     const userId = token.user._id;
     const user = await User.findById(userId);
@@ -80,7 +78,6 @@ const shareReview = async (req, res) => {
       reviewDescription,
       media,
       agreeToTerms,
-      // likeCount,
       likedBy,
     } = req.body;
 
@@ -100,14 +97,8 @@ const shareReview = async (req, res) => {
 };
 const getReview = async (req, res) => {
   try {
-    // const { _id } = req.params;
-    // const authHeader = req.headers.authorization;
-    // const token = JSON.parse(authHeader);
-    // const userId = token.user._id;
     const restaurantId = req.params._id;
-    console.log(restaurantId);
     const reviews = await Review.find({ restaurant_id: restaurantId });
-    // console.log(reviews);
     if (!reviews) {
       return res.status(404).json({ message: "Review not found" });
     }
@@ -115,14 +106,12 @@ const getReview = async (req, res) => {
 
     res.json(reviews);
   } catch (err) {
-    console.error("Error fetching reviews:", err);
     res.status(500).json({ message: "Failed to fetch reviews" });
   }
 };
 
 const deleteReview = async (req, res) => {
   const { _id } = req.params;
-  console.log(_id);
   try {
     const review = await Review.findOneAndDelete({ _id });
     if (!review) {
@@ -131,7 +120,6 @@ const deleteReview = async (req, res) => {
 
     res.json({ message: "Review deleted successfully" });
   } catch (error) {
-    console.error("Error deleting review:", error);
     res.status(500).json({ message: "Failed to delete review" });
   }
 };
@@ -154,7 +142,6 @@ const likeReview = async (req, res) => {
     await review.save();
     res.json({ message: "Review liked/unliked successfully", review });
   } catch (error) {
-    console.error("Error liking review:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -189,46 +176,20 @@ const updateReview = async (req, res) => {
 
     res.status(200).json({ message: "Review updated successfully" });
   } catch (error) {
-    console.error("Error updating review:", error);
     res.status(500).json({ message: "Failed to update review" });
   }
 };
 
-
-// const updateAverageRating = async (req, res) => {
-//   const { _id } = req.params; // Get restaurant ID from URL parameters
-//   const { averageRating } = req.body; // Get averageRating from request body
-//   console.log(_id);
-//   console.log(averageRating);
-//   try {
-//     // Find the restaurant by ID and update its averageRating
-//     const restaurant = await Restaurant.findByIdAndUpdate(
-//       _id,
-//       { averageRating },
-//       { new: true }
-//     );
-
-//     // Respond with the updated restaurant object
-//     res.json({ message: "Average rating updated successfully", restaurant });
-//   } catch (error) {
-//     console.error("Error updating average rating:", error);
-//     res.status(500).json({ message: "Error updating average rating" });
-//   }
-// };
 const edit = async (req, res) => {
   try {
     const reviewId = req.params.reviewId;
-    const reviewData = await Review.findById(reviewId); // Example using Mongoose
-    // If review data is found, send it as a response
+    const reviewData = await Review.findById(reviewId); 
     if (reviewData) {
       res.status(200).json(reviewData);
     } else {
-      // If review data is not found, return a 404 error
       res.status(404).json({ message: "Review not found" });
     }
   } catch (error) {
-    // If an error occurs, return a 500 error
-    console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -240,6 +201,5 @@ module.exports = {
   likeReview,
   updateReview,
   shareReview,
-  // updateAverageRating,
   edit,
 };

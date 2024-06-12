@@ -11,14 +11,10 @@ import Popup from "reactjs-popup";
 
 const AddReview = () => {
   const { _id, reviewId } = useParams();
-  console.log(_id);
   const navigate = useNavigate();
   const location = useLocation();
   const editMode = new URLSearchParams(location.search).get("edit") || "false";
 
-  // const editMode = new URLSearchParams(location.search).get("edit") || "false";
-  // const reviewId = new URLSearchParams(location.search).get("reviewId");
-  // console.log(reviewId);
   const [reviewData, setReviewData] = useState(false);
   const params = new URLSearchParams(location.search);
   const restaurantName = params.get("restaurantName");
@@ -30,16 +26,12 @@ const AddReview = () => {
   const token = localStorage.getItem("JomMakanUser");
 
   const handleUploadFile = async (selectedFile) => {
-    console.log("Uploading file:", selectedFile);
     setUploadStatus("loading");
     setSelectedFile(selectedFile);
     setTimeout(() => {
       setUploadStatus("success");
     }, 3000);
 
-    // const mediaUrl = URL.createObjectURL(selectedFile);
-    // console.log(mediaUrl);
-    // setMediaInput(mediaUrl);
   };
 
   const resetUploadStatus = () => {
@@ -47,71 +39,15 @@ const AddReview = () => {
   };
 
   const handleRating = (rate) => {
-    console.log("Rating:", rate);
     setratingInput(rate);
   };
-  // const updateReview = async () => {
-  //   try {
-  //     const response = await axios.put(
-  //       `http://localhost:3001/api/review/${selectedReview.reviewId}`, // Assuming you have a unique identifier for each review (e.g., reviewId)
-  //       {
-  //         rating: ratingInput,
-  //         reviewDescription: descriptionInput,
-  //         media: mediaInput,
-  //         agreeToTerms: isChecked,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: token,
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-  //     console.log("Review updated successfully:", response.data);
-  //     // Optionally, you can navigate to another page or perform other actions upon successful review update
-  //   } catch (error) {
-  //     console.error("Error updating review:", error);
-  //     // Handle error scenarios here
-  //   }
-  // };
+ 
   const handleClickOutside = (event) => {
     if (popRef.current && !popRef.current.contains(event.target)) {
       setShowPopup(false);
     }
   };
-  //  useEffect(() => {
-  //     //get token from local storage
-  //     const token = localStorage.getItem("JomMakanUser");
-
-  //     if (!token) {
-  //       alert("User is not authenticated.");
-  //       return;
-  //     }
-
-  //     axios
-  //       .get(`http://localhost:3001/api/review/${_id}`, {
-  //         headers: {
-  //           Authorization: token,
-  //         },
-  //       })
-  //       .then(({ data }) => {
-  //         set(data.username);
-  //         setLocation(data.location);
-  //         setEmail(data.email);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching profile:", error);
-  //       });
-  //   }, []); // Empty dependency array to fetch data only once when component mounts
-
-  // const resetForm = () => {
-  //   setratingInput("");
-  //   setDescriptionInput(" ");
-  //   setMediaInput("");
-  //   setSelectedFile(null);
-  //   setIsChecked(false);
-  //   setUploadStatus("idle");
-  // };
+  
   const [ratingInput, setratingInput] = useState(params.get("rating") || "");
   const [descriptionInput, setDescriptionInput] = useState(
     params.get("description") || ""
@@ -153,8 +89,6 @@ useEffect(() => {
       formData.append("image", selectedFile);
       formData.append("agreeToTerms", isChecked);
 
-      console.log("Selected File:", selectedFile);
-
       try {
         const response = await axios.put(
           `http://localhost:3001/api/review/${reviewId}/editReview`,
@@ -190,12 +124,6 @@ useEffect(() => {
       formData.append("image", selectedFile);
       formData.append("agreeToTerms", isChecked);
 
-      console.log("Rating Input:", ratingInput);
-      console.log("Date:", new Date());
-      console.log("Description Input:", descriptionInput);
-      console.log("Is Checked:", isChecked);
-      console.log("Selected File:", selectedFile);
-
       try {
         const response = await axios.post(
           `http://localhost:3001/api/review/${_id}/addReview`,
@@ -203,11 +131,9 @@ useEffect(() => {
           {
             headers: {
               Authorization: token,
-              // "Content-Type": "multipart/form-data",
             },
           }
         );
-
         console.log("Review submitted successfully:", response.data);
         navigate(`/restaurant/${_id}`);
       } catch (error) {
@@ -226,25 +152,18 @@ useEffect(() => {
 
   const handleDescriptionChange = (event) => {
     setDescriptionInput(event.target.value);
-    // console.log("Description:", descriptionInput);
   };
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
 
   useEffect(() => {
-    console.log("editMode: " + editMode);
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  //  useEffect(() => {
-  //    if (edit && selectedReview) {
-  //      setratingInput(selectedReview.rating);
-  //      setDescriptionInput(selectedReview.reviewDescription);
-  //    }
-  //  }, [edit, selectedReview]);
+ 
 
   return (
     <div>
