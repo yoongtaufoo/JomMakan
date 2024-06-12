@@ -107,7 +107,7 @@ const MyRegistration = () => {
           <i className="bi bi-arrow-left-circle"></i> Back
         </div>
 
-        <h1 className="custom-h1">My Workshops</h1>
+        <h1 className="custom-h1">My Registrations</h1>
 
         <Tabs
           tabdata={{ one: "Upcoming", two: "Completed", three: "Cancelled" }}
@@ -120,13 +120,15 @@ const MyRegistration = () => {
         <br />
         <div className="card mb-3">
           {filteredWorkshops.map((registration) => {
-          console.log(registration._id);
-        return (
-          <CollectionCard key={registration._id} registrations={registration} />
-         );
-        })}
-      </div>
-        
+            console.log(registration._id);
+            return (
+              <CollectionCard
+                key={registration._id}
+                registrations={registration}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

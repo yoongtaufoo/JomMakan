@@ -1,5 +1,5 @@
 const Workshop = require("../models/workshopModel");
-const favWorkshop = require("../models/favWorkshopModel")
+const favWorkshop = require("../models/favWorkshopModel");
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
@@ -8,11 +8,10 @@ const workshops = async (req, res) => {
   try {
     // Get the current date
     //const currentDate = new Date();
-    
-    // Find workshops with dates greater than the current date
-   // const upcomingWorkshops = await Workshop.find({ date: { $gt: currentDate } });
-   const upcomingWorkshops = await Workshop.find();
 
+    // Find workshops with dates greater than the current date
+    // const upcomingWorkshops = await Workshop.find({ date: { $gt: currentDate } });
+    const upcomingWorkshops = await Workshop.find();
 
     res.json(upcomingWorkshops);
   } catch (error) {
@@ -29,20 +28,23 @@ const workshopDetails = async (req, res) => {
     }
 
     const authHeader = req.headers.authorization; //Get token
-    if (!authHeader){
-      console.log("No token provided");
+    if (!authHeader) {
+      // console.log("No token provided");
       return res.json({ workshop }); //Return workshop details without isSaved flag
     }
-    const token = JSON.parse(authHeader)
+    const token = JSON.parse(authHeader);
     console.log("Authorization Header:", token);
 
-    if (!token){
-      console.log("No token provided");
-      return res.json({ workshop });// Return workshop details without isSaved flag
+    if (!token) {
+      // console.log("No token provided");
+      return res.json({ workshop }); // Return workshop details without isSaved flag
     }
 
-    const userId = token.user._id
-    const savedWorkshop = await favWorkshop.findOne({ user_id: userId, workshop_id: req.params._id });
+    const userId = token.user._id;
+    const savedWorkshop = await favWorkshop.findOne({
+      user_id: userId,
+      workshop_id: req.params._id,
+    });
     const isSaved = !!savedWorkshop;
 
     console.log("isSaved:", isSaved);
@@ -67,7 +69,7 @@ const saveWorkshop = async (req, res) => {
     date,
     availableSlot,
     photoLink,
-    workshop_id,  
+    workshop_id,
   } = req.body;
 
   try {
@@ -75,7 +77,7 @@ const saveWorkshop = async (req, res) => {
     const token = JSON.parse(authHeader);
 
     const userId = token.user._id; // Get the userId from the decoded token
-    console.log(userId)
+    console.log(userId);
 
     // Create a new favourite restaurant to db
     const newFavWorkshop = new favWorkshop({
@@ -93,9 +95,9 @@ const saveWorkshop = async (req, res) => {
     await newFavWorkshop.save();
 
     const workshop = await Workshop.findById(workshop_id);
-    console.log(workshop)
+    console.log(workshop);
     if (workshop) {
-      workshop.favourited.push(userId); // Set the registered status to true 
+      workshop.favourited.push(userId); // Set the registered status to true
       await workshop.save(); // Save the updated workshop
     }
 
@@ -113,40 +115,37 @@ const myFavouriteWorkshop = async (req, res) => {
   try {
     const authHeader = req.headers.authorization; // Get token
     const token = JSON.parse(authHeader);
-  
+
     const userId = token.user._id; // Get the userId from the decoded token
 
-    const saved = await Workshop.find({ favourited: { $in: [userId] } });// Find saved workshop where userId is in the favourited array
-    
-    console.log(saved)
+    const saved = await Workshop.find({ favourited: { $in: [userId] } }); // Find saved workshop where userId is in the favourited array
+
+    console.log(saved);
 
     res.json(saved); // Send sorted saved workshop array as response
-    
   } catch (err) {
     console.error("Error fetching favourite workshop:", err);
     res.status(500).json({ message: "Failed to fetch favourite workshop" });
   }
 };
 
-
-
 // Delete the favorite workshop
 const deleteFavWorkshop = async (req, res) => {
   try {
-
-    const deleted = await favWorkshop.findByIdAndDelete({"_id": req.params._id});
+    const deleted = await favWorkshop.findByIdAndDelete({
+      _id: req.params._id,
+    });
     if (!deleted) {
       return res.status(404).json({ message: "Favorite workshop not found" });
     }
 
-         // Find the workshop by ID and update the available slots
-         const workshop = await Workshop.findById(deleted.workshop_id);
-         console.log(workshop);
-         if (workshop) {
-           workshop.favourited.pull(deleted.user_id.toString()); // Remove the user id
-           await workshop.save(); // Save the updated workshop
-         }
-
+    // Find the workshop by ID and update the available slots
+    const workshop = await Workshop.findById(deleted.workshop_id);
+    console.log(workshop);
+    if (workshop) {
+      workshop.favourited.pull(deleted.user_id.toString()); // Remove the user id
+      await workshop.save(); // Save the updated workshop
+    }
 
     res.json({ message: "Favorite workshop removed successfully" }); // Send a success message as response
   } catch (err) {
@@ -157,13 +156,15 @@ const deleteFavWorkshop = async (req, res) => {
 
 const getFavWorkshopById = async (req, res) => {
   try {
-
     const authHeader = req.headers.authorization; // Get token
     const token = JSON.parse(authHeader);
 
     const userId = token.user._id;
 
-    const workshop = await favWorkshop.findOne({ "workshop_id": req.params._id, user_id: userId });
+    const workshop = await favWorkshop.findOne({
+      workshop_id: req.params._id,
+      user_id: userId,
+    });
     if (!workshop) {
       return res.status(404).json({ message: "Favorite workshop not found" });
     }
@@ -172,9 +173,7 @@ const getFavWorkshopById = async (req, res) => {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
   }
-
 };
-
 
 module.exports = {
   workshops,
@@ -182,6 +181,5 @@ module.exports = {
   saveWorkshop,
   myFavouriteWorkshop,
   deleteFavWorkshop,
-  getFavWorkshopById
+  getFavWorkshopById,
 };
-

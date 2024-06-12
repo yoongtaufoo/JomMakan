@@ -118,7 +118,7 @@ const ProfileSection = () => {
       <div className="profile-sec d-flex flex-column justify-content-center align-items-center">
         <form
           onSubmit={handleSubmit}
-          className="profile-sec d-flex flex-column justify-content-center align-items-center"
+          className="d-flex flex-column justify-content-center align-items-center"
         >
           <div className="profile-edit">
             <img className="profile-pic" src={previewImage} alt="profilePic" />
@@ -138,15 +138,6 @@ const ProfileSection = () => {
               />
             </div>
           </div>
-
-          {/* {previewImage ? (
-          <img
-            id="preview-image"
-            className="profile-pic"
-            src={previewImage}
-            alt="preview-image"
-          />
-        ) : null} */}
 
           <h1 className="mt-4 mb-5">{username}</h1>
           <button className="upload-image-btn orange-btn" type="submit">

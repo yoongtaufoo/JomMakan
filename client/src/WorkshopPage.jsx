@@ -9,7 +9,7 @@ import SearchBar from "./components/SearchBar";
 const Workshop = () => {
   const [workshops, setWorkshops] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  console.log(workshops)
+  console.log(workshops);
   useEffect(() => {
     //get userid from local storage
     const token = localStorage.getItem("JomMakanUser");
@@ -17,10 +17,12 @@ const Workshop = () => {
       alert("User is not authenticated.");
       return;
     }
-    
+
     const fetchWorkshops = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/workshop/workshops");
+        const response = await axios.get(
+          "http://localhost:3001/api/workshop/workshops"
+        );
         setWorkshops(response.data);
       } catch (error) {
         console.error("Error fetching workshops:", error);
@@ -30,7 +32,7 @@ const Workshop = () => {
   }, []);
 
   const filteredWorkshops = workshops.filter((workshop) => {
-    const { workshopName, workshopDescription , date } = workshop;
+    const { workshopName, workshopDescription, date } = workshop;
     const query = searchQuery.toLowerCase();
     const currentDate = new Date();
     // Convert workshop date to a Date object
@@ -42,7 +44,6 @@ const Workshop = () => {
         workshopDescription.toLowerCase().includes(query))
     );
   });
-  
 
   return (
     <div>
@@ -59,15 +60,16 @@ const Workshop = () => {
             </a>
             <a href="/schedule">
               <small className="back-btn">
-                <i className="bi bi-calendar-heart custom-icon"></i>My Workshops
+                <i className="bi bi-calendar-heart custom-icon"></i>My
+                Registrations
               </small>
             </a>
           </div>
         </div>
         <div className="d-flex justify-content-end align-items-center">
           <div>
-            <SearchBar 
-              place="Workshops, Events..." 
+            <SearchBar
+              place="Workshops, Events..."
               onSearch={(query) => setSearchQuery(query)}
             />
           </div>

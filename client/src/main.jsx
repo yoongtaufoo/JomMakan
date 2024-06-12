@@ -10,7 +10,6 @@ import Profile from "./Profile.jsx";
 import ResetPassword from "./ResetPassword.jsx";
 import ResetPassword2 from "./ResetPassword2.jsx";
 import ForgotPassword from "./ForgotPassword.jsx";
-import Report from "./Report.jsx";
 import Workshop from "./WorkshopPage.jsx";
 import FavWorkshop from "./FavWorkshop.jsx";
 import WRegistration from "./Registration.jsx";
@@ -49,7 +48,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               path="/reset-password/:id/:token"
               element={<ResetPassword2 />}
             ></Route>
-            <Route exact path="/report" element={<Report />} />
             <Route exact path="/home" element={<Home />} />
             <Route exact path="/restaurant/:_id" element={<Restaurant />} />
 

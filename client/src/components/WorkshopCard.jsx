@@ -186,7 +186,7 @@ const WorkshopCard = ({ workshop }) => {
               }}
               disabled
             >
-              FULL
+              Full
             </button>
           ) : (
             <Link
