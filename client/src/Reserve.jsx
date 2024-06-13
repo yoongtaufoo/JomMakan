@@ -25,7 +25,6 @@ const Reserve = () => {
           },
       })
       .then(({ data }) => {
-        // console.log("Received restaurant data:", data);
         setRestaurant(data.restaurant);
       })
       .catch((error) => {
@@ -60,7 +59,6 @@ const Reserve = () => {
     <div>
       <Navbar />
       <div className="container">
-        {/* <div id='Rmain-container'> */}
         <br />
         <div className="d-flex justify-content-between align-items-center">
           <Link to={`/restaurant/${_id}`} className="back-btn">

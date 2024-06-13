@@ -45,8 +45,6 @@ const Reservations = () => {
         const response = await axios.get(
           "http://localhost:3001/api/restaurant/restaurants"
         );
-        // const data = await response.json();
-        // console.log(response.data)
         setRestaurants(response.data);
       } catch (error) {
         console.error("Error fetching restaurants:", error);
@@ -63,9 +61,7 @@ const Reservations = () => {
       2: "D",
     };
     const status = statusFilter[activeTab];
-    // console.log(status)
     const query = searchQuery.toLowerCase();
-    // if (status === undefined) return true; // Default case
 
     const restaurant = restaurants.find(
       (rest) => rest._id === reservation.restaurant_id
@@ -83,7 +79,6 @@ const Reservations = () => {
       : "";
     if (reservation.status === status) {
       return (
-        // (reservation.status === status &&
         reservation.name.toLowerCase().includes(query) ||
         reservation.date.includes(query) ||
         reservation.phone.includes(query) ||
@@ -96,7 +91,6 @@ const Reservations = () => {
   });
 
   const handleTabClick = (index) => {
-    // console.log(index)
     setActiveTab(index); // Update the activeTab state
   };
 
@@ -117,7 +111,6 @@ const Reservations = () => {
         >
           <i className="bi bi-arrow-left-circle"></i> Back
         </div>
-        {/* <SearchBar/> */}
 
         <h1 className="custom-h1">My Reservations</h1>
         <Tabs

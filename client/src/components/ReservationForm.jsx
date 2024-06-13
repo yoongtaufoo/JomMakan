@@ -69,25 +69,6 @@ const ReservationForm = (props) => {
       paxinput !== "" &&
       tableinput !== "";
 
-    console.log(
-      "dateinput: ",
-      dateinput,
-      "timestartinput: ",
-      timestartinput,
-      "timeendinput",
-      timeendinput,
-      "nameinput",
-      nameinput,
-      "phoneinput",
-      phoneinput,
-      "paxinput",
-      paxinput,
-      "tableinput",
-      tableinput,
-      "restaurantid",
-      restaurantId
-    );
-
     // Update form validity state
     setIsFormValid(isValid);
   }, [
@@ -159,7 +140,6 @@ const ReservationForm = (props) => {
 
   // Parse the opening hours string and extract opening and closing times
   const parseOpeningHours = (openingHours) => {
-    // console.log(props.openinghours)
     if (props.tables !== null) {
       const timePattern = /\b\d{1,2}:\d{2}\s*(?:am|pm)?\b/gi;
       const times = openingHours.match(timePattern);
@@ -298,8 +278,7 @@ const ReservationForm = (props) => {
         disabledTables.add(reservation.table_id); // Add the table_id to the disabled set
       }
     });
-    // console.log("timestartinput", timestartinput);
-    // console.log("disabled tables", disabledTables);
+
     return disabledTables;
   };
 
@@ -390,7 +369,6 @@ const ReservationForm = (props) => {
         }
       )
       .then(() => {
-        // alert("Reserved Successfully");
         setDateInput("");
         setTimeStartInput("");
         setTimeEndInput("");
@@ -399,7 +377,6 @@ const ReservationForm = (props) => {
         setPaxInput("");
         setTableInput("");
         setConfirm(true);
-        //window.location.reload(); // reload window after reserve successfully
       })
       .catch((error) => {
         alert("Unable to reserve user");
@@ -411,7 +388,7 @@ const ReservationForm = (props) => {
     if (popRef.current && !popRef.current.contains(event.target)) {
       setConfirm(false);
       setSubmit(false);
-      window.location.reload();
+      window.location.reload(); // reload the window to refresh the browser to remove the input
     }
   };
   useEffect(() => {
