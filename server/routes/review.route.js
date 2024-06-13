@@ -11,7 +11,6 @@ const {
   deleteReview,
   updateReview,
   shareReview,
-  // updateAverageRating,
   edit,
 } = require("../controllers/review.controller");
 
@@ -21,7 +20,6 @@ router.post("/:_id/likeReview", likeReview);
 router.delete("/:_id/deleteReview", deleteReview);
 router.put("/:_id/editReview", upload.single("image"), updateReview);
 router.post("/:_id/shareReview", shareReview);
-// router.put("/:_id/updateAverageRating", updateAverageRating);
 router.get("/:reviewId", edit);
 
 module.exports = router;
