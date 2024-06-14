@@ -1,8 +1,6 @@
 import React from "react";
-// import { get } from "../../../server/routes/reservation.route";
 
 const DetailCard = ({ workshop, restaurant }) => {
-  // console.log(restaurant)
   const getMinMaxTableCapacity = (restaurant) => {
     if (!restaurant || !restaurant.tables) {
       return 0; // Return 0 if restaurant or tables data is missing
@@ -39,7 +37,6 @@ const DetailCard = ({ workshop, restaurant }) => {
 
   return (
     <div style={{ padding: "10px", display: "block", margin: "5% auto" }}>
-    {/* // <div className="card customized-workshop-card"> */}
       <img
         src={workshop ? workshop.photoLink : restaurant.image}
         alt={workshop ? workshop.workshopName : restaurant.name}

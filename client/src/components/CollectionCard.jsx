@@ -1,7 +1,6 @@
 // This card can be used for displaying registration or reservation made
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-// import { restaurants } from "../RestaurantData";
 import axios from "axios";
 
 const CollectionCard = ({ registrations, reservations }) => {
@@ -40,7 +39,6 @@ const CollectionCard = ({ registrations, reservations }) => {
           }
         )
         .then(({ data }) => {
-          // console.log("data: ", data);
           setRestaurantData(data.restaurant);
         })
         .catch((error) => {
@@ -63,10 +61,9 @@ const CollectionCard = ({ registrations, reservations }) => {
     }
   }, [registrations]);
 
-  //Cancel reservation
+  // Cancel reservation
   const cancelReservation = async (reservationId) => {
     const token = localStorage.getItem("JomMakanUser");
-    //const { token } = useAuth();
     if (!token) {
       alert("User is not authenticated.");
       return;
@@ -91,7 +88,6 @@ const CollectionCard = ({ registrations, reservations }) => {
   //Cancel registration
   const cancelRegistration = async (registrationId) => {
     const token = localStorage.getItem("JomMakanUser");
-    // const { token } = useAuth();
     if (!token) {
       alert("User is not authenticated.");
       return;
@@ -224,7 +220,6 @@ const CollectionCard = ({ registrations, reservations }) => {
   };
 
   const renderReservation = (reservations) => {
-    // const restaurantData = getRestaurantData(reservations, restaurants);
     return (
       <div className="row g-0 custom-row">
         <div className="col-md-4">
